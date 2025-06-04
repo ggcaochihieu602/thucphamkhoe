@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Giỏ hàng | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .cart-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    .cart-table th, .cart-table td {
+      border: 1px solid #eee;
+      padding: 0.7rem 0.5rem;
+      text-align: center;
+    }
+    .cart-table th {
+      background: #f1f1f1;
+    }
+    .cart-product-img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .cart-actions button {
+      background: #40916c;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.3rem 0.8rem;
+      margin: 0 0.2rem;
+      cursor: pointer;
+    }
+    .cart-actions button.remove {
+      background: #d90429;
+    }
+    .cart-total {
+      text-align: right;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .checkout-btn {
+      display: inline-block;
+      background: #2d6a4f;
+      color: #fff;
+      padding: 0.7rem 2rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="cart-container">
+      <h2>Giỏ hàng của bạn</h2>
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Ảnh</th>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><img src="img/spinach.jpg" alt="Rau chân vịt" class="cart-product-img"></td>
+            <td>Rau chân vịt</td>
+            <td>30.000đ</td>
+            <td>
+              <div class="cart-actions">
+                <button>-</button>
+                <span>1</span>
+                <button>+</button>
+              </div>
+            </td>
+            <td>30.000đ</td>
+            <td><button class="remove">Xóa</button></td>
+          </tr>
+          <tr>
+            <td><img src="img/broccoli.jpg" alt="Bông cải xanh" class="cart-product-img"></td>
+            <td>Bông cải xanh</td>
+            <td>35.000đ</td>
+            <td>
+              <div class="cart-actions">
+                <button>-</button>
+                <span>2</span>
+                <button>+</button>
+              </div>
+            </td>
+            <td>70.000đ</td>
+            <td><button class="remove">Xóa</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="cart-total">
+        <strong>Tổng cộng: 100.000đ</strong>
+      </div>
+      <a href="#" class="checkout-btn">Thanh toán</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com – Website thực phẩm dinh dưỡng</p>
+  </footer>
+  <script>
+  (function() {
+    const nav = document.querySelector('nav ul');
+    if (!nav) return;
+    const user = localStorage.getItem('user');
+    const loginLi = Array.from(nav.children).find(li => li.textContent.includes('Đăng nhập'));
+    if (user && loginLi) {
+      loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+    } else if (!user && loginLi) {
+      loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+    }
+  })();
+  </script>
+</body>
+</html>

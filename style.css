@@ -1,0 +1,277 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+header {
+  background: #2d6a4f;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #95d5b2;
+  color: #1b4332;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('img/vegetable.jpg') center/cover no-repeat;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.hero h1, .hero p, .hero .btn {
+  color: #fff;
+  text-shadow:
+    0 4px 16px rgba(0,0,0,0.7),
+    0 1.5px 0 rgba(0,0,0,0.15),
+    0 0.5px 8px rgba(0,0,0,0.5);
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero .btn {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  background: #40916c;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.products {
+  padding: 2rem;
+  text-align: center;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.product-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.product-card h3 {
+  margin: 0.5rem 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.product-card .price {
+  font-size: 2.2rem;
+  color: #d90429;
+  font-weight: bold;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.product-card button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #2d6a4f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+footer {
+  background: #2d6a4f;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+.product-detail-container {
+  max-width: 1024px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.product-content {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.product-detail-image {
+  width: 45%;
+  flex-shrink: 0;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #95d5b2;
+}
+
+.product-detail-info {
+  flex-grow: 1;
+}
+
+.product-detail-name {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 0.7rem;
+}
+
+.product-detail-price {
+  font-size: 2rem;
+  color: #d90429;
+  font-weight: bold;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.product-detail-info p {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.quantity-btn {
+  background: #40916c;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.quantity-btn:hover {
+  background: #2d6a4f;
+}
+
+.quantity-input {
+  width: 48px;
+  text-align: center;
+  font-size: 1.3rem;
+  border: 1px solid #b7e4c7;
+  border-radius: 6px;
+  padding: 0.3rem 0.2rem;
+  margin: 0 0.2rem;
+}
+
+.add-cart-btn {
+  background: #2d6a4f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+  margin-top: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.add-cart-btn:hover {
+  background: #40916c;
+}
+
+.add-cart-btn .cart-icon {
+  font-size: 1.7rem;
+  vertical-align: middle;
+}
+
+.expert-review-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.expert-review-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.expert-review-section .review-text {
+  font-style: italic;
+  color: #555;
+}
+
+.cart-product-img {
+  width: 100px;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  object-fit: cover;
+  border-radius: 6px;
+}

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết sản phẩm | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .product-detail-container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    .product-detail-image {
+      width: 320px;
+      aspect-ratio: 4 / 3;
+      height: auto;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #95d5b2;
+    }
+    .product-detail-info {
+      flex: 1;
+    }
+    .product-detail-name {
+      font-size: 2.2rem;
+      font-weight: bold;
+      margin-bottom: 0.7rem;
+    }
+    .product-detail-price {
+      font-size: 2rem;
+      color: #d90429;
+      font-weight: bold;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .quantity-btn {
+      background: #40916c;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .quantity-btn:hover {
+      background: #2d6a4f;
+    }
+    .quantity-input {
+      width: 48px;
+      text-align: center;
+      font-size: 1.3rem;
+      border: 1px solid #b7e4c7;
+      border-radius: 6px;
+      padding: 0.3rem 0.2rem;
+      margin: 0 0.2rem;
+    }
+    .add-cart-btn {
+      background: #2d6a4f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.6rem 1.2rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+      margin: 0 auto;
+      justify-content: center;
+    }
+    .add-cart-btn:hover {
+      background: #40916c;
+    }
+    .add-cart-btn .cart-icon {
+      font-size: 1.7rem;
+      vertical-align: middle;
+    }
+    .expert-review-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #eee;
+    }
+    .expert-review-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .expert-review-section .review-text {
+      font-style: italic;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div class="product-detail-container" id="product-detail" style="display:flex;gap:2rem;align-items:flex-start;width:100%;max-width:none;">
+      <div style="flex:1;">
+        <img id="product-image" alt="Product Image" class="product-detail-image" style="width:100%;height:auto;">
+      </div>
+      <div class="product-detail-info" style="flex:1;display:flex;flex-direction:column;gap:0.3rem;">
+        <div class="product-detail-name" id="product-name" style="margin-bottom:0.1rem;"></div>
+        <div class="product-detail-price" id="product-price" style="margin-top:0;margin-bottom:0.3rem;"></div>
+        <div><strong>Mô tả</strong><br><span id="product-description"></span><br><span id="product-detail-desc"></span></div>
+        <div style="margin-top:1rem;">
+          <div style="font-weight:bold;">Đánh giá chuyên gia</div>
+          <div id="expert-review"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:1.5rem;width:100%;">
+          <div id="total-price" style="font-size:1.1rem;font-weight:500;margin-bottom:0.7rem;"></div>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrementDetail()">-</button>
+            <input class="quantity-input" id="detail-qty" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="incrementDetail()">+</button>
+          </div>
+          <button class="add-cart-btn" style="width:100%;max-width:320px;font-size:1.5rem;padding:0.8rem 0;display:flex;align-items:center;justify-content:center;margin-top:1rem;">
+            <span class="cart-icon" style="font-size:2rem;margin-right:0.7rem;">🛒</span>Thêm vào giỏ
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com – Website thực phẩm dinh dưỡng</p>
+  </footer>
+  <script>
+    const products = {
+      'spinach': {
+        name: 'Rau chân vịt',
+        img: 'img/spinach.jpg',
+        desc: 'Giàu sắt, vitamin K, axit folic. Tốt cho máu, xương, thai kỳ và miễn dịch.',
+        price: '36.000đ/kg',
+        detail: 'Rau chân vịt là một trong những loại rau xanh đậm giàu sắt, vitamin A, C, K và axit folic. Loại rau này rất tốt cho tuần hoàn máu, hệ miễn dịch, đặc biệt hỗ trợ sức khỏe cho phụ nữ mang thai và người thiếu máu.',
+        review: '"Rau chân vịt nên có mặt trong mọi chế độ ăn lành mạnh. Nó không chỉ tốt cho máu mà còn hỗ trợ xương chắc khỏe." — TS. Nguyễn Thanh Tùng'
+      },
+      'broccoli': {
+        name: 'Bông cải xanh',
+        img: 'img/broccoli.jpg',
+        desc: 'Chứa chất chống oxy hóa sulforaphane. Hỗ trợ phòng ngừa ung thư, tăng cường miễn dịch.',
+        price: '49.000đ/kg',
+        detail: 'Bông cải xanh chứa sulforaphane – hợp chất giúp ngăn ngừa ung thư và chống lão hóa. Ngoài ra, đây còn là nguồn cung cấp chất xơ và vitamin C lý tưởng cho người lớn tuổi.',
+        review: '"Loại rau này thực sự là siêu thực phẩm. Ăn hấp hoặc xào nhẹ giúp giữ được tối đa lợi ích." — PGS.TS. Trần Quang Thắng'
+      },
+      'carrot': {
+        name: 'Cà rốt',
+        img: 'img/carrot.jpg',
+        desc: 'Giàu beta-carotene (tiền vitamin A). Tốt cho thị lực, da và hệ miễn dịch.',
+        price: '30.000đ/kg',
+        detail: 'Cà rốt rất giàu beta-carotene – tiền chất vitamin A, hỗ trợ sáng mắt, làn da đẹp và hệ miễn dịch khỏe mạnh. Có thể ăn sống, luộc hoặc ép lấy nước.',
+        review: '"Cà rốt là loại rau nên dùng mỗi ngày, đặc biệt là với trẻ em và người làm việc nhiều với màn hình." — BS. Đặng Thị Phương'
+      },
+      'garlic': {
+        name: 'Tỏi',
+        img: 'img/garlic.jpg',
+        desc: 'Chống viêm, kháng khuẩn tự nhiên. Tốt cho tim mạch, giảm huyết áp.',
+        price: '30.000đ/kg',
+        detail: 'Tỏi có tính kháng khuẩn, kháng virus và kháng viêm mạnh mẽ. Nó giúp giảm cholesterol, hỗ trợ tim mạch và tiêu hóa.',
+        review: '"Tỏi sống là \'kháng sinh thiên nhiên\' tuyệt vời. Dùng điều độ mỗi ngày giúp tăng cường đề kháng rõ rệt." — GS.TS. Hồ Bá Do'
+      },
+      'cucumbers': {
+        name: 'Dưa leo',
+        img: 'img/cucumbers.jpg',
+        desc: 'Giàu nước, thanh nhiệt, hỗ trợ tiêu hóa. Ít calo, thích hợp cho người ăn kiêng.',
+        price: '7.000đ/kg',
+        detail: 'Dưa leo có hàm lượng nước cao, giúp thanh nhiệt, làm mát cơ thể và giảm cân hiệu quả. Nó cũng giúp làm đẹp da và giảm sưng phù nhẹ.',
+        review: '"Dưa leo là lựa chọn hoàn hảo cho những ai muốn giảm cân mà vẫn giữ được làn da mịn màng." — ThS. Trần Hoài Phương'
+      },
+      'kale': {
+        name: 'Cải xoăn',
+        img: 'img/kale.jpg',
+        desc: 'Giàu vitamin C, K, canxi và chất xơ. Tốt cho xương, miễn dịch và giảm cholesterol.',
+        price: '70.000đ/kg',
+        detail: 'Cải xoăn là một trong những loại rau giàu chất dinh dưỡng nhất, chứa nhiều vitamin K, C, canxi, chất chống oxy hóa, hỗ trợ phòng bệnh và chống lão hóa.',
+        review: '"Cải xoăn là rau số 1 nếu bạn theo chế độ ăn sạch. Nên ép nước hoặc trộn salad mỗi ngày." — TS. Lê Minh Hương'
+      },
+      'sweet-potato': {
+        name: 'Khoai lang',
+        img: 'img/Sweet potato.jpg',
+        desc: 'Nhiều chất xơ, vitamin A, và carb phức hợp. Tốt cho đường ruột, kiểm soát đường huyết.',
+        price: '15.000đ/kg',
+        detail: 'Khoai lang là nguồn carb phức hợp lành mạnh, chứa nhiều chất xơ, vitamin A và có chỉ số đường huyết thấp – tốt cho người tiểu đường.',
+        review: '"Khoai lang là lựa chọn tuyệt vời thay cơm. Vừa ngon, vừa hỗ trợ tiêu hóa." — BS. Nguyễn Hải Vân'
+      },
+      'beetroot': {
+        name: 'Củ dền',
+        img: 'img/beetroot.jpg',
+        desc: 'Giàu nitrate tự nhiên, folate, chống oxy hóa. Hỗ trợ lưu thông máu, tốt cho tim mạch.',
+        price: '36.000đ/kg',
+        detail: 'Củ dền chứa nitrate tự nhiên, hỗ trợ tuần hoàn máu, giảm huyết áp và cải thiện hiệu suất thể thao. Ngoài ra, nó giúp gan giải độc hiệu quả.',
+        review: '"Nước ép củ dền là thức uống yêu thích của vận động viên chuyên nghiệp." — ThS. Nguyễn Trí Đức'
+      },
+      'pumpkin': {
+        name: 'Bí đỏ',
+        img: 'img/pumpkin.jpg',
+        desc: 'Rất giàu beta-carotene, vitamin A. Tốt cho mắt, miễn dịch, da dẻ.',
+        price: '22.000đ/kg',
+        detail: 'Bí đỏ giàu beta-carotene, chất chống oxy hóa mạnh, hỗ trợ thị lực và sức khỏe tim mạch. Ngoài ra còn giúp cải thiện tâm trạng nhờ tryptophan.',
+        review: '"Trẻ em và người lớn tuổi nên ăn bí đỏ đều đặn để tăng cường thị lực và miễn dịch." — TS. Lương Văn Hải'
+      },
+      'onion': {
+        name: 'Hành tây',
+        img: 'img/onion.jpg',
+        desc: 'Kháng khuẩn, tốt cho tim mạch và đường huyết.',
+        price: '37.000đ/kg',
+        detail: 'Hành tây có khả năng kháng viêm, hỗ trợ điều hòa đường huyết, chống oxy hóa và phòng ngừa ung thư nhờ hợp chất quercetin.',
+        review: '"Hành tây nấu hoặc ăn sống đều có lợi. Nên kết hợp với bữa chính ít nhất 3 lần mỗi tuần." — BS. Trần Mạnh Khôi'
+      },
+      'lettuce': {
+        name: 'Xà lách',
+        img: 'img/lettuce.jpg',
+        desc: 'Giàu nước, chất xơ, vitamin A. Tốt cho hydrat hóa, tiêu hóa, và chế độ ăn ít calo.',
+        price: '30.000đ/kg',
+        detail: 'Xà lách chứa nhiều nước và chất xơ, giúp thanh nhiệt, dễ tiêu hóa và hỗ trợ làm đẹp da. Thường dùng ăn sống, làm salad hoặc cuốn.',
+        review: '"Là loại rau nền lý tưởng cho người ăn kiêng và ăn chay." — ThS. Nguyễn Bích Trâm'
+      },
+      'corn': {
+        name: 'Ngô / Bắp',
+        img: 'img/corn.jpeg',
+        desc: 'Giàu vitamin B, chất xơ và chất chống oxy hóa lutein, tốt cho mắt và não bộ. Là nguồn năng lượng tốt cho cả người lớn lẫn trẻ nhỏ.',
+        price: '15.000đ/kg',
+        detail: 'Ngô giàu vitamin B, chất xơ và chất chống oxy hóa lutein, tốt cho mắt và não bộ. Là nguồn năng lượng tốt cho cả người lớn lẫn trẻ nhỏ.',
+        review: '"Ngô luộc hoặc hấp vừa ngon miệng, vừa bổ dưỡng – đặc biệt cho người vận động nhiều." — PGS.TS. Đào Tuấn Minh'
+      },
+      'cauliflower': {
+        name: 'Súp lơ trắng',
+        img: 'img/Cauliflower.jpg',
+        desc: 'Ít calo nhưng giàu vitamin C, K và chất xơ. Hỗ trợ miễn dịch, chống viêm và rất phù hợp cho chế độ low-carb.',
+        price: '32.000đ/kg',
+        detail: 'Súp lơ trắng ít calo nhưng giàu vitamin C, K và chất xơ. Hỗ trợ miễn dịch, chống viêm và rất phù hợp cho chế độ low-carb.',
+        review: '"Súp lơ trắng là lựa chọn thay thế cơm rất tốt trong thực đơn keto hoặc giảm cân." — ThS. Trần Hương Giang'
+      },
+      'bell-peppers': {
+        name: 'Ớt chuông',
+        img: 'img/bell peppers.jpg',
+        desc: 'Ớt chuông (đặc biệt màu đỏ) chứa rất nhiều vitamin C và beta-carotene, giúp tăng cường miễn dịch, bảo vệ da và thị lực.',
+        price: '50.000đ/kg',
+        detail: 'Ớt chuông (đặc biệt màu đỏ) chứa rất nhiều vitamin C và beta-carotene, giúp tăng cường miễn dịch, bảo vệ da và thị lực.',
+        review: '"Ớt chuông đỏ có lượng vitamin C cao gấp 3 lần cam. Ăn sống trong salad là tốt nhất." — BS. Đặng Thanh Hà'
+      },
+      'green-beans': {
+        name: 'Đậu que / đậu cô ve',
+        img: 'img/green beans.jpg',
+        desc: 'Cung cấp chất xơ, folate, vitamin A, C, K, giúp kiểm soát đường huyết và hỗ trợ tim mạch. Có thể luộc, xào hoặc hấp.',
+        price: '35.000đ/kg',
+        detail: 'Đậu que cung cấp chất xơ, folate, vitamin A, C, K, giúp kiểm soát đường huyết và hỗ trợ tim mạch. Có thể luộc, xào hoặc hấp.',
+        review: '"Thực phẩm an toàn, ít gây dị ứng, phù hợp cho cả trẻ nhỏ và người lớn tuổi." — TS. Hoàng Minh Châu'
+      },
+      'napa-cabbage': {
+        name: 'Cải thảo',
+        img: 'img/napa cabbage.jpg',
+        desc: 'Mềm, dễ ăn và giàu vitamin C, folate. Là nguyên liệu phổ biến trong kimchi và món canh. Hỗ trợ giải nhiệt và làm mát gan.',
+        price: '20.000đ/kg',
+        detail: 'Cải thảo mềm, dễ ăn và giàu vitamin C, folate. Là nguyên liệu phổ biến trong kimchi và món canh. Hỗ trợ giải nhiệt và làm mát gan.',
+        review: '"Rất tốt cho người ăn nhạt và cần thanh lọc cơ thể nhẹ nhàng." — BS. Lê Thị Hoa'
+      },
+      'bok-choy': {
+        name: 'Cải thìa / cải chíp',
+        img: 'img/bok choy.jpg',
+        desc: 'Giàu canxi, vitamin A và C, giúp xương chắc khỏe và tăng cường thị lực. Dễ chế biến, thường có trong các món xào hoặc luộc.',
+        price: '25.000đ/kg',
+        detail: 'Cải thìa giàu canxi, vitamin A và C, giúp xương chắc khỏe và tăng cường thị lực. Dễ chế biến, thường có trong các món xào hoặc luộc.',
+        review: '"Cải thìa kết hợp với tôm hoặc thịt nạc là món ăn ngon – bổ – rẻ cho mọi nhà." — TS. Trần Quốc Hùng'
+      },
+      'brussels-sprouts': {
+        name: 'Cải brussels',
+        img: 'img/brussels sprouts.jpg',
+        desc: 'Thuộc họ cải, giàu vitamin K, C, chất chống oxy hóa và hỗ trợ thanh lọc gan. Nên nướng hoặc hấp.',
+        price: '60.000đ/kg',
+        detail: 'Cải brussels thuộc họ cải, giàu vitamin K, C, chất chống oxy hóa và hỗ trợ thanh lọc gan. Nên nướng hoặc hấp.',
+        review: '"Dù hơi khó ăn với trẻ em, nhưng lại rất tốt cho người lớn tuổi và người cần detox." — BS. Ngô Thu Vân'
+      },
+      'water-spinach': {
+        name: 'Rau muống',
+        img: 'img/water spinach.jpg',
+        desc: 'Giàu chất sắt, canxi, vitamin A và C. Là món ăn dân dã quen thuộc, hỗ trợ máu huyết và tiêu hóa.',
+        price: '10.000đ/kg',
+        detail: 'Rau muống giàu chất sắt, canxi, vitamin A và C. Là món ăn dân dã quen thuộc, hỗ trợ máu huyết và tiêu hóa.',
+        review: '"Tuy phổ biến, nhưng đừng xem nhẹ giá trị dinh dưỡng của rau muống – rất tốt cho máu." — ThS. Đoàn Phương Mai'
+      },
+      'perilla-leaves': {
+        name: 'Lá tía tô',
+        img: 'img/Perilla Leaves.jpg',
+        desc: 'Chứa omega-3 thực vật, chống viêm, giúp giải cảm, hỗ trợ hô hấp và làm đẹp da.',
+        price: '50.000đ/kg',
+        detail: 'Lá tía tô chứa omega-3 thực vật, chống viêm, giúp giải cảm, hỗ trợ hô hấp và làm đẹp da.',
+        review: '"Lá tía tô vừa là gia vị, vừa là vị thuốc. Rất nên dùng cho người hay dị ứng, cảm lạnh." — Lương y Nguyễn Văn Khánh'
+      }
+    };
+
+    function getProductIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+    const productId = getProductIdFromUrl();
+    const product = products[productId];
+    const detailDiv = document.getElementById('product-detail');
+    if (product) {
+      document.getElementById('product-image').src = product.img;
+      document.getElementById('product-image').alt = product.name;
+      document.getElementById('product-name').textContent = product.name;
+      document.getElementById('product-price').textContent = product.price;
+      document.getElementById('product-description').textContent = product.desc;
+      document.getElementById('expert-review').textContent = product.review;
+    } else {
+      detailDiv.innerHTML = '<div style="font-size:1.3rem;color:#d90429;">Không tìm thấy sản phẩm.</div>';
+    }
+    function updateTotalPrice() {
+      const qty = parseInt(document.getElementById('detail-qty').value) || 1;
+      const priceStr = product.price.replace(/[^\d]/g, '');
+      const price = parseInt(priceStr);
+      const total = qty * price;
+      document.getElementById('total-price').textContent = 'Tổng thanh toán: ' + total.toLocaleString('vi-VN') + 'đ';
+    }
+    document.getElementById('detail-qty').addEventListener('input', updateTotalPrice);
+    function decrementDetail() {
+      var input = document.getElementById('detail-qty');
+      var value = parseInt(input.value);
+      if (value > 1) input.value = value - 1;
+      updateTotalPrice();
+    }
+    function incrementDetail() {
+      var input = document.getElementById('detail-qty');
+      var value = parseInt(input.value);
+      input.value = value + 1;
+      updateTotalPrice();
+    }
+    updateTotalPrice();
+  </script>
+  <script>
+    (function() {
+      const nav = document.querySelector('nav ul');
+      if (!nav) return;
+      const user = localStorage.getItem('user');
+      const loginLi = Array.from(nav.children).find(li => li.textContent.includes('Đăng nhập'));
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+  </script>
+</body>
+</html>

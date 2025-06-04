@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản lý sản phẩm | Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { border: 1px solid #eee; padding: 0.7rem 0.5rem; text-align: left; }
+    th { background: #f1f1f1; }
+    .action-btn { background: #40916c; color: #fff; border: none; border-radius: 5px; padding: 0.3rem 1rem; margin-right: 0.5rem; cursor: pointer; }
+    .action-btn.delete { background: #d90429; }
+    .add-btn { background: #22223b; color: #fff; border: none; border-radius: 5px; padding: 0.5rem 1.2rem; margin-bottom: 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <button id="logout-btn" style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;margin-left:2rem;">Đăng xuất</button>
+  </header>
+  <main class="admin-main">
+    <h1>Quản lý sản phẩm</h1>
+    <button class="add-btn">+ Thêm sản phẩm</button>
+    <table>
+      <thead>
+        <tr><th>STT</th><th>Ảnh</th><th>Tên sản phẩm</th><th>Giá</th><th>Hành động</th></tr>
+      </thead>
+      <tbody id="admin-products-tbody">
+        <!-- Product rows will be rendered by JS -->
+      </tbody>
+    </table>
+  </main>
+  <script>
+    // Only allow admin
+    (function() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.role !== 'admin') window.location.href = 'login.html';
+    })();
+
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    };
+
+    // Product data (copy from product-detail.html)
+    const products = {
+      'spinach': { name: 'Rau chân vịt', img: 'img/spinach.jpg', price: '36.000đ/kg' },
+      'broccoli': { name: 'Bông cải xanh', img: 'img/broccoli.jpg', price: '49.000đ/kg' },
+      'carrot': { name: 'Cà rốt', img: 'img/carrot.jpg', price: '30.000đ/kg' },
+      'garlic': { name: 'Tỏi', img: 'img/garlic.jpg', price: '30.000đ/kg' },
+      'cucumbers': { name: 'Dưa leo', img: 'img/cucumbers.jpg', price: '7.000đ/kg' },
+      'kale': { name: 'Cải xoăn', img: 'img/kale.jpg', price: '70.000đ/kg' },
+      'sweet-potato': { name: 'Khoai lang', img: 'img/Sweet potato.jpg', price: '15.000đ/kg' },
+      'beetroot': { name: 'Củ dền', img: 'img/beetroot.jpg', price: '36.000đ/kg' },
+      'pumpkin': { name: 'Bí đỏ', img: 'img/pumpkin.jpg', price: '22.000đ/kg' },
+      'onion': { name: 'Hành tây', img: 'img/onion.jpg', price: '37.000đ/kg' },
+      'lettuce': { name: 'Xà lách', img: 'img/lettuce.jpg', price: '30.000đ/kg' },
+      'corn': { name: 'Ngô / Bắp', img: 'img/corn.jpeg', price: '15.000đ/kg' },
+      'cauliflower': { name: 'Súp lơ trắng', img: 'img/Cauliflower.jpg', price: '32.000đ/kg' },
+      'bell-peppers': { name: 'Ớt chuông', img: 'img/bell peppers.jpg', price: '50.000đ/kg' },
+      'green-beans': { name: 'Đậu que / đậu cô ve', img: 'img/green beans.jpg', price: '35.000đ/kg' },
+      'napa-cabbage': { name: 'Cải thảo', img: 'img/napa cabbage.jpg', price: '20.000đ/kg' },
+      'bok-choy': { name: 'Cải thìa / cải chíp', img: 'img/bok choy.jpg', price: '25.000đ/kg' },
+      'brussels-sprouts': { name: 'Cải brussels', img: 'img/brussels sprouts.jpg', price: '60.000đ/kg' },
+      'water-spinach': { name: 'Rau muống', img: 'img/water spinach.jpg', price: '10.000đ/kg' },
+      'perilla-leaves': { name: 'Lá tía tô', img: 'img/Perilla Leaves.jpg', price: '50.000đ/kg' }
+    };
+    // Render products table
+    const tbody = document.getElementById('admin-products-tbody');
+    const keys = Object.keys(products);
+    tbody.innerHTML = keys.map((key, idx) => {
+      const p = products[key];
+      return `<tr>
+        <td>${idx + 1}</td>
+        <td><img src="${p.img}" alt="${p.name}" style="width:50px;"></td>
+        <td>${p.name}</td>
+        <td>${p.price}</td>
+        <td>
+          <button class="action-btn">Sửa</button>
+          <button class="action-btn delete">Xóa</button>
+        </td>
+      </tr>`;
+    }).join('');
+  </script>
+</body>
+</html>

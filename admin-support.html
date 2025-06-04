@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hỗ trợ khách hàng | Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { border: 1px solid #eee; padding: 0.7rem 0.5rem; text-align: left; }
+    th { background: #f1f1f1; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <button id="logout-btn" style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;margin-left:2rem;">Đăng xuất</button>
+  </header>
+  <main class="admin-main">
+    <h1>Hỗ trợ khách hàng</h1>
+    <table>
+      <thead>
+        <tr><th>Mã báo cáo</th><th>Khách hàng</th><th>Đơn hàng</th><th>Vấn đề</th><th>Trạng thái</th></tr>
+      </thead>
+      <tbody id="support-tbody">
+        <!-- Rows rendered by JS -->
+      </tbody>
+    </table>
+  </main>
+  <script>
+    // Only allow admin
+    (function() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.role !== 'admin') window.location.href = 'login.html';
+    })();
+
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    };
+
+    // Demo report data
+    const reports = [
+      { code: 'RP1001', user: 'Nguyễn Văn A', order: '#1001', issue: 'Sản phẩm bị hỏng', status: false },
+      { code: 'RP1002', user: 'Nguyễn Văn A', order: '#1002', issue: 'Giao hàng trễ', status: true }
+    ];
+    const tbody = document.getElementById('support-tbody');
+    function renderReports() {
+      tbody.innerHTML = reports.map((r, idx) => `
+        <tr>
+          <td>${r.code}</td>
+          <td>${r.user}</td>
+          <td>${r.order}</td>
+          <td>${r.issue}</td>
+          <td>
+            <button class="status-btn" data-idx="${idx}" style="padding:0.4rem 1.1rem;border:none;border-radius:5px;font-weight:500;cursor:pointer;${r.status ? 'background:#40916c;color:#fff;' : 'background:#d90429;color:#fff;'}">
+              ${r.status ? 'Đã xử lý' : 'Chưa xử lý'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    tbody.addEventListener('click', function(e) {
+      const btn = e.target.closest('.status-btn');
+      if (!btn) return;
+      const idx = btn.getAttribute('data-idx');
+      reports[idx].status = !reports[idx].status;
+      renderReports();
+    });
+    renderReports();
+  </script>
+</body>
+</html>

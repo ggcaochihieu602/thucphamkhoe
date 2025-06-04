@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Chọn thực phẩm tốt cho sức khỏe của bạn</h1>
+    <p>Thông tin dinh dưỡng rõ ràng – Gợi ý chế độ ăn cá nhân</p>
+    <a href="#" class="btn">Khám phá ngay</a>
+  </section>
+
+  <section class="products">
+    <h2>Top 10 Rau Củ Quả Tốt Cho Sức Khỏe</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="img/spinach.jpg" alt="Rau chân vịt">
+        <h3>1. Rau chân vịt</h3>
+        <p style="text-align:left;">Giàu sắt, vitamin K, axit folic. Tốt cho máu, xương, thai kỳ và miễn dịch.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/broccoli.jpg" alt="Bông cải xanh">
+        <h3>2. Bông cải xanh</h3>
+        <p style="text-align:left;">Chứa chất chống oxy hóa sulforaphane. Hỗ trợ phòng ngừa ung thư, tăng cường miễn dịch.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/carrot.jpg" alt="Cà rốt">
+        <h3>3. Cà rốt</h3>
+        <p style="text-align:left;">Giàu beta-carotene (tiền vitamin A). Tốt cho thị lực, da và hệ miễn dịch.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/garlic.jpg" alt="Tỏi">
+        <h3>4. Tỏi</h3>
+        <p style="text-align:left;">Chống viêm, kháng khuẩn tự nhiên. Tốt cho tim mạch, giảm huyết áp.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/cucumbers.jpg" alt="Dưa leo">
+        <h3>5. Dưa leo</h3>
+        <p style="text-align:left;">Giàu nước, thanh nhiệt, hỗ trợ tiêu hóa. Ít calo, thích hợp cho người ăn kiêng.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/kale.jpg" alt="Cải xoăn">
+        <h3>6. Cải xoăn</h3>
+        <p style="text-align:left;">Giàu vitamin C, K, canxi và chất xơ. Tốt cho xương, miễn dịch và giảm cholesterol.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/Sweet potato.jpg" alt="Khoai lang">
+        <h3>7. Khoai lang</h3>
+        <p style="text-align:left;">Nhiều chất xơ, vitamin A, và carb phức hợp. Tốt cho đường ruột, kiểm soát đường huyết.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/beetroot.jpg" alt="Củ dền">
+        <h3>8. Củ dền</h3>
+        <p style="text-align:left;">Giàu nitrate tự nhiên, folate, chống oxy hóa. Hỗ trợ lưu thông máu, tốt cho tim mạch.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/pumpkin.jpg" alt="Bí đỏ">
+        <h3>9. Bí đỏ</h3>
+        <p style="text-align:left;">Rất giàu beta-carotene, vitamin A. Tốt cho mắt, miễn dịch, da dẻ.</p>
+      </div>
+      <div class="product-card">
+        <img src="img/onion.jpg" alt="Hành tây">
+        <h3>10. Hành tây</h3>
+        <p style="text-align:left;">Kháng khuẩn, tốt cho tim mạch và đường huyết.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com – Website thực phẩm dinh dưỡng</p>
+  </footer>
+  <script>
+  (function() {
+    const nav = document.querySelector('nav ul');
+    if (!nav) return;
+    const user = localStorage.getItem('user');
+    const loginLi = Array.from(nav.children).find(li => li.textContent.includes('Đăng nhập'));
+    if (user && loginLi) {
+      loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+    } else if (!user && loginLi) {
+      loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+    }
+  })();
+  </script>
+</body>
+</html>

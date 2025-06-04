@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết sản phẩm | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .product-detail-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+      display: flex;
+      gap: 2rem;
+    }
+    .product-detail-image {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #95d5b2;
+    }
+    .product-detail-info {
+      flex: 1;
+    }
+    .nutrition-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .nutrition-table th, .nutrition-table td {
+      border: 1px solid #eee;
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+    }
+    .nutrition-table th {
+      background: #f1f1f1;
+    }
+    .reviews-section {
+      margin-top: 2rem;
+    }
+    .review {
+      background: #f9f9f9;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #95d5b2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="products">
+      <div style="background:#f5f5f5;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-radius:8px;margin-bottom:2rem;position:relative;">
+        <span style="font-size:1.1rem;color:#555;">Lọc theo</span>
+        <div class="filter-dropdown" style="position:relative;">
+          <button onclick="toggleDropdown('type-dropdown')" style="background:#ee4d2d;color:#fff;font-weight:500;border:none;padding:0.6rem 1.3rem;border-radius:5px;font-size:1rem;cursor:pointer;">Loại thực phẩm</button>
+          <div id="type-dropdown" class="dropdown-content" style="display:none;position:absolute;top:110%;left:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:6px;min-width:180px;z-index:10;">
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Rau lá xanh</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Củ quả</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Gia vị tự nhiên</div>
+          </div>
+        </div>
+        <div class="filter-dropdown" style="position:relative;">
+          <button onclick="toggleDropdown('diet-dropdown')" style="background:#fff;color:#333;font-weight:500;border:1px solid #eee;padding:0.6rem 1.3rem;border-radius:5px;font-size:1rem;cursor:pointer;">Nhu cầu dinh dưỡng</button>
+          <div id="diet-dropdown" class="dropdown-content" style="display:none;position:absolute;top:110%;left:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:6px;min-width:200px;z-index:10;">
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Giàu chất xơ</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Tốt cho tiêu hóa</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Tốt cho thai kỳ</div>
+          </div>
+        </div>
+        <div class="filter-dropdown" style="position:relative;">
+          <button onclick="toggleDropdown('price-dropdown')" style="background:#fff;color:#333;font-weight:500;border:1px solid #eee;padding:0.6rem 1.3rem;border-radius:5px;font-size:1rem;cursor:pointer;display:flex;align-items:center;gap:0.5rem;">
+            Giá
+            <span style="font-size:1.2rem;">&#9660;</span>
+          </button>
+          <div id="price-dropdown" class="dropdown-content" style="display:none;position:absolute;top:110%;left:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-radius:6px;min-width:200px;z-index:10;">
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Dưới 20.000đ/kg</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">20.000đ – 40.000đ/kg</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">40.000đ – 60.000đ/kg</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">60.000đ – 80.000đ/kg</div>
+            <div style="padding:0.7rem 1.2rem;cursor:pointer;">Trên 80.000đ/kg</div>
+      </div>
+    </div>
+      </div>
+      <div class="product-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:1rem;">
+        <div class="product-card" data-id="spinach">
+          <img src="img/spinach.jpg" alt="Rau chân vịt">
+          <h3>1. Rau chân vịt</h3>
+          <p style="text-align:left;">Giàu sắt, vitamin K, axit folic. Tốt cho máu, xương, thai kỳ và miễn dịch.</p>
+          <p class="price">36.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="broccoli">
+          <img src="img/broccoli.jpg" alt="Bông cải xanh">
+          <h3>2. Bông cải xanh</h3>
+          <p style="text-align:left;">Chứa chất chống oxy hóa sulforaphane. Hỗ trợ phòng ngừa ung thư, tăng cường miễn dịch.</p>
+          <p class="price">49.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="carrot">
+          <img src="img/carrot.jpg" alt="Cà rốt">
+          <h3>3. Cà rốt</h3>
+          <p style="text-align:left;">Giàu beta-carotene (tiền vitamin A). Tốt cho thị lực, da và hệ miễn dịch.</p>
+          <p class="price">30.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="garlic">
+          <img src="img/garlic.jpg" alt="Tỏi">
+          <h3>4. Tỏi</h3>
+          <p style="text-align:left;">Chống viêm, kháng khuẩn tự nhiên. Tốt cho tim mạch, giảm huyết áp.</p>
+          <p class="price">30.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="cucumbers">
+          <img src="img/cucumbers.jpg" alt="Dưa leo">
+          <h3>5. Dưa leo</h3>
+          <p style="text-align:left;">Giàu nước, thanh nhiệt, hỗ trợ tiêu hóa. Ít calo, thích hợp cho người ăn kiêng.</p>
+          <p class="price">7.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="kale">
+          <img src="img/kale.jpg" alt="Cải xoăn">
+          <h3>6. Cải xoăn</h3>
+          <p style="text-align:left;">Giàu vitamin C, K, canxi và chất xơ. Tốt cho xương, miễn dịch và giảm cholesterol.</p>
+          <p class="price">70.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="sweet-potato">
+          <img src="img/Sweet potato.jpg" alt="Khoai lang">
+          <h3>7. Khoai lang</h3>
+          <p style="text-align:left;">Nhiều chất xơ, vitamin A, và carb phức hợp. Tốt cho đường ruột, kiểm soát đường huyết.</p>
+          <p class="price">15.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="beetroot">
+          <img src="img/beetroot.jpg" alt="Củ dền">
+          <h3>8. Củ dền</h3>
+          <p style="text-align:left;">Giàu nitrate tự nhiên, folate, chống oxy hóa. Hỗ trợ lưu thông máu, tốt cho tim mạch.</p>
+          <p class="price">36.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="pumpkin">
+          <img src="img/pumpkin.jpg" alt="Bí đỏ">
+          <h3>9. Bí đỏ</h3>
+          <p style="text-align:left;">Rất giàu beta-carotene, vitamin A. Tốt cho mắt, miễn dịch, da dẻ.</p>
+          <p class="price">22.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="onion">
+          <img src="img/onion.jpg" alt="Hành tây">
+          <h3>10. Hành tây</h3>
+          <p style="text-align:left;">Kháng khuẩn, tốt cho tim mạch và đường huyết.</p>
+          <p class="price">37.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="lettuce">
+          <img src="img/lettuce.jpg" alt="Xà lách">
+          <h3>11. Xà lách</h3>
+          <p>Giàu nước, chất xơ, vitamin A. Tốt cho hydrat hóa, tiêu hóa, và chế độ ăn ít calo.</p>
+          <p class="price">30.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="corn">
+          <img src="img/corn.jpeg" alt="Ngô / Bắp">
+          <h3>12. Ngô / Bắp</h3>
+          <p>Chứa chất xơ, vitamin B, chất chống oxy hóa. Hỗ trợ tiêu hóa và tốt cho mắt (lutein & zeaxanthin).</p>
+          <p class="price">15.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="cauliflower">
+          <img src="img/Cauliflower.jpg" alt="Súp lơ trắng">
+          <h3>13. Súp lơ trắng</h3>
+          <p>Giàu vitamin C, chất xơ, choline. Hỗ trợ não, tiêu hóa, miễn dịch.</p>
+          <p class="price">32.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="bell-peppers">
+          <img src="img/bell peppers.jpg" alt="Ớt chuông">
+          <h3>14. Ớt chuông</h3>
+          <p>Rất giàu vitamin C, chất chống oxy hóa. Tăng miễn dịch, tốt cho da.</p>
+          <p class="price">50.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="green-beans">
+          <img src="img/green beans.jpg" alt="Đậu que / đậu cô ve">
+          <h3>15. Đậu que / đậu cô ve</h3>
+          <p>Nguồn vitamin K, chất xơ, folate. Tốt cho xương và tim mạch.</p>
+          <p class="price">35.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="napa-cabbage">
+          <img src="img/napa cabbage.jpg" alt="Cải thảo">
+          <h3>16. Cải thảo</h3>
+          <p>Chứa vitamin C, A, kali. Thanh mát, hỗ trợ miễn dịch.</p>
+          <p class="price">20.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="bok-choy">
+          <img src="img/bok choy.jpg" alt="Cải thìa / cải chíp">
+          <h3>17. Cải thìa / cải chíp</h3>
+          <p>Giàu canxi, vitamin K, beta-carotene. Tốt cho xương, mắt.</p>
+          <p class="price">25.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="brussels-sprouts">
+          <img src="img/brussels sprouts.jpg" alt="Cải brussels">
+          <h3>18. Cải brussels</h3>
+          <p>Giàu vitamin K, folate, chất xơ. Chống viêm, hỗ trợ thải độc.</p>
+          <p class="price">60.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="water-spinach">
+          <img src="img/water spinach.jpg" alt="Rau muống">
+          <h3>19. Rau muống</h3>
+          <p>Phổ biến ở Đông Nam Á, giàu sắt, canxi. Tốt cho máu và xương.</p>
+          <p class="price">10.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+        <div class="product-card" data-id="perilla-leaves">
+          <img src="img/Perilla Leaves.jpg" alt="Lá tía tô">
+          <h3>20. Lá tía tô</h3>
+          <p>Chứa omega-3, kháng dị ứng. Giải độc, tốt cho da và miễn dịch.</p>
+          <p class="price">50.000đ/kg</p>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decrement(this)">-</button>
+            <input class="quantity-input" type="number" value="1" min="1">
+            <button class="quantity-btn" onclick="increment(this)">+</button>
+          </div>
+          <button class="add-cart-btn"><span class="cart-icon">🛒</span>Thêm vào giỏ</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com – Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script>
+    function decrement(button) {
+      var input = button.nextElementSibling;
+      var value = parseInt(input.value);
+      if (value > 1) {
+        input.value = value - 1;
+      }
+    }
+
+    function increment(button) {
+      var input = button.previousElementSibling;
+      var value = parseInt(input.value);
+      input.value = value + 1;
+    }
+
+    function toggleDropdown(id) {
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el.id !== id) el.style.display = 'none';
+      });
+      var dropdown = document.getElementById(id);
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.filter-dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => el.style.display = 'none');
+      }
+    });
+
+    document.querySelectorAll('.product-card').forEach(function(card) {
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.add-cart-btn') || e.target.closest('.quantity-btn')) return;
+        const id = card.getAttribute('data-id');
+        if (id) {
+          window.location.href = `product-detail.html?id=${encodeURIComponent(id)}`;
+        }
+      });
+    });
+
+    (function() {
+      const nav = document.querySelector('nav ul');
+      if (!nav) return;
+      const user = localStorage.getItem('user');
+      const loginLi = Array.from(nav.children).find(li => li.textContent.includes('Đăng nhập'));
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+  </script>
+</body>
+</html>

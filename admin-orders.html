@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản lý đơn hàng | Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { border: 1px solid #eee; padding: 0.7rem 0.5rem; text-align: left; }
+    th { background: #f1f1f1; }
+    .action-btn { background: #40916c; color: #fff; border: none; border-radius: 5px; padding: 0.3rem 1rem; margin-right: 0.5rem; cursor: pointer; }
+    .action-btn.update { background: #22223b; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="admin-main">
+    <h1>Quản lý đơn hàng</h1>
+    <table>
+      <thead>
+        <tr><th>Mã đơn</th><th>Khách hàng</th><th>Ngày đặt</th><th>Trạng thái</th><th>Hành động</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#1001</td>
+          <td>Nguyễn Văn A</td>
+          <td>10/03/2024</td>
+          <td>Đã giao</td>
+          <td>
+            <button class="action-btn">Xem</button>
+            <button class="action-btn update">Cập nhật</button>
+          </td>
+        </tr>
+        <tr>
+          <td>#1002</td>
+          <td>Nguyễn Văn A</td>
+          <td>22/03/2024</td>
+          <td>Đang xử lý</td>
+          <td>
+            <button class="action-btn">Xem</button>
+            <button class="action-btn update">Cập nhật</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+  <script>
+    // Only allow admin
+    (function() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.role !== 'admin') window.location.href = 'login.html';
+    })();
+  </script>
+</body>
+</html>

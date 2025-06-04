@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đánh giá sản phẩm | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #fff7f0;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .reviews-container {
+      max-width: 700px;
+      margin: 2.5rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 16px rgba(255,145,0,0.07);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    .reviews-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .reviews-header h2 {
+      color: #ff9100;
+    }
+    .reviews-header p {
+      color: #444;
+    }
+    .product-review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .product-review-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0.5rem;
+      border-bottom: 1px solid #ffe0b2;
+    }
+    .product-review-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #ff9100;
+    }
+    .review-btn {
+      background: #ff9100;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.2rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(255,145,0,0.08);
+    }
+    .review-btn:hover {
+      background: #ff6f00;
+    }
+  </style>
+</head>
+<body>
+  <header style="background:#ff9100;color:#fff;padding:1rem 2rem;margin-bottom:2rem;border-radius:0 0 10px 10px;">
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <b style="float:right;">Chuyên gia</b>
+  </header>
+  <div class="reviews-container">
+    <div class="reviews-header">
+      <h2>Đánh giá sản phẩm</h2>
+      <p>Chọn sản phẩm để viết đánh giá chi tiết về thành phần dinh dưỡng.</p>
+    </div>
+    <div class="product-review-list" id="productReviewList">
+      <!-- Product list will be rendered here -->
+    </div>
+  </div>
+  <script>
+    // Dummy product data
+    const products = [
+      'Rau chân vịt', 'Bông cải xanh', 'Cà rốt', 'Tỏi', 'Dưa leo',
+      'Cải xoăn', 'Khoai lang', 'Củ dền', 'Bí đỏ', 'Hành tây',
+      'Cà chua', 'Ớt chuông', 'Bắp cải', 'Măng tây', 'Đậu Hà Lan',
+      'Cà tím', 'Su hào', 'Củ cải trắng', 'Rau muống', 'Rau mồng tơi'
+    ];
+    function renderProductReviews() {
+      const list = document.getElementById('productReviewList');
+      list.innerHTML = products.map((name, idx) => `
+        <div class="product-review-item">
+          <span class="product-review-name">${idx+1}. ${name}</span>
+          <button class="review-btn" onclick="leaveReview('${name}')">Viết đánh giá</button>
+        </div>
+      `).join('');
+    }
+    function leaveReview(name) {
+      alert('Viết đánh giá cho: ' + name + '\n(Tính năng này sẽ mở form đánh giá chi tiết)');
+    }
+    renderProductReviews();
+  </script>
+</body>
+</html>

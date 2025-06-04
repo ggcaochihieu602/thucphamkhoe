@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+    .feature-list { margin-top: 2rem; }
+    .feature-list li { margin-bottom: 1.2rem; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <button id="logout-btn" style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;margin-left:2rem;">Đăng xuất</button>
+  </header>
+  <main class="admin-main">
+    <h1>Chào mừng, Admin!</h1>
+    <p>Đây là trang quản trị. Chọn chức năng bên dưới để quản lý hệ thống.</p>
+    <div style="display:flex;justify-content:center;margin-bottom:2.5rem;margin-top:2.5rem;">
+      <div style="width:740px;max-width:100vw;aspect-ratio:30/10;">
+        <img src="img/hello.jpg" alt="Hello" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:18px;">
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2rem;">
+      <div style="display:flex;gap:2rem;justify-content:center;">
+        <div style="flex:1;min-width:180px;max-width:350px;">
+          <a href="admin-products.html" style="display:block;padding:1rem 0;font-size:1.2rem;font-weight:bold;background:#40916c;color:#fff;text-align:center;border-radius:8px;text-decoration:none;">Quản lý sản phẩm</a>
+          <div style="text-align:center;color:#444;margin-top:0.5rem;">Thêm, sửa, xóa và xem danh sách sản phẩm.</div>
+        </div>
+        <div style="flex:1;min-width:180px;max-width:350px;">
+          <a href="admin-orders.html" style="display:block;padding:1rem 0;font-size:1.2rem;font-weight:bold;background:#2d6a4f;color:#fff;text-align:center;border-radius:8px;text-decoration:none;">Quản lý đơn hàng</a>
+          <div style="text-align:center;color:#444;margin-top:0.5rem;">Xem, cập nhật trạng thái và chi tiết đơn hàng.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:2rem;justify-content:center;">
+        <div style="flex:1;min-width:180px;max-width:350px;">
+          <a href="admin-users.html" style="display:block;padding:1rem 0;font-size:1.2rem;font-weight:bold;background:#22223b;color:#fff;text-align:center;border-radius:8px;text-decoration:none;">Quản lý người dùng</a>
+          <div style="text-align:center;color:#444;margin-top:0.5rem;">Xem, chỉnh sửa, khóa tài khoản người dùng.</div>
+        </div>
+        <div style="flex:1;min-width:180px;max-width:350px;">
+          <a href="admin-transactions.html" style="display:block;padding:1rem 0;font-size:1.2rem;font-weight:bold;background:#95d5b2;color:#22223b;text-align:center;border-radius:8px;text-decoration:none;">Theo dõi giao dịch</a>
+          <div style="text-align:center;color:#444;margin-top:0.5rem;">Xem lịch sử giao dịch, thanh toán.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:2rem;justify-content:center;">
+        <div style="flex:1;min-width:180px;max-width:350px;">
+          <a href="admin-support.html" style="display:block;padding:1rem 0;font-size:1.2rem;font-weight:bold;background:#d90429;color:#fff;text-align:center;border-radius:8px;text-decoration:none;">Hỗ trợ khách hàng</a>
+          <div style="text-align:center;color:#444;margin-top:0.5rem;">Xem và xử lý các báo cáo, yêu cầu hỗ trợ.</div>
+        </div>
+        <div style="flex:1;min-width:180px;max-width:350px;"></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    // Only allow admin
+    (function() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.role !== 'admin') window.location.href = 'login.html';
+    })();
+
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    };
+  </script>
+</body>
+</html>

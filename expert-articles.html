@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản lý bài viết | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #fff7f0;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .articles-admin-container {
+      max-width: 800px;
+      margin: 2.5rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 16px rgba(255,145,0,0.07);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    .articles-admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .articles-admin-header h2 {
+      margin: 0;
+      color: #ff9100;
+    }
+    .add-article-btn {
+      background: #ff9100;
+      color: #fff;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(255,145,0,0.08);
+    }
+    .add-article-btn:hover {
+      background: #ff6f00;
+    }
+    .article-admin-list {
+      margin-top: 1.5rem;
+    }
+    .article-admin-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid #ffe0b2;
+    }
+    .article-admin-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #ff9100;
+    }
+    .article-admin-actions button {
+      margin-left: 0.7rem;
+      background: #ffe0b2;
+      color: #ff9100;
+      border: none;
+      border-radius: 4px;
+      padding: 0.4rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .article-admin-actions button.edit {
+      background: #ff9100;
+      color: #fff;
+    }
+    .article-admin-actions button.edit:hover {
+      background: #ff6f00;
+    }
+    .article-admin-actions button.delete {
+      background: #d90429;
+      color: #fff;
+    }
+    .article-admin-actions button.delete:hover {
+      background: #b8001c;
+    }
+    .article-admin-actions button:hover {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <header style="background:#ff9100;color:#fff;padding:1rem 2rem;margin-bottom:2rem;border-radius:0 0 10px 10px;">
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <b style="float:right;">Chuyên gia</b>
+  </header>
+  <div class="articles-admin-container">
+    <div class="articles-admin-header">
+      <h2>Quản lý bài viết</h2>
+      <button class="add-article-btn" onclick="addArticle()">+ Viết bài mới</button>
+    </div>
+    <div class="article-admin-list" id="articleList">
+      <!-- Dummy articles -->
+    </div>
+  </div>
+  <script>
+    // Dummy data
+    let articles = [
+      {id: 1, title: 'Lợi ích của rau xanh trong chế độ ăn uống'},
+      {id: 2, title: 'Cách xây dựng thực đơn lành mạnh mỗi ngày'},
+      {id: 3, title: 'Những sai lầm phổ biến về dinh dưỡng'},
+    ];
+    function renderArticles() {
+      const list = document.getElementById('articleList');
+      list.innerHTML = articles.map(article => `
+        <div class="article-admin-item">
+          <span class="article-admin-title">${article.title}</span>
+          <span class="article-admin-actions">
+            <button class="edit" onclick="editArticle(${article.id})">Sửa</button>
+            <button class="delete" onclick="deleteArticle(${article.id})">Xóa</button>
+          </span>
+        </div>
+      `).join('');
+    }
+    function addArticle() {
+      const title = prompt('Nhập tiêu đề bài viết mới:');
+      if (title) {
+        articles.push({id: Date.now(), title});
+        renderArticles();
+      }
+    }
+    function editArticle(id) {
+      const article = articles.find(a => a.id === id);
+      if (!article) return;
+      const newTitle = prompt('Chỉnh sửa tiêu đề bài viết:', article.title);
+      if (newTitle) {
+        article.title = newTitle;
+        renderArticles();
+      }
+    }
+    function deleteArticle(id) {
+      if (confirm('Bạn có chắc muốn xóa bài viết này?')) {
+        articles = articles.filter(a => a.id !== id);
+        renderArticles();
+      }
+    }
+    renderArticles();
+  </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết đơn hàng | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .order-container {
+      max-width: 700px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    .order-header {
+      margin-bottom: 2rem;
+    }
+    .order-header h2 {
+      margin-bottom: 0.5rem;
+    }
+    .order-header p {
+      margin: 0.2rem 0;
+      color: #555;
+    }
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .order-table th, .order-table td {
+      border: 1px solid #eee;
+      padding: 0.7rem 0.5rem;
+      text-align: left;
+    }
+    .order-table th {
+      background: #f1f1f1;
+    }
+    .order-product-img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div class="order-container">
+      <div class="order-header" id="order-header"></div>
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>Ảnh</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+          </tr>
+        </thead>
+        <tbody id="order-products"></tbody>
+      </table>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com – Website thực phẩm dinh dưỡng</p>
+  </footer>
+  <script>
+    // Static order data for demo
+    const orders = {
+      '1001': {
+        code: '#1001',
+        date: '10/03/2024',
+        status: 'Đã giao',
+        products: [
+          { img: 'img/spinach.jpg', name: 'Rau chân vịt', qty: 2, price: '36.000đ/kg' },
+          { img: 'img/broccoli.jpg', name: 'Bông cải xanh', qty: 3, price: '49.000đ/kg' }
+        ]
+      },
+      '1002': {
+        code: '#1002',
+        date: '22/03/2024',
+        status: 'Đang xử lý',
+        products: [
+          { img: 'img/carrot.jpg', name: 'Cà rốt', qty: 5, price: '30.000đ/kg' },
+          { img: 'img/garlic.jpg', name: 'Tỏi', qty: 2, price: '30.000đ/kg' }
+        ]
+      }
+    };
+    function getOrderIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+    const orderId = getOrderIdFromUrl();
+    const order = orders[orderId];
+    const headerDiv = document.getElementById('order-header');
+    const productsTbody = document.getElementById('order-products');
+    if (order) {
+      headerDiv.innerHTML = `
+        <h2>Đơn hàng ${order.code}</h2>
+        <p><strong>Ngày đặt:</strong> ${order.date}</p>
+        <p><strong>Trạng thái:</strong> ${order.status}</p>
+      `;
+      productsTbody.innerHTML = order.products.map(p => `
+        <tr>
+          <td><img src="${p.img}" alt="${p.name}" class="order-product-img"></td>
+          <td>${p.name}</td>
+          <td>${p.qty}</td>
+          <td>${p.price}</td>
+        </tr>
+      `).join('');
+    } else {
+      headerDiv.innerHTML = '<div style="color:#d90429;font-size:1.2rem;">Không tìm thấy đơn hàng.</div>';
+    }
+    // Update nav for login/profile
+    (function() {
+      const nav = document.querySelector('nav ul');
+      if (!nav) return;
+      const user = localStorage.getItem('user');
+      const loginLi = Array.from(nav.children).find(li => li.textContent.includes('Đăng nhập'));
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+  </script>
+</body>
+</html>

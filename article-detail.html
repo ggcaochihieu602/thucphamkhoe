@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bài viết chuyên gia | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .articles-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    .article-card {
+      border-bottom: 1px solid #eee;
+      padding: 1.2rem 0;
+    }
+    .article-card:last-child {
+      border-bottom: none;
+    }
+    .article-title {
+      font-size: 1.3rem;
+      color: #2d6a4f;
+      margin-bottom: 0.3rem;
+    }
+    .article-meta {
+      color: #888;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .article-excerpt {
+      margin-bottom: 0.7rem;
+      color: #444;
+    }
+    .read-more {
+      color: #40916c;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .read-more:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="img/logo.png" alt="Logo" style="height:60px;vertical-align:middle;"> <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Chuyên gia</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="articles-container" id="article-detail-container">
+      <!-- Nội dung bài viết sẽ được render bằng JavaScript -->
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com – Website thực phẩm dinh dưỡng</p>
+  </footer>
+  <script>
+    const articles = {
+      1: {
+        title: 'Lợi ích của chế độ ăn Địa Trung Hải',
+        meta: '👩‍⚕️ BS. Trần Thị B | 🗓️ 20/03/2024',
+        img: 'img/article1.png',
+        content: `<p>Chế độ ăn Địa Trung Hải là một trong những chế độ ăn lành mạnh và được nghiên cứu rộng rãi nhất trên thế giới. Nó không chỉ giúp phòng ngừa bệnh tật mà còn nâng cao chất lượng sống và tuổi thọ.</p>
+        <b>1. Chế độ ăn Địa Trung Hải là gì?</b><br>
+        - Ăn nhiều rau củ, trái cây, đậu, ngũ cốc nguyên hạt<br>
+        - Dùng dầu ô liu thay cho chất béo bão hòa<br>
+        - Ăn cá, hải sản 2–3 lần/tuần<br>
+        - Hạn chế thịt đỏ, đường, đồ chế biến sẵn<br>
+        - Ăn sữa chua, phô mai và trứng ở mức độ vừa phải<br>
+        - Kèm theo rượu vang đỏ với liều lượng hợp lý (1 ly/ngày)<br>
+        <b>2. Lợi ích sức khỏe</b><br>
+        - Giảm nguy cơ bệnh tim mạch: nhờ giảm cholesterol xấu (LDL) và tăng HDL<br>
+        - Hỗ trợ sức khỏe não bộ: cải thiện trí nhớ, giảm nguy cơ Alzheimer<br>
+        - Kiểm soát cân nặng: thực phẩm giàu xơ, chỉ số đường huyết thấp<br>
+        - Tăng tuổi thọ: nhiều nghiên cứu cho thấy người theo chế độ này sống lâu hơn<br>
+        <b>3. Gợi ý áp dụng vào bữa ăn hằng ngày</b><br>
+        - Bữa sáng: sữa chua + trái cây + yến mạch<br>
+        - Bữa trưa: salad rau xanh + cá hồi áp chảo + bánh mì nguyên cám<br>
+        - Bữa tối: rau củ xào + đậu lăng + 1 ly rượu vang đỏ (nếu có thể)<br>
+        <blockquote>"Không chỉ là chế độ ăn, Địa Trung Hải còn là phong cách sống chậm, biết thưởng thức món ăn và dành thời gian vận động nhẹ nhàng mỗi ngày."<br>— BS. Trần Thị B</blockquote>`
+      },
+      2: {
+        title: 'Ăn uống lành mạnh cho người bận rộn',
+        meta: '👨‍⚕️ CN Dinh dưỡng Lê Văn C | 🗓️ 15/03/2024',
+        img: 'img/article2.jpg',
+        content: `<p>Bạn là người bận rộn với công việc, học tập hoặc gia đình? Đừng lo, bạn vẫn có thể ăn uống lành mạnh nhờ một vài mẹo đơn giản.</p>
+        <b>1. Lên kế hoạch trước</b><br>
+        - Dành 30 phút mỗi tuần để lên thực đơn và danh sách mua sắm. Chuẩn bị trước một số nguyên liệu như:<br>
+        - Gọt sẵn rau củ, bảo quản trong hộp kín<br>
+        - Nấu sẵn gạo lứt, quinoa, trữ đông<br>
+        - Luộc trứng hoặc ức gà để dùng dần<br>
+        <b>2. Ưu tiên thực phẩm nguyên chất</b><br>
+        - Dùng rau củ, trái cây tươi thay vì đồ hộp<br>
+        - Chọn ngũ cốc nguyên hạt, ít tinh chế<br>
+        - Ưu tiên thực phẩm không đường hoặc ít gia vị công nghiệp<br>
+        <b>3. Gợi ý thực đơn nhanh, lành mạnh</b><br>
+        - Bữa sáng: bánh mì đen + trứng luộc + dưa leo<br>
+        - Bữa trưa: cơm gạo lứt + cá hồi nướng + rau hấp<br>
+        - Bữa tối: súp rau củ + sữa hạt không đường<br>
+        <b>4. Mẹo nhỏ:</b><br>
+        - Luôn mang theo hạt điều, hạnh nhân, trái cây khô để ăn vặt lành mạnh<br>
+        - Nếu đi làm xa: chuẩn bị hộp cơm trưa, dùng microwave ở văn phòng<br>
+        - Không bỏ bữa, tránh ăn vặt sau 21h<br>
+        <blockquote>"Ăn uống lành mạnh không cần cầu kỳ, chỉ cần bạn sắp xếp một chút thời gian và lựa chọn thông minh."<br>— CN Lê Văn C</blockquote>`
+      }
+    };
+    function getArticleIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+    const articleId = getArticleIdFromUrl();
+    const article = articles[articleId];
+    const container = document.getElementById('article-detail-container');
+    if (article) {
+      container.innerHTML = `
+        <img src="${article.img}" alt="${article.title}" style="width:100%;max-width:600px;display:block;margin:0 auto 1.5rem auto;border-radius:10px;">
+        <h2 style="margin-bottom:0.5rem;">${article.title}</h2>
+        <div class="article-meta" style="margin-bottom:1.2rem;">${article.meta}</div>
+        <div class="article-content" style="font-size:1.15rem;line-height:1.7;text-align:left;">${article.content}</div>
+      `;
+    } else {
+      container.innerHTML = '<div style="color:#d90429;font-size:1.2rem;">Không tìm thấy bài viết.</div>';
+    }
+  </script>
+  <script>
+    (function() {
+      const nav = document.querySelector('nav ul');
+      if (!nav) return;
+      const user = localStorage.getItem('user');
+      const loginLi = Array.from(nav.children).find(li => li.textContent.includes('Đăng nhập'));
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+  </script>
+</body>
+</html>
