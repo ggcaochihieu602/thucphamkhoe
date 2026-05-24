@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản lý người dùng | Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { border: 1px solid #eee; padding: 0.7rem 0.5rem; text-align: left; }
+    th { background: #f1f1f1; }
+    .action-btn { background: #40916c; color: #fff; border: none; border-radius: 5px; padding: 0.3rem 1rem; margin-right: 0.5rem; cursor: pointer; }
+    .action-btn.lock { background: #d90429; }
+    .action-btn.unlock { background: #22223b; }
+    .message { margin-top: 0.8rem; color: #d00000; font-size: 0.95rem; }
+
+    .filters {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 0.7rem;
+      padding: 0.8rem;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+    .filters label { font-weight: 600; font-size: 0.95rem; }
+    .filters select, .filters input {
+      padding: 0.5rem 0.65rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.95rem;
+      background: #fff;
+      min-width: 220px;
+    }
+    .filters input { flex: 1 1 260px; min-width: 260px; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .badge.ok { background: #b7e4c7; color: #1b4332; }
+    .badge.bad { background: #ffc9c9; color: #c92a2a; }
+
+    /* modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 999;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(720px, 96vw);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      color: #444;
+    }
+    .modal-body { padding: 1rem 1.2rem 1.2rem 1.2rem; }
+    .field { margin-top: 0.7rem; }
+    .field label { display:block; font-weight:700; margin-bottom:0.35rem; }
+    .field input, .field select {
+      width: 100%;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      outline: none;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .modal-actions { margin-top: 1rem; display:flex; gap:0.7rem; justify-content:flex-end; flex-wrap:wrap; }
+    .btn { border:none; border-radius:8px; padding:0.6rem 1rem; cursor:pointer; font-weight:700; }
+    .btn.ghost { background:#eef2ff; color:#22223b; }
+    .btn.primary { background:#40916c; color:#fff; }
+    .btn.primary:hover { background:#2d6a4f; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <div>
+      <a href="profile.html" id="admin-profile-btn" style="background:#fff;color:#22223b;border:1px solid #fff;padding:0.45rem 1rem;border-radius:6px;font-weight:600;margin-right:0.6rem;text-decoration:none;">Hồ sơ</a>
+      <button id="logout-btn" style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;">Đăng xuất</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Quản lý người dùng</h1>
+
+    <div class="filters">
+      <div>
+        <label for="filter-role">Vai trò</label><br>
+        <select id="filter-role">
+          <option value="">Tất cả</option>
+        </select>
+      </div>
+      <div>
+        <label for="filter-status">Trạng thái</label><br>
+        <select id="filter-status">
+          <option value="">Tất cả</option>
+          <option value="active">Hoạt động</option>
+          <option value="locked">Đã khóa</option>
+        </select>
+      </div>
+      <div style="flex:1 1 260px;">
+        <label for="filter-q">Tìm kiếm</label><br>
+        <input id="filter-q" type="text" placeholder="Tên hoặc email..." />
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Họ tên</th><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th>Hành động</th></tr>
+      </thead>
+      <tbody id="users-tbody">
+        <tr><td colspan="5">Đang tải...</td></tr>
+      </tbody>
+    </table>
+    <div id="users-message" class="message"></div>
+  </main>
+
+  <div class="modal-backdrop" id="edit-modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div style="font-weight:800;">Sửa người dùng</div>
+        <button class="modal-close" id="modal-close" title="Đóng">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="edit-name">Họ tên</label>
+          <input id="edit-name" type="text">
+        </div>
+        <div class="field">
+          <label for="edit-email">Email</label>
+          <input id="edit-email" type="email" disabled style="background:#fafafa;color:#555;">
+        </div>
+        <div class="field">
+          <label for="edit-role">Vai trò</label>
+          <select id="edit-role"></select>
+        </div>
+        <div id="edit-msg" class="message"></div>
+        <div class="modal-actions">
+          <button class="btn ghost" id="edit-cancel" type="button">Hủy</button>
+          <button class="btn primary" id="edit-save" type="button">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = localStorage.getItem("token") || "";
+    if (user.role !== "admin") window.location.href = "login.html";
+
+const logoutBtn = document.getElementById("logout-btn");
+if (logoutBtn) {
+  logoutBtn.onclick = function () {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  };
+}
+
+    const tbody = document.getElementById("users-tbody");
+    const msgEl = document.getElementById("users-message");
+    const filterRole = document.getElementById("filter-role");
+    const filterStatus = document.getElementById("filter-status");
+    const filterQ = document.getElementById("filter-q");
+
+    let ALL_USERS = [];
+    let ROLES = [];
+    let EDITING_ID = null;
+
+    function norm(s) { return String(s || "").trim().toLowerCase(); }
+    function translateRole(role) {
+      if (role === "admin") return "Admin";
+      if (role === "expert") return "Chuyên gia";
+      return "Khách hàng";
+    }
+
+    function openModal() {
+      document.getElementById("edit-modal").classList.add("open");
+    }
+    function closeModal() {
+      document.getElementById("edit-modal").classList.remove("open");
+    }
+    document.getElementById("modal-close").onclick = closeModal;
+    document.getElementById("edit-cancel").onclick = closeModal;
+    document.getElementById("edit-modal").addEventListener("click", function (e) {
+      if (e.target.id === "edit-modal") closeModal();
+    });
+
+    function renderUsers(users) {
+      if (!users || users.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5'>Chưa có người dùng.</td></tr>";
+        return;
+      }
+      tbody.innerHTML = users.map(u => {
+        const locked = Number(u.is_locked) === 1;
+        const statusHtml = locked
+          ? `<span class="badge bad">Đã khóa</span>`
+          : `<span class="badge ok">Hoạt động</span>`;
+        const lockBtn = locked
+          ? `<button class="action-btn unlock" data-action="toggle-lock">Mở khóa</button>`
+          : `<button class="action-btn lock" data-action="toggle-lock">Khóa</button>`;
+        return `
+          <tr data-id="${u.id}">
+            <td>${u.name || ""}</td>
+            <td>${u.email || ""}</td>
+            <td>${translateRole(u.role_name)}</td>
+            <td>${statusHtml}</td>
+            <td>
+              <button class="action-btn" data-action="edit">Sửa</button>
+              ${lockBtn}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function applyFilters() {
+      const role = (filterRole.value || "").trim();
+      const st = (filterStatus.value || "").trim();
+      const q = norm(filterQ.value);
+      const filtered = (ALL_USERS || []).filter(u => {
+        const okRole = !role || String(u.role_name) === role;
+        const locked = Number(u.is_locked) === 1;
+        const okStatus = !st || (st === "locked" ? locked : !locked);
+        const okQ = !q || norm(u.name).includes(q) || norm(u.email).includes(q);
+        return okRole && okStatus && okQ;
+      });
+      renderUsers(filtered);
+    }
+
+    async function fetchRoles() {
+      const res = await fetch(API_BASE + "/admin/roles", {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không tải được roles");
+      return data.roles || [];
+    }
+
+    async function fetchUsers() {
+      const res = await fetch(API_BASE + "/admin/users", {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không tải được người dùng");
+      return data.users || [];
+    }
+
+    function populateRoleFilters(roles) {
+      filterRole.innerHTML =
+        `<option value="">Tất cả</option>` +
+        roles.map(r => `<option value="${r.name}">${translateRole(r.name)}</option>`).join("");
+      const editRole = document.getElementById("edit-role");
+      editRole.innerHTML = roles.map(r => `<option value="${r.name}">${translateRole(r.name)}</option>`).join("");
+    }
+
+    async function loadData() {
+      msgEl.textContent = "";
+      tbody.innerHTML = "<tr><td colspan='5'>Đang tải...</td></tr>";
+      try {
+        ROLES = await fetchRoles();
+        populateRoleFilters(ROLES);
+        ALL_USERS = await fetchUsers();
+        applyFilters();
+      } catch (e) {
+        tbody.innerHTML = "";
+        msgEl.textContent = e.message || "Không tải được dữ liệu";
+    }
+    }
+
+    async function saveUser(id) {
+      const name = document.getElementById("edit-name").value.trim();
+      const role = document.getElementById("edit-role").value;
+      const editMsg = document.getElementById("edit-msg");
+      editMsg.style.color = "#d00000";
+      editMsg.textContent = "";
+      if (!name || !role) {
+        editMsg.textContent = "Thiếu name/role";
+        return;
+      }
+      try {
+        const res = await fetch(API_BASE + "/admin/users/" + encodeURIComponent(id), {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ name, role })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          editMsg.textContent = data.message || "Lưu thất bại";
+          return;
+        }
+        editMsg.style.color = "#2d6a4f";
+        editMsg.textContent = "Đã lưu";
+        await loadData();
+        closeModal();
+      } catch (e) {
+        editMsg.textContent = "Không kết nối được tới API";
+      }
+    }
+
+    async function toggleLock(id) {
+      msgEl.style.color = "#d00000";
+      msgEl.textContent = "";
+      const u = (ALL_USERS || []).find(x => String(x.id) === String(id));
+      if (!u) return;
+      const locked = Number(u.is_locked) === 1;
+      const next = !locked;
+      const ok = confirm((next ? "Khóa" : "Mở khóa") + " tài khoản " + (u.email || "") + "?");
+      if (!ok) return;
+      try {
+        const res = await fetch(API_BASE + "/admin/users/" + encodeURIComponent(id) + "/lock", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ locked: next })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          msgEl.textContent = data.message || "Thao tác thất bại";
+          return;
+        }
+        msgEl.style.color = "#2d6a4f";
+        msgEl.textContent = data.message || "Đã cập nhật";
+        await loadData();
+      } catch (e) {
+        msgEl.textContent = "Không kết nối được tới API";
+      }
+    }
+
+    document.getElementById("edit-save").onclick = function () {
+      if (!EDITING_ID) return;
+      saveUser(EDITING_ID);
+    };
+
+    document.addEventListener("click", function (e) {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const tr = e.target.closest("tr[data-id]");
+      if (!tr) return;
+      const id = tr.getAttribute("data-id");
+      const action = btn.getAttribute("data-action");
+      if (action === "edit") {
+        const u = (ALL_USERS || []).find(x => String(x.id) === String(id));
+        if (!u) return;
+        EDITING_ID = id;
+        document.getElementById("edit-name").value = u.name || "";
+        document.getElementById("edit-email").value = u.email || "";
+        document.getElementById("edit-role").value = u.role_name || "customer";
+        document.getElementById("edit-msg").textContent = "";
+        openModal();
+      }
+      if (action === "toggle-lock") {
+        toggleLock(id);
+      }
+    });
+
+    let debounce = null;
+    filterRole.addEventListener("change", applyFilters);
+    filterStatus.addEventListener("change", applyFilters);
+    filterQ.addEventListener("input", function () {
+      clearTimeout(debounce);
+      debounce = setTimeout(applyFilters, 150);
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
+
+
+

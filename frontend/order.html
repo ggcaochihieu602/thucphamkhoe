@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết đơn hàng | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .order-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    .order-header h2 {
+      margin-bottom: 0.3rem;
+    }
+    .order-header p {
+      margin: 0.2rem 0;
+      color: #555;
+      font-size: 0.9rem;
+    }
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .order-table th, .order-table td {
+      border: 1px solid #eee;
+      padding: 0.6rem 0.5rem;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    .order-table th {
+      background: #f1f1f1;
+    }
+    .order-product-img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .order-total {
+      margin-top: 1rem;
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div id="order-empty" style="max-width:800px;margin:2rem auto;text-align:center;color:#555;display:none;">
+      Chưa có đơn hàng nào. Hãy đặt hàng từ trang giỏ hàng.
+    </div>
+
+    <div class="order-container" id="order-container" style="display:none;">
+      <div class="order-header" id="order-header"></div>
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>Ảnh</th>
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+            <th>Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody id="order-products"></tbody>
+      </table>
+      <div class="order-total" id="order-total"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    function formatPrice(n, item) {
+      const val = Number(n || 0);
+      let unit = "kg";
+      if (item && item.price_unit) {
+        const parts = item.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return val.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function formatPricePlain(n) {
+      return Number(n || 0).toLocaleString("vi-VN") + "đ";
+    }
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return "img/placeholder.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function getOrderIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    function formatStatus(st) {
+      const s = String(st || "").toLowerCase();
+      if (s === "pending" || s === "processing") return "Đang xử lý";
+      if (s === "cancelled_by_admin") return "Đã hủy";
+      if (s === "cancelled" || s === "canceled") return "Đã hủy";
+      if (s === "delivered") return "Đã giao";
+      return st || "Đang xử lý";
+    }
+
+    async function loadOrder() {
+      const emptyEl = document.getElementById("order-empty");
+      const container = document.getElementById("order-container");
+
+      const orderId = getOrderIdFromUrl();
+      const token = localStorage.getItem("token") || "";
+      let order = null;
+      let items = null;
+
+      // Ưu tiên lấy từ API nếu có id
+      if (orderId && token) {
+        try {
+          const res = await fetch(API_BASE + "/orders/" + encodeURIComponent(orderId), {
+            headers: { "Authorization": "Bearer " + token }
+          });
+          const data = await res.json();
+          if (data.ok && data.order) {
+            order = data.order;
+            items = data.items || [];
+          }
+        } catch (_) {}
+      }
+
+      // fallback demo localStorage nếu không có API
+      if (!order) {
+        const raw = localStorage.getItem("lastOrder");
+      if (!raw) {
+        emptyEl.style.display = "block";
+        container.style.display = "none";
+        return;
+      }
+      try {
+        order = JSON.parse(raw);
+          items = order.items || [];
+      } catch {
+        emptyEl.style.display = "block";
+        container.style.display = "none";
+        return;
+      }
+      }
+
+      container.style.display = "block";
+      emptyEl.style.display = "none";
+
+      const headerDiv = document.getElementById("order-header");
+      const created = new Date(order.created_at || order.createdAt || Date.now());
+      headerDiv.innerHTML = `
+        <h2>Đơn hàng #${order.id || ""}</h2>
+        <p><strong>Trạng thái:</strong> ${formatStatus(order.status)}</p>
+        <p><strong>Ngày đặt:</strong> ${created.toLocaleString("vi-VN")}</p>
+      `;
+
+      const tbody = document.getElementById("order-products");
+      let total = 0;
+      tbody.innerHTML = (items || []).map(item => {
+        const qty = item.quantity || 0;
+        const price = item.unit_price != null ? item.unit_price : item.price;
+        const line = (Number(item.price || 0) * item.quantity) || 0;
+        const realLine = (Number(price || 0) * Number(qty || 0)) || 0;
+        total += realLine;
+        const img = item.image ? item.image : buildImageUrl(item.image_url);
+        return `
+          <tr>
+            <td><img src="${img}" alt="${item.name}" class="order-product-img"></td>
+            <td>${item.name}</td>
+            <td>${qty}</td>
+            <td>${formatPrice(price, item)}</td>
+            <td>${formatPricePlain(realLine)}</td>
+          </tr>
+        `;
+      }).join("");
+      document.getElementById("order-total").textContent =
+        "Tổng thanh toán: " + formatPrice(order.total_price || order.total || total);
+    }
+
+    (function() {
+      const nav = document.querySelector("nav ul");
+      if (!nav) return;
+      const user = localStorage.getItem("user");
+      const loginLi = Array.from(nav.children).find(li => li.textContent.includes("Đăng nhập"));
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+
+    loadOrder();
+  </script>
+</body>
+</html>

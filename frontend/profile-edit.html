@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chỉnh sửa hồ sơ | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .wrap {
+      max-width: 860px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .top h1 { margin: 0; }
+    .msg { margin-top: 0.8rem; font-size: 0.95rem; color: #d90429; }
+    .msg.ok { color: #2d6a4f; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem 1.2rem;
+      margin-top: 1rem;
+    }
+    .field label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: #333;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      outline: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: #40916c;
+      box-shadow: 0 0 0 3px rgba(64,145,108,0.12);
+    }
+    .section {
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid #eee;
+    }
+    .section h3 { margin: 0 0 0.6rem 0; }
+    .avatar-box {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      background: #fafafa;
+      border: 1px dashed #ddd;
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    .avatar-box img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #95d5b2;
+      background: #fff;
+    }
+    .actions {
+      margin-top: 1.4rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+    .btn2 {
+      border: none;
+      border-radius: 8px;
+      padding: 0.65rem 1.1rem;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+    .btn2.ghost { background: #eef2ff; color: #22223b; }
+    .btn2.primary { background: #40916c; color: #fff; }
+    .btn2.primary:hover { background: #2d6a4f; }
+    .field-note {
+      margin: 0.2rem 0 0;
+      color: #64748b;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .multi-select {
+      min-height: 148px;
+      background: #f8fcf9;
+    }
+    .legacy-native-select {
+      display: none !important;
+    }
+    .legacy-option-group {
+      display: none;
+    }
+    .smart-multi {
+      position: relative;
+      margin-top: 0.55rem;
+    }
+    .smart-multi-trigger {
+      width: 100%;
+      min-height: 48px;
+      padding: 0.7rem 0.95rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .smart-multi.open .smart-multi-trigger {
+      border-color: #cbd5e1;
+      box-shadow: 0 0 0 3px rgba(64,145,108,0.12);
+    }
+    .smart-multi-trigger-text {
+      color: #334155;
+      flex: 1;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .smart-multi-trigger-text.placeholder {
+      color: #94a3b8;
+    }
+    .smart-multi-trigger-side {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-shrink: 0;
+    }
+    .smart-multi-count {
+      min-width: 34px;
+      height: 30px;
+      padding: 0 0.55rem;
+      border-radius: 999px;
+      background: #1f2937;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .smart-multi-count[hidden] {
+      display: none;
+    }
+    .smart-multi-caret {
+      color: #475569;
+      font-size: 0.9rem;
+    }
+    .smart-multi-panel {
+      position: absolute;
+      top: calc(100% + 0.45rem);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+      padding: 0.8rem;
+      z-index: 40;
+    }
+    .smart-multi-panel[hidden] {
+      display: none;
+    }
+    .smart-multi-search {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 0.94rem;
+      box-sizing: border-box;
+      margin-bottom: 0.65rem;
+    }
+    .smart-multi-select-all,
+    .smart-multi-option {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.78rem 0.2rem;
+      border-top: 1px solid #f1f5f9;
+      color: #1f2937;
+      font-size: 0.95rem;
+    }
+    .smart-multi-select-all {
+      border-top: none;
+      padding-top: 0.2rem;
+    }
+    .smart-multi-option input,
+    .smart-multi-select-all input {
+      width: 16px;
+      height: 16px;
+      accent-color: #40916c;
+      margin: 0;
+    }
+    .smart-multi-options {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+      .actions { justify-content: stretch; }
+      .btn2 { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="profile.html">Hồ sơ</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="top">
+        <h1>Chỉnh sửa hồ sơ</h1>
+        <button class="btn2 ghost" id="back-btn" type="button">← Quay lại</button>
+      </div>
+
+      <div id="page-msg" class="msg"></div>
+
+      <form id="form" style="display:none;">
+        <div class="section">
+          <h3>Ảnh đại diện</h3>
+          <div class="avatar-box">
+            <img id="avatar-preview" src="http://localhost:3000/img/assets/hello.jpg" alt="Avatar">
+            <div style="flex:1;">
+              <div class="field">
+                <label for="avatar-file">Tải ảnh (JPG/PNG)</label>
+                <input id="avatar-file" type="file" accept=".jpg,.jpeg,.png" />
+              </div>
+            </div>
+          </div>
+          <div class="field legacy-option-group" style="margin-top:1rem;">
+            <label>Tình trạng sức khỏe cần lưu ý</label>
+            <p class="field-note">Giai đoạn 1 sẽ dùng thông tin này để giảm đi các món kèm phù hợp và ưu tiên các món an toàn hơn.</p>
+            <div class="option-grid" id="health-conditions-group">
+              <label class="option-chip">
+                <input type="checkbox" name="health_conditions" value="hypertension" />
+                <span><strong>Cao huyết áp</strong>Ưu tiên món nhạt, ít xu hướng quả bảo vệ và tránh nhầm các trái cây.</span>
+              </label>
+              <label class="option-chip">
+                <input type="checkbox" name="health_conditions" value="heart_disease" />
+                <span><strong>Tim mạch</strong>Ưu tiên rau củ, đạm gà và hạn chế nhầm quả nhiều chất béo.</span>
+              </label>
+              <label class="option-chip">
+                <input type="checkbox" name="health_conditions" value="kidney_disease" />
+                <span><strong>Bệnh thận</strong>Giảm ưu tiên các món quá đậm đậm hoặc quá dày năng lượng.</span>
+              </label>
+              <label class="option-chip">
+                <input type="checkbox" name="health_conditions" value="liver_disease" />
+                <span><strong>Gan / viêm gan</strong>Ưu tiên món thanh nhẹ, hạn chế món quá béo.</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field legacy-option-group" style="margin-top:1rem;">
+            <label>Thói quen hoặc nguyên tắc ăn uống</label>
+            <p class="field-note">Khi DB chưa có dữ liệu natri, đường..., hệ thống sẽ suy luận tự động, nhầm món và 4 chỉ số calories, protein, fat, carbs.</p>
+            <div class="option-grid" id="diet-preferences-group">
+              <label class="option-chip">
+                <input type="checkbox" name="diet_preferences" value="low_salt" />
+                <span><strong>Ăn nhạt / ít muối</strong>Hạn chế nhầm các món gia vị nặng và ưu tiên món ăn nhẹ.</span>
+              </label>
+              <label class="option-chip">
+                <input type="checkbox" name="diet_preferences" value="low_fat" />
+                <span><strong>Ít chất béo</strong>Giảm ưu tiên món nhiều dầu mỡ hoặc năng lượng quá đậm.</span>
+              </label>
+              <label class="option-chip">
+                <input type="checkbox" name="diet_preferences" value="low_carb" />
+                <span><strong>Ít tinh bột</strong>Giảm ưu tiên nhầm carb cao khi không thực sự cần thiết.</span>
+              </label>
+              <label class="option-chip">
+                <input type="checkbox" name="diet_preferences" value="vegetarian" />
+                <span><strong>Ăn chay</strong>Ưu tiên rau củ, hạt, đậu và giảm điểm món có nguồn gốc thịt cá.</span>
+              </label>
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="diet_preferences_select">Thói quen hoặc nguyên tắc ăn uống</label>
+              <p class="field-note">Giữ Ctrl hoặc Cmd để chọn nhiều mục.</p>
+              <select id="diet_preferences_select" class="multi-select" multiple>
+                <option value="low_salt">��an nh�t / �t mu���i</option>
+                <option value="low_fat">�t cháº¥t b�©o</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="health_conditions_select">Tình trạng sức khỏe cần lưu ý</label>
+              <p class="field-note">Phần này sẽ được đặt ở cuối cùng của nhóm "Thông tin sức khỏe & dinh dưỡng". Giữ Ctrl hoặc Cmd để chọn nhiều mục.</p>
+              <select id="health_conditions_select" class="multi-select" multiple>
+                <option value="hypertension">Cao huyết áp</option>
+                <option value="heart_disease">Tim mạch</option>
+                <option value="kidney_disease">Bệnh thận</option>
+                <option value="liver_disease">Gan / viêm gan</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="diet_preferences_select_unused">Thói quen hoặc nguyên tắc ăn uống</label>
+              <p class="field-note">Giữ Ctrl hoặc Cmd để chọn nhiều mục.</p>
+              <select id="diet_preferences_select_unused" class="multi-select" multiple>
+                <option value="low_salt">Ăn nhạt / ít muối</option>
+                <option value="low_fat">Ít chất béo</option>
+                <option value="low_carb">Ít tinh bột</option>
+                <option value="vegetarian">Ăn chay</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="health_conditions_select_unused">Tình trạng sức khỏe cần lưu ý</label>
+              <p class="field-note">Phần này sẽ được đặt ở cuối cùng của nhóm "Thông tin sức khỏe & dinh dưỡng". Giữ Ctrl hoặc Cmd để chọn nhiều mục.</p>
+              <select id="health_conditions_select_unused" class="multi-select" multiple>
+                <option value="hypertension">Cao huyết áp</option>
+                <option value="heart_disease">Tim mạch</option>
+                <option value="kidney_disease">Bệnh thận</option>
+                <option value="liver_disease">Gan / viêm gan</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Thông tin cơ bản</h3>
+          <div class="grid">
+            <div class="field">
+              <label for="name">Họ tên</label>
+              <input id="name" type="text" required />
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <div id="email-text" style="padding:0.6rem 0.75rem;border:1px solid #eee;border-radius:8px;background:#fafafa;color:#555;">
+                ...
+              </div>
+            </div>
+            <div class="field">
+              <label for="phone">Số điện thoại</label>
+              <input id="phone" type="text" placeholder="Ví dụ: 09xxxxxxxx" />
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="address">Địa chỉ</label>
+              <textarea id="address" placeholder="Nhập địa chỉ giao hàng..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="health-nutrition-section">
+          <h3>Thông tin sức khỏe & dinh dưỡng</h3>
+          <div class="grid">
+            <div class="field">
+              <label for="age">Tuổi</label>
+              <input id="age" type="number" min="1" max="120" placeholder="Ví dụ: 25" />
+            </div>
+            <div class="field">
+              <label for="gender">Giới tính</label>
+              <select id="gender" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.95rem;">
+                <option value="">Chọn giới tính</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="height">Chiều cao (cm)</label>
+              <input id="height" type="number" min="50" max="250" placeholder="Ví dụ: 170" />
+            </div>
+            <div class="field">
+              <label for="weight">Cân nặng (kg)</label>
+              <input id="weight" type="number" min="20" max="300" step="0.1" placeholder="Ví dụ: 65" />
+            </div>
+            <div class="field">
+              <label for="activity_level">Mức độ vận động</label>
+              <select id="activity_level" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #e5e7eb;border-radius:8px;font-size:0.95rem;">
+                <option value="">Chọn mức độ</option>
+                <option value="low">Ít vận động (ngồi nhiều, ít tập)</option>
+                <option value="moderate">Vận động vừa phải (tập 1-3 lần/tuần)</option>
+                <option value="high">Vận động nhiều (tập 4+ lần/tuần)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Đổi mật khẩu (tùy chọn)</h3>
+          <div class="grid">
+            <div class="field">
+              <label for="current_password">Mật khẩu hiện tại</label>
+              <input id="current_password" type="password" placeholder="Nhập mật khẩu hiện tại" />
+            </div>
+            <div class="field">
+              <label for="new_password">Mật khẩu mới</label>
+              <input id="new_password" type="password" placeholder="Ít nhất 6 ký tự" />
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="confirm_password">Nhập lại mật khẩu mới</label>
+              <input id="confirm_password" type="password" placeholder="Nhập lại mật khẩu mới" />
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn2 primary" id="save-btn" type="submit">Lưu thay đổi</button>
+        </div>
+        <div id="form-msg" class="msg"></div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/hello.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function setMsg(id, text, ok) {
+      const el = document.getElementById(id);
+      el.textContent = text || "";
+      el.classList.toggle("ok", !!ok);
+    }
+
+    function getMultiSelectValues(id) {
+      const el = document.getElementById(id);
+      if (!el) return [];
+      return Array.from(el.selectedOptions || [])
+        .map((option) => option.value)
+        .filter((value) => value && value !== "none");
+    }
+
+    function setMultiSelectValues(id, values) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const selected = new Set(Array.isArray(values) ? values : []);
+      Array.from(el.options || []).forEach((option) => {
+        option.selected = selected.has(option.value);
+      });
+      el.dispatchEvent(new Event("change"));
+    }
+
+    function buildSmartMultiSelect(fieldEl, selectEl, config) {
+      if (!fieldEl || !selectEl) return;
+
+      fieldEl.style.gridColumn = "1 / -1";
+      selectEl.classList.add("legacy-native-select");
+
+      let existing = fieldEl.querySelector(".smart-multi");
+      if (existing) existing.remove();
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "smart-multi";
+
+      const trigger = document.createElement("button");
+      trigger.type = "button";
+      trigger.className = "smart-multi-trigger";
+
+      const triggerText = document.createElement("span");
+      triggerText.className = "smart-multi-trigger-text placeholder";
+
+      const triggerSide = document.createElement("span");
+      triggerSide.className = "smart-multi-trigger-side";
+
+      const countBadge = document.createElement("span");
+      countBadge.className = "smart-multi-count";
+      countBadge.hidden = true;
+
+      const caret = document.createElement("span");
+      caret.className = "smart-multi-caret";
+      caret.textContent = "\u25BE";
+
+      triggerSide.appendChild(countBadge);
+      triggerSide.appendChild(caret);
+      trigger.appendChild(triggerText);
+      trigger.appendChild(triggerSide);
+
+      const panel = document.createElement("div");
+      panel.className = "smart-multi-panel";
+      panel.hidden = true;
+
+      const search = document.createElement("input");
+      search.type = "text";
+      search.className = "smart-multi-search";
+      search.placeholder = config.searchPlaceholder;
+      search.autocomplete = "off";
+      search.spellcheck = false;
+      search.autocapitalize = "off";
+      search.setAttribute("autocorrect", "off");
+      search.name = (selectEl.id || "smart_multi") + "_search";
+
+      const selectAllRow = document.createElement("label");
+      selectAllRow.className = "smart-multi-select-all";
+      const selectAllInput = document.createElement("input");
+      selectAllInput.type = "checkbox";
+      const selectAllText = document.createElement("span");
+      selectAllText.textContent = "Ch\u1ECDn t\u1EA5t c\u1EA3";
+      selectAllRow.appendChild(selectAllInput);
+      selectAllRow.appendChild(selectAllText);
+
+      const optionsBox = document.createElement("div");
+      optionsBox.className = "smart-multi-options";
+
+      panel.appendChild(search);
+      panel.appendChild(selectAllRow);
+      panel.appendChild(optionsBox);
+      wrapper.appendChild(trigger);
+      wrapper.appendChild(panel);
+      fieldEl.appendChild(wrapper);
+
+      function getOptions() {
+        return Array.from(selectEl.options).map((option) => ({
+          value: option.value,
+          label: option.text,
+          selected: option.selected
+        }));
+      }
+
+      function syncTrigger() {
+        const selectedOptions = getOptions().filter((item) => item.selected);
+        if (selectedOptions.length) {
+          triggerText.classList.remove("placeholder");
+          triggerText.textContent = selectedOptions.map((item) => item.label).join(", ");
+          countBadge.hidden = false;
+          countBadge.textContent = String(selectedOptions.length);
+        } else {
+          triggerText.classList.add("placeholder");
+          triggerText.textContent = config.placeholder;
+          countBadge.hidden = true;
+          countBadge.textContent = "0";
+        }
+      }
+
+      function renderOptions() {
+        const keyword = (search.value || "").trim().toLowerCase();
+        const allOptions = getOptions();
+        const selectedFirst = allOptions.slice().sort((a, b) => {
+          if (a.value === "none" && b.value !== "none") return -1;
+          if (a.value !== "none" && b.value === "none") return 1;
+          return Number(b.selected) - Number(a.selected);
+        });
+        const visibleOptions = keyword
+          ? selectedFirst.filter((item) => item.label.toLowerCase().includes(keyword))
+          : selectedFirst;
+
+        optionsBox.innerHTML = "";
+        visibleOptions.forEach((item) => {
+          const row = document.createElement("label");
+          row.className = "smart-multi-option";
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = item.selected;
+          checkbox.dataset.value = item.value;
+          const text = document.createElement("span");
+          text.textContent = item.label;
+          row.appendChild(checkbox);
+          row.appendChild(text);
+          optionsBox.appendChild(row);
+        });
+
+        const selectedCount = allOptions.filter((item) => item.selected).length;
+        selectAllInput.checked = allOptions.length > 0 && selectedCount === allOptions.length;
+        selectAllInput.indeterminate = selectedCount > 0 && selectedCount < allOptions.length;
+      }
+
+      function updateValue(value, checked) {
+        Array.from(selectEl.options).forEach((option) => {
+          if (option.value === value) option.selected = checked;
+          if (value === "none" && checked && option.value !== "none") option.selected = false;
+          if (value !== "none" && checked && option.value === "none") option.selected = false;
+        });
+        syncTrigger();
+        renderOptions();
+      }
+
+      function setOpen(nextOpen) {
+        wrapper.classList.toggle("open", !!nextOpen);
+        panel.hidden = !nextOpen;
+        if (nextOpen) {
+          search.value = "";
+          renderOptions();
+          search.focus();
+        }
+      }
+
+      trigger.addEventListener("click", () => {
+        setOpen(panel.hidden);
+      });
+
+      search.addEventListener("input", renderOptions);
+
+      selectAllInput.addEventListener("change", () => {
+        Array.from(selectEl.options).forEach((option) => {
+          option.selected = selectAllInput.checked && option.value !== "none";
+        });
+        syncTrigger();
+        renderOptions();
+      });
+
+      optionsBox.addEventListener("change", (event) => {
+        const input = event.target;
+        if (!(input instanceof HTMLInputElement)) return;
+        updateValue(input.dataset.value, input.checked);
+      });
+
+      selectEl.addEventListener("change", () => {
+        syncTrigger();
+        renderOptions();
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!wrapper.contains(event.target)) {
+          setOpen(false);
+        }
+      });
+
+      syncTrigger();
+      search.value = "";
+      renderOptions();
+    }
+
+    function setupHealthSelects() {
+      const healthSectionGrid = document.querySelector("#health-nutrition-section .grid");
+      if (!healthSectionGrid) return;
+
+      document.querySelectorAll(
+        "#diet_preferences_select, #health_conditions_select, #diet_preferences_select_unused, #health_conditions_select_unused"
+      ).forEach((el) => {
+        const field = el.closest(".field");
+        if (field) field.style.display = "none";
+      });
+
+      let dietField = document.getElementById("diet_preferences_runtime_field");
+      let healthField = document.getElementById("health_conditions_runtime_field");
+
+      if (!dietField) {
+        dietField = document.createElement("div");
+        dietField.className = "field";
+        dietField.id = "diet_preferences_runtime_field";
+        dietField.style.gridColumn = "1 / -1";
+        dietField.innerHTML = `
+          <label for="diet_preferences_runtime">Thói quen hoặc nguyên tắc ăn uống</label>
+          <p class="field-note">Chọn một hoặc nhiều thói quen ăn uống phù hợp.</p>
+          <select id="diet_preferences_runtime" multiple>
+            <option value="none">Không có</option>
+            <option value="low_salt">Ăn nhạt / ít muối</option>
+            <option value="low_fat">Ít chất béo</option>
+            <option value="low_carb">Ít tinh bột</option>
+            <option value="vegetarian">Ăn chay</option>
+          </select>
+        `;
+      }
+
+      if (!healthField) {
+        healthField = document.createElement("div");
+        healthField.className = "field";
+        healthField.id = "health_conditions_runtime_field";
+        healthField.style.gridColumn = "1 / -1";
+        healthField.innerHTML = `
+          <label for="health_conditions_runtime">Tình trạng sức khỏe cần lưu ý</label>
+          <p class="field-note">Phần này nằm ở cuối nhóm Thông tin sức khỏe & dinh dưỡng để AI ưu tiên yếu tố sức khỏe sau khi đã có thông tin cơ bản.</p>
+          <select id="health_conditions_runtime" multiple>
+            <option value="none">Không có</option>
+            <option value="hypertension">Cao huyết áp</option>
+            <option value="heart_disease">Tim mạch</option>
+            <option value="kidney_disease">Bệnh thận</option>
+            <option value="liver_disease">Gan / viêm gan</option>
+          </select>
+        `;
+      }
+
+      healthSectionGrid.appendChild(dietField);
+      healthSectionGrid.appendChild(healthField);
+
+      buildSmartMultiSelect(dietField, document.getElementById("diet_preferences_runtime"), {
+        placeholder: "Chọn thói quen ăn uống",
+        searchPlaceholder: "Tìm thói quen..."
+      });
+      buildSmartMultiSelect(healthField, document.getElementById("health_conditions_runtime"), {
+        placeholder: "Chọn tình trạng sức khỏe",
+        searchPlaceholder: "Tìm tình trạng sức khỏe..."
+      });
+    }
+
+    function getStoredToken() {
+      const raw = localStorage.getItem("token");
+      if (!raw) return "";
+
+      let token = String(raw).trim();
+      if (token.startsWith("\"") && token.endsWith("\"")) {
+        token = token.slice(1, -1).trim();
+      }
+
+      if (token && token !== raw) {
+        localStorage.setItem("token", token);
+      }
+
+      return token;
+    }
+
+    function isAuthError(message) {
+      const text = String(message || "").toLowerCase();
+      return text.includes("token") || text.includes("authorization") || text.includes("�ng nh�p");
+    }
+
+    function redirectToLogin(message) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      alert(message || "Phi�n �ng nh�p �� h�t h�n. Vui l�ng �ng nh�p l�i.");
+      window.location.href = "login.html";
+    }
+
+    async function authFetch(url, options) {
+      const token = getStoredToken();
+      if (!token) throw new Error("Thi�u token. H�y �ng nh�p l�i.");
+
+      const res = await fetch(url, {
+        ...(options || {}),
+        headers: {
+          ...((options && options.headers) || {}),
+          "Authorization": "Bearer " + token
+        }
+      });
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {}
+
+      if (res.status === 401) {
+        redirectToLogin((data && data.message) || "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        throw new Error("Phiên đăng nhập đã hết hạn.");
+      }
+
+      return data || {};
+    }
+
+    async function fetchProfile() {
+      const data = await authFetch(API_BASE + "/me/profile");
+      if (!data.ok) throw new Error(data.message || "Không tải được hồ sơ");
+      return data.profile;
+    }
+
+    async function saveProfile(formData) {
+      const data = await authFetch(API_BASE + "/me/profile", {
+        method: "PUT",
+        body: formData
+      });
+      if (!data.ok) throw new Error(data.message || "Cập nhật thất bại");
+      return data;
+    }
+
+    document.getElementById("back-btn").onclick = function () {
+      window.location.href = "profile.html";
+    };
+
+    document.getElementById("avatar-file").addEventListener("change", function () {
+      const f = this.files && this.files[0];
+      if (!f) return;
+      document.getElementById("avatar-preview").src = URL.createObjectURL(f);
+    });
+
+    setupHealthSelects();
+
+    (async function init() {
+      setMsg("page-msg", "Đang tải hồ sơ...", false);
+      try {
+        const p = await fetchProfile();
+        document.getElementById("name").value = p.name || "";
+        document.getElementById("email-text").textContent = p.email || "";
+        document.getElementById("phone").value = p.phone || "";
+        document.getElementById("address").value = p.address || "";
+        document.getElementById("age").value = p.age || "";
+        document.getElementById("gender").value = p.gender || "";
+        document.getElementById("height").value = p.height || "";
+        document.getElementById("weight").value = p.weight || "";
+        document.getElementById("activity_level").value = p.activity_level || "";
+        setMultiSelectValues("health_conditions_runtime", p.health_conditions || []);
+        setMultiSelectValues("diet_preferences_runtime", p.diet_preferences || []);
+        document.getElementById("avatar-preview").src = buildImageUrl(p.avatar_url);
+        document.getElementById("form").style.display = "block";
+        setMsg("page-msg", "", false);
+      } catch (e) {
+        if (!isAuthError(e.message)) {
+          setMsg("page-msg", e.message || "Không tải được hồ sơ", false);
+        }
+      }
+    })();
+
+    document.getElementById("form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      setMsg("form-msg", "", false);
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const age = document.getElementById("age").value;
+      const gender = document.getElementById("gender").value;
+      const height = document.getElementById("height").value;
+      const weight = document.getElementById("weight").value;
+      const activityLevel = document.getElementById("activity_level").value;
+      const healthConditions = getMultiSelectValues("health_conditions_runtime");
+      const dietPreferences = getMultiSelectValues("diet_preferences_runtime");
+
+      const currentPassword = document.getElementById("current_password").value;
+      const newPassword = document.getElementById("new_password").value;
+      const confirmPassword = document.getElementById("confirm_password").value;
+
+      if (!name) {
+        setMsg("form-msg", "Vui lòng nhập họ tên.", false);
+        return;
+      }
+      if (newPassword || confirmPassword) {
+        if (newPassword !== confirmPassword) {
+          setMsg("form-msg", "Mật khẩu mới và nhập lại không khớp.", false);
+          return;
+        }
+      }
+
+      const fd = new FormData();
+      fd.append("name", name);
+      fd.append("phone", phone);
+      fd.append("address", address);
+      fd.append("age", age);
+      fd.append("gender", gender);
+      fd.append("height", height);
+      fd.append("weight", weight);
+      fd.append("activity_level", activityLevel);
+      fd.append("health_conditions", JSON.stringify(healthConditions));
+      fd.append("diet_preferences", JSON.stringify(dietPreferences));
+
+      if (newPassword) {
+        fd.append("current_password", currentPassword);
+        fd.append("new_password", newPassword);
+      }
+
+      const avatarFile = document.getElementById("avatar-file").files[0];
+      if (avatarFile) fd.append("avatar", avatarFile);
+
+      setMsg("form-msg", "Đang lưu...", false);
+      try {
+        const result = await saveProfile(fd);
+        setMsg("form-msg", "Đã cập nhật hồ sơ.", true);
+
+        // cập nhật localStorage.user để các trang khác dùng
+        let u = {};
+        try { u = JSON.parse(localStorage.getItem("user") || "{}"); } catch {}
+        localStorage.setItem("user", JSON.stringify({
+          ...(u || {}),
+          name,
+          phone,
+          address,
+          age: Number(age) || null,
+          gender,
+          height: Number(height) || null,
+          weight: Number(weight) || null,
+          activity_level: activityLevel,
+          health_conditions: healthConditions,
+          diet_preferences: dietPreferences,
+          avatar: (result.avatar_url ? result.avatar_url : (u.avatar || ""))
+        }));
+
+        setTimeout(() => {
+          window.location.href = "profile.html";
+        }, 500);
+      } catch (err) {
+        if (!isAuthError(err.message)) {
+          setMsg("form-msg", err.message || "Cập nhật thất bại", false);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+

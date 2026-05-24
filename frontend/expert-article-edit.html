@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chỉnh sửa bài viết | Chuyên gia</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #fff7f0;
+      margin: 0;
+      font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, "Tahoma", "Verdana", sans-serif;
+    }
+    .expert-header {
+      background: #ff9100;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 0 0 10px 10px;
+    }
+    .edit-wrap {
+      max-width: 900px;
+      margin: 2.5rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 16px rgba(255, 145, 0, 0.07);
+      padding: 2rem;
+    }
+    .edit-wrap h1 {
+      margin: 0 0 0.4rem 0;
+      color: #ff9100;
+    }
+    .field {
+      margin-top: 1rem;
+    }
+    .field label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 0.7rem 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .field textarea {
+      min-height: 220px;
+      resize: vertical;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #ff9100;
+      box-shadow: 0 0 0 3px rgba(255, 145, 0, 0.12);
+    }
+    .thumb {
+      width: 220px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #eee;
+      background: #fafafa;
+      margin-top: 0.4rem;
+    }
+    .actions {
+      margin-top: 1.4rem;
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .btn.primary {
+      background: #ff9100;
+      color: #fff;
+    }
+    .btn.primary:hover {
+      background: #ff6f00;
+    }
+    .btn.ghost {
+      background: #f1f1f1;
+      color: #333;
+    }
+    .msg {
+      margin-top: 0.8rem;
+      font-size: 0.95rem;
+      color: #d90429;
+    }
+    .msg.ok {
+      color: #2d6a4f;
+    }
+  </style>
+</head>
+<body>
+  <header class="expert-header">
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <div>
+      <b style="margin-right:1rem;">Chuyên gia</b>
+      <a href="profile.html" id="expert-profile-btn" style="background:#fff;color:#ff9100;border:1px solid #fff;padding:0.35rem 0.8rem;border-radius:18px;font-weight:700;margin-right:0.6rem;text-decoration:none;">Hồ sơ</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="edit-wrap">
+      <h1>Chỉnh sửa bài viết</h1>
+      <div id="page-msg" class="msg"></div>
+      <form id="edit-form" style="display:none;">
+        <div class="field">
+          <label for="title">Tiêu đề</label>
+          <input id="title" type="text" required />
+        </div>
+        <div class="field">
+          <label for="status">Trạng thái</label>
+          <select id="status">
+            <option value="draft">Bản nháp</option>
+            <option value="in_review">Chờ duyệt</option>
+            <option value="published">Đã xuất bản</option>
+            <option value="archived">Lưu trữ</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="category">Chủ đề</label>
+          <select id="category"></select>
+        </div>
+        <div class="field">
+          <label for="tags">Tag</label>
+          <input id="tags" type="text" placeholder="Nhập tag, cách nhau bằng dấu phẩy" />
+        </div>
+        <div class="field">
+          <label for="content">Nội dung</label>
+          <textarea id="content" required placeholder="Nhập nội dung bài viết..."></textarea>
+        </div>
+        <div class="field">
+          <label for="image">Ảnh bìa (JPG/PNG)</label>
+          <input id="image" type="file" accept=".jpg,.jpeg,.png" />
+          <img id="thumb" class="thumb" src="http://localhost:3000/img/assets/hello.jpg" alt="Cover">
+        </div>
+        <div class="actions">
+          <button class="btn ghost" type="button" id="btn-back">Quay lại</button>
+          <button class="btn primary" type="submit" id="btn-save">Lưu bài viết</button>
+        </div>
+        <div id="form-msg" class="msg"></div>
+      </form>
+    </div>
+  </main>
+
+  <footer style="text-align:center;margin:1.5rem 0;color:#555;">
+    &copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng
+  </footer>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const ARTICLE_TOPIC_OPTIONS = [
+      "Dinh dưỡng lành mạnh",
+      "Giảm cân",
+      "Tăng cân",
+      "Bệnh lý dinh dưỡng",
+      "Mẹ và bé",
+      "Mẹo chọn thực phẩm",
+      "Thực đơn gợi ý"
+    ];
+
+    function getIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/hello.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function setMsg(id, text, ok) {
+      const el = document.getElementById(id);
+      el.textContent = text || "";
+      el.classList.toggle("ok", !!ok);
+    }
+
+    function renderTopicOptions(selectedValue = "Dinh dưỡng lành mạnh") {
+      const normalized = String(selectedValue || "").trim() || "Dinh dưỡng lành mạnh";
+      document.getElementById("category").innerHTML = ARTICLE_TOPIC_OPTIONS.map((topic) =>
+        `<option value="${topic}" ${topic === normalized ? "selected" : ""}>${topic}</option>`
+      ).join("");
+    }
+
+    async function fetchArticle(id) {
+      const token = localStorage.getItem("token") || "";
+      if (!token) throw new Error("Thiếu token. Hãy đăng nhập lại.");
+      const res = await fetch(API_BASE + "/expert/articles/" + encodeURIComponent(id), {
+        headers: { Authorization: "Bearer " + token }
+      });
+      const data = await res.json();
+      if (!data.ok || !data.article) throw new Error(data.message || "Không tải được bài viết");
+      return data.article;
+    }
+
+    async function saveArticle(id, formData) {
+      const token = localStorage.getItem("token") || "";
+      if (!token) throw new Error("Thiếu token. Hãy đăng nhập lại.");
+      const res = await fetch(API_BASE + "/expert/articles/" + encodeURIComponent(id), {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + token },
+        body: formData
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Lưu thất bại");
+      return data;
+    }
+
+    document.getElementById("btn-back").onclick = function () {
+      window.location.href = "expert-articles.html";
+    };
+
+    document.getElementById("image").addEventListener("change", function () {
+      const f = this.files && this.files[0];
+      if (!f) return;
+      document.getElementById("thumb").src = URL.createObjectURL(f);
+    });
+
+    (async function init() {
+      const articleId = getIdFromUrl();
+      if (!articleId) {
+        window.location.href = "expert-article-upload.html";
+        return;
+      }
+      setMsg("page-msg", "Đang tải...", false);
+      try {
+        const article = await fetchArticle(articleId);
+        document.getElementById("title").value = article.title || "";
+        document.getElementById("status").value = article.status || "draft";
+        renderTopicOptions(article.category || "Dinh dưỡng lành mạnh");
+        document.getElementById("tags").value = article.tags || "";
+        document.getElementById("content").value = article.content || "";
+        document.getElementById("thumb").src = buildImageUrl(article.image_url);
+        document.getElementById("edit-form").style.display = "block";
+        setMsg("page-msg", "", false);
+      } catch (e) {
+        setMsg("page-msg", e.message || "Không tải được bài viết", false);
+      }
+    })();
+
+    document.getElementById("edit-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      setMsg("form-msg", "", false);
+
+      const id = getIdFromUrl();
+      if (!id) return;
+
+      const title = document.getElementById("title").value.trim();
+      const status = document.getElementById("status").value;
+      const category = document.getElementById("category").value.trim();
+      const tags = document.getElementById("tags").value.trim();
+      const content = document.getElementById("content").value.trim();
+
+      if (!title || !content) {
+        setMsg("form-msg", "Vui lòng nhập tiêu đề và nội dung.", false);
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append("title", title);
+      fd.append("status", status);
+      fd.append("category", category);
+      fd.append("tags", tags);
+      fd.append("content", content);
+
+      const file = document.getElementById("image").files[0];
+      if (file) fd.append("image", file);
+
+      try {
+        await saveArticle(id, fd);
+        setMsg("form-msg", "Đã lưu bài viết.", true);
+        setTimeout(() => {
+          window.location.href = "expert-articles.html";
+        }, 500);
+      } catch (err) {
+        setMsg("form-msg", err.message || "Lưu thất bại", false);
+      }
+    });
+
+    renderTopicOptions();
+  </script>
+</body>
+</html>

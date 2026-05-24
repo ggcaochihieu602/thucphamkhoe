@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hồ sơ cá nhân | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .profile-container {
+      max-width: 650px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+      text-align: center;
+    }
+    .profile-picture {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #95d5b2;
+      margin-bottom: 1rem;
+    }
+    .profile-info h2 {
+      margin-bottom: 0.3rem;
+    }
+    .profile-info p {
+      margin: 0.2rem 0;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .edit-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1.2rem;
+      background: #40916c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .expert-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      margin-left: 0.7rem;
+      padding: 0.5rem 1.2rem;
+      background: #ff9100;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .order-history {
+      text-align: left;
+      margin-top: 2rem;
+    }
+    .order-history h3 {
+      margin-bottom: 0.7rem;
+    }
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .order-table th,
+    .order-table td {
+      border: 1px solid #eee;
+      padding: 0.6rem 0.4rem;
+      text-align: left;
+    }
+    .order-table th {
+      background: #f1f1f1;
+    }
+    .order-link {
+      color: #40916c;
+      text-decoration: none;
+    }
+    .order-link:hover {
+      text-decoration: underline;
+    }
+    .order-link.disabled {
+      color: #aaa;
+      pointer-events: none;
+      cursor: default;
+      text-decoration: none;
+    }
+    .small-btn {
+      padding: 0.35rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.88rem;
+      background: #eef2ff;
+      color: #22223b;
+    }
+    .small-btn:hover { background: #e0e7ff; }
+    .small-btn.danger { background: #ffe3e3; color: #c92a2a; }
+    .small-btn.danger:hover { background: #ffd1d1; }
+
+    /* modal report */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 999;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(760px, 96vw);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      color: #444;
+    }
+    .modal-body { padding: 1rem 1.2rem 1.2rem 1.2rem; }
+    .issue-list label { display:block; margin:0.35rem 0; font-size:0.95rem; color:#333; }
+    .issue-note {
+      width: 100%;
+      min-height: 90px;
+      border-radius: 8px;
+      border: 1px solid #b7e4c7;
+      padding: 0.65rem;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-top: 0.6rem;
+      display: none;
+      box-sizing: border-box;
+    }
+    .issue-note.show { display: block; }
+    .modal-actions { margin-top: 1rem; display:flex; gap:0.7rem; justify-content:flex-end; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="#" id="logout-link">Đăng xuất</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="profile-container">
+      <img src="img/avatar-placeholder.png" alt="Ảnh đại diện" class="profile-picture" id="profile-avatar">
+      <div class="profile-info">
+        <h2 id="profile-name">Tên người dùng</h2>
+        <p><strong>Email:</strong> <span id="profile-email">example@email.com</span></p>
+        <p><strong>Vai trò:</strong> <span id="profile-role">Khách hàng</span></p>
+        <p id="profile-created">Tài khoản đang hoạt động trên ThucPhamKhoe.</p>
+        <a href="profile-edit.html" class="edit-btn">
+          Chỉnh sửa hồ sơ
+        </a>
+      </div>
+
+      <div class="order-history">
+        <h3>Đơn hàng gần đây</h3>
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Ngày đặt</th>
+              <th>Sản phẩm</th>
+              <th>Trạng thái</th>
+              <th>Tổng tiền</th>
+              <th>Chi tiết</th>
+            </tr>
+          </thead>
+          <tbody id="order-history-body">
+            <!-- JavaScript sẽ thêm dữ liệu đơn hàng gần nhất (lastOrder) -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="report-modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div style="font-weight:800;" id="report-title">Báo cáo đơn hàng</div>
+        <button class="modal-close" id="report-close" title="Đóng">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-weight:700;margin-bottom:0.4rem;">Vấn đề bạn gặp phải:</div>
+        <div class="issue-list" id="issue-list"></div>
+        <textarea id="issue-note" class="issue-note" placeholder="Mô tả thêm..."></textarea>
+        <div id="report-msg" style="margin-top:0.6rem;color:#d90429;font-size:0.95rem;"></div>
+        <div class="modal-actions">
+          <button class="small-btn" id="report-cancel" type="button">Hủy</button>
+          <button class="small-btn danger" id="report-submit" type="button">Gửi báo cáo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    function translateRole(role) {
+      if (role === 'admin') return 'Quản trị viên';
+      if (role === 'expert') return 'Chuyên gia';
+      return 'Khách hàng';
+    }
+
+    function formatMoney(value, product) {
+      const n = Number(value || 0);
+      if (!n) return "Liên hệ!";
+      let unit = "kg";
+      if (product && product.price_unit) {
+        const parts = product.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return n.toLocaleString('vi-VN') + "đ/" + unit;
+    }
+
+    function formatStatus(st) {
+      const s = String(st || "").toLowerCase();
+      if (s === "pending" || s === "processing") return "Đang xử lý";
+      if (s === "shipping") return "Đang vận chuyển";
+      if (s === "cancelled_by_admin") return "Đã hủy";
+      if (s === "cancelled" || s === "canceled") return "Đã hủy";
+      if (s === "delivered") return "Đã giao";
+      return st || "Đang xử lý";
+    }
+
+    function formatDate(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return "";
+      return d.toLocaleDateString("vi-VN");
+    }
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/hello.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function getStoredToken() {
+      const raw = localStorage.getItem("token");
+      if (!raw) return "";
+
+      let token = String(raw).trim();
+      if (token.startsWith("\"") && token.endsWith("\"")) {
+        token = token.slice(1, -1).trim();
+      }
+
+      if (token && token !== raw) {
+        localStorage.setItem("token", token);
+      }
+
+      return token;
+    }
+
+    function clearAuthAndRedirect(message) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      alert(message || "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+      window.location.href = "login.html";
+    }
+
+    async function loadProfile() {
+      const token = getStoredToken();
+      if (!token) {
+        alert("Bạn cần đăng nhập để xem hồ sơ.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      // fallback: lấy từ localStorage nếu API lỗi
+      let fallbackUser = {};
+      try { fallbackUser = JSON.parse(localStorage.getItem("user") || "{}"); } catch {}
+
+      try {
+        const res = await fetch(API_BASE + "/me/profile", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (res.status === 401) {
+          clearAuthAndRedirect(data.message || "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          return;
+        }
+        if (!data.ok || !data.profile) throw new Error(data.message || "Không tải được hồ sơ");
+
+        const p = data.profile;
+        document.getElementById("profile-name").textContent = p.name || "Người dùng";
+        document.getElementById("profile-email").textContent = p.email || "";
+        document.getElementById("profile-role").textContent = translateRole(p.role);
+        document.getElementById("profile-avatar").src = buildImageUrl(p.avatar_url);
+
+        // sync lại localStorage.user để các trang khác dùng
+        localStorage.setItem("user", JSON.stringify({
+          ...(fallbackUser || {}),
+          id: p.id,
+          name: p.name,
+          email: p.email,
+          role: p.role,
+          avatar: p.avatar_url || "",
+          phone: p.phone || "",
+          address: p.address || "",
+          age: p.age || null,
+          gender: p.gender || "",
+          height: p.height || null,
+          weight: p.weight || null,
+          activity_level: p.activity_level || "",
+          health_conditions: p.health_conditions || [],
+          diet_preferences: p.diet_preferences || []
+        }));
+      } catch (e) {
+        document.getElementById("profile-name").textContent = fallbackUser.name || "Người dùng";
+        document.getElementById("profile-email").textContent = fallbackUser.email || "";
+        document.getElementById("profile-role").textContent = translateRole(fallbackUser.role);
+        document.getElementById("profile-avatar").src = buildImageUrl(fallbackUser.avatar || "");
+    }
+    }
+
+    async function loadOrdersFromApi() {
+      const tbody = document.getElementById('order-history-body');
+      const token = getStoredToken();
+      if (!token) {
+        tbody.innerHTML = '<tr><td colspan="6">Thiếu token. Hãy đăng nhập lại.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '<tr><td colspan="6">Đang tải đơn hàng...</td></tr>';
+      try {
+        const res = await fetch(API_BASE + "/orders", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (res.status === 401) {
+          clearAuthAndRedirect(data.message || "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          return;
+        }
+        if (!data.ok) {
+          tbody.innerHTML = '<tr><td colspan="6">Không tải được đơn hàng.</td></tr>';
+          return;
+        }
+        const orders = data.orders || [];
+        if (orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">Chưa có đơn hàng nào.</td></tr>';
+        return;
+      }
+
+        // hiển thị tối đa 8 đơn hàng gần nhất + lấy với token sản phẩm (không quá dài)
+        const recent = orders.slice(0, 8);
+        const details = await Promise.all(
+          recent.map(async (o) => {
+            try {
+              const r = await fetch(API_BASE + "/orders/" + encodeURIComponent(o.id), {
+                headers: { "Authorization": "Bearer " + token }
+              });
+              const j = await r.json();
+              return { id: o.id, items: j.items || [], has_report: !!j.has_report };
+            } catch (_) {
+              return { id: o.id, items: [], has_report: false };
+            }
+          })
+        );
+        const itemsMap = {};
+        const reportMap = {};
+        details.forEach(d => {
+          itemsMap[String(d.id)] = d.items || [];
+          reportMap[String(d.id)] = !!d.has_report;
+        });
+
+        function buildItemsPreview(orderId) {
+          const items = itemsMap[String(orderId)] || [];
+          const names = items.map(it => it.name).filter(Boolean);
+          if (names.length === 0) return "<i>Không có</i>";
+          const top = names.slice(0, 3);
+          const more = names.length > top.length ? ` +${names.length - top.length}` : "";
+          return top.join(", ") + more;
+        }
+
+        function buildReportCell(orderId) {
+          const reported = !!reportMap[String(orderId)];
+          if (reported) {
+            return `<span class="order-link disabled">Báo cáo</span>`;
+          }
+          return `<a href="javascript:void(0)" class="order-link" data-action="report" data-id="${orderId}">Báo cáo</a>`;
+        }
+
+        function buildReceiveCell(orderId, status) {
+          const s = String(status || "").toLowerCase();
+          // chỉ hiện "Đã nhận hàng" khi đang vận chuyển
+          if (s !== "shipping") return "";
+          return `<a href="javascript:void(0)" class="order-link" data-action="received" data-id="${orderId}">Đã nhận hàng</a>`;
+        }
+
+        tbody.innerHTML = recent.map(o => `
+        <tr>
+            <td><a href="order.html?id=${encodeURIComponent(o.id)}" class="order-link">#${o.id}</a></td>
+            <td>${formatDate(o.created_at)}</td>
+            <td>${buildItemsPreview(o.id)}</td>
+            <td>${formatStatus(o.status)}</td>
+            <td>${formatMoney(o.total_price)}</td>
+            <td>
+              <a href="order.html?id=${encodeURIComponent(o.id)}" class="order-link">Xem</a>
+              &nbsp;|&nbsp;
+              ${buildReportCell(o.id)}
+              ${buildReceiveCell(o.id, o.status) ? "&nbsp;|&nbsp;" + buildReceiveCell(o.id, o.status) : ""}
+            </td>
+        </tr>
+        `).join("");
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="6">Không kết nối được tới API.</td></tr>';
+      }
+    }
+
+    // Reporting modal
+    const REPORT_ISSUES = [
+      "Giao sai sản phẩm",
+      "Thiếu sản phẩm trong đơn",
+      "Sản phẩm hư hỏng, dập nát, chảy nước",
+      "Sản phẩm hết hạn hoặc gần hết hạn",
+      "Khối lượng hoặc số lượng không đúng như đã đặt",
+      "Bao bì rách, bẩn, không đảm bảo vệ sinh",
+      "Đơn hàng giao trễ so với thời gian dự kiến",
+      "Shipper có thái độ hoặc hành vi không phù hợp",
+      "Lỗi thanh toán, bị trừ tiền nhưng đơn không xác nhận",
+      "Đơn hàng bị hủy mà không biết lý do",
+      "Lý do khác"
+    ];
+    let REPORT_ORDER_ID = null;
+
+    function openReportModal(orderId) {
+      REPORT_ORDER_ID = orderId;
+      document.getElementById("report-title").textContent = "Báo cáo đơn hàng #" + orderId;
+      document.getElementById("report-msg").textContent = "";
+      const list = document.getElementById("issue-list");
+      list.innerHTML = REPORT_ISSUES.map((t, idx) => `
+        <label>
+          <input type="radio" name="issue" value="${t}" ${idx === 0 ? "checked" : ""}>
+          ${t}
+        </label>
+      `).join("");
+      document.getElementById("issue-note").value = "";
+      toggleNote();
+      document.getElementById("report-modal").classList.add("open");
+    }
+    function closeReportModal() {
+      document.getElementById("report-modal").classList.remove("open");
+      REPORT_ORDER_ID = null;
+    }
+    function getSelectedIssue() {
+      const el = document.querySelector('input[name="issue"]:checked');
+      return el ? el.value : "";
+    }
+    function toggleNote() {
+      const issue = getSelectedIssue();
+      const noteEl = document.getElementById("issue-note");
+      if (issue === "Lý do khác") noteEl.classList.add("show");
+      else noteEl.classList.remove("show");
+    }
+
+    document.getElementById("report-close").onclick = closeReportModal;
+    document.getElementById("report-cancel").onclick = closeReportModal;
+    document.getElementById("report-modal").addEventListener("click", function (e) {
+      if (e.target.id === "report-modal") closeReportModal();
+    });
+    document.getElementById("issue-list").addEventListener("change", toggleNote);
+
+    document.getElementById("report-submit").onclick = async function () {
+      const token = localStorage.getItem("token") || "";
+      const msg = document.getElementById("report-msg");
+      msg.style.color = "#d90429";
+      msg.textContent = "";
+      const issue = getSelectedIssue();
+      const desc = document.getElementById("issue-note").value.trim();
+      if (!issue) {
+        msg.textContent = "Vui lòng chọn 1 lý do.";
+        return;
+      }
+      if (issue === "Lý do khác" && !desc) {
+        msg.textContent = "Vui lòng nhập mô tả cho 'Lý do khác'.";
+        return;
+      }
+      if (!REPORT_ORDER_ID) return;
+
+      msg.style.color = "#555";
+      msg.textContent = "Đang gửi báo cáo...";
+      try {
+        const res = await fetch(API_BASE + "/orders/" + encodeURIComponent(REPORT_ORDER_ID) + "/report", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ issue_type: issue, description: desc })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          msg.style.color = "#d90429";
+          msg.textContent = data.message || "Gửi báo cáo thất bại";
+          return;
+        }
+        msg.style.color = "#2d6a4f";
+        msg.textContent = data.message || "Đã gửi báo cáo.";
+        setTimeout(() => closeReportModal(), 600);
+      } catch (e) {
+        msg.style.color = "#d90429";
+        msg.textContent = "Không kết nối được tới API.";
+      }
+    };
+
+    document.addEventListener("click", function (e) {
+      const a = e.target.closest('a[data-action="report"]');
+      if (!a) return;
+      const id = a.getAttribute("data-id");
+      if (!id) return;
+      openReportModal(id);
+    });
+
+    document.addEventListener("click", async function (e) {
+      const a = e.target.closest('a[data-action="received"]');
+      if (!a) return;
+      const id = a.getAttribute("data-id");
+      if (!id) return;
+      const token = localStorage.getItem("token") || "";
+      if (!token) return;
+      const ok = confirm("Xác nhận bạn đã nhận hàng cho đơn #" + id + "?");
+      if (!ok) return;
+      try {
+        const res = await fetch(API_BASE + "/orders/" + encodeURIComponent(id) + "/received", {
+          method: "PUT",
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert(data.message || "Không cập nhật được trạng thái");
+          return;
+        }
+        await loadOrdersFromApi();
+      } catch (_) {
+        alert("Không kết nối được tới API.");
+      }
+    });
+
+    document.getElementById('logout-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      alert('Bạn đã đăng xuất.');
+      window.location.href = 'login.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProfile();
+      loadOrdersFromApi();
+    });
+  </script>
+</body>
+</html>
+
+
+

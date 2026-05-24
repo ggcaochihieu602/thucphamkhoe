@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="home">
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png"
+          alt="Logo"
+          style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html" id="login-link">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Chọn thực phẩm tốt cho sức khỏe của bạn</h1>
+      <p>Thông tin dinh dưỡng rõ ràng, gợi ý ăn uống theo mục tiêu của bạn</p>
+      <a href="products.html" class="btn">Khám phá sản phẩm</a>
+    </div>
+  </section>
+
+  <section class="products" id="products-section">
+    <h2>Sản phẩm dinh dưỡng</h2>
+    <div id="product-list" class="product-grid-dynamic">
+      <!-- Sản phẩm sẽ được thêm bằng JavaScript -->
+    </div>
+    <div id="products-message" class="message"></div>
+  </section>
+
+  <section class="products suggested-section">
+    <h2 id="suggested-title">Gợi ý hôm nay</h2>
+    <div id="suggested-list" class="suggested-row">
+      <!-- Suggested products -->
+    </div>
+    <div id="suggested-message" class="message"></div>
+  </section>
+
+  <section class="articles-home">
+    <h2>Bài viết nổi bật</h2>
+    <div id="top-article" class="top-article-card">
+      <!-- top 1 article -->
+    </div>
+    <div id="article-message" class="message"></div>
+  </section>
+
+  <section class="service-highlights">
+    <div class="service-grid">
+      <div class="service-item">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3c2.76 0 5 2.24 5 5v1h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1V8c0-2.76 2.24-5 5-5zm3 6V8a3 3 0 0 0-6 0v1h6zm-3 4a2 2 0 0 0-1 3.732V18a1 1 0 0 0 2 0v-1.268A2 2 0 0 0 12 13z"></path>
+          </svg>
+        </div>
+        <div class="service-text">
+          <div class="service-title">Thanh toán</div>
+          <div class="service-sub">khi nhận hàng</div>
+        </div>
+      </div>
+
+      <div class="service-item">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12h2a7 7 0 0 1 14 0h2a9 9 0 0 0-18 0zm9-8a8 8 0 0 1 8 8h-2a6 6 0 0 0-12 0H4a8 8 0 0 1 8-8zm-1 8.414 5.657-5.657 1.414 1.414-6.364 6.364A1 1 0 0 1 10 14V7h2v5.414z"></path>
+          </svg>
+        </div>
+        <div class="service-text">
+          <div class="service-title">Giao nhanh</div>
+          <div class="service-sub">miễn phí 2H</div>
+        </div>
+      </div>
+
+      <div class="service-item">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v5.586l3.707 3.707-1.414 1.414L11 13.414V7h2zm-1 13a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"></path>
+          </svg>
+        </div>
+        <div class="service-text">
+          <div class="service-title">30 ngày</div>
+          <div class="service-sub">đổi trả miễn phí</div>
+        </div>
+      </div>
+
+      <div class="service-item">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2l7 4v6c0 5-3 9.74-7 10-4-.26-7-5-7-10V6l7-4zm0 2.2L7 6.3v5.7c0 4.1 2.3 7.8 5 8.9 2.7-1.1 5-4.8 5-8.9V6.3l-5-2.1zm-1 11.1l5.2-5.2 1.4 1.4-6.6 6.6-3.6-3.6 1.4-1.4 2.2 2.2z"></path>
+          </svg>
+        </div>
+        <div class="service-text">
+          <div class="service-title">Thương hiệu</div>
+          <div class="service-sub">uy tín toàn cầu</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return "img/vegetable.jpg"; // ảnh dự phòng ở front-end
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+      }
+      // nếu DB lưu "/img/..." thì nối thẳng vào API_BASE
+      if (imagePath.startsWith("/img/")) {
+        return API_BASE + imagePath;
+      }
+      // nếu DB lưu "img/..." (đường dẫn tương đối của backend), chuyển hóa về "/img/..."
+      if (imagePath.startsWith("img/")) {
+        return API_BASE + "/" + imagePath;
+      }
+      // mặc định: DB lưu "spinach.jpg" -> backend phục vụ tới /img/spinach.jpg
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function goToProductDetail(id) {
+      window.location.href = "product-detail.html?id=" + encodeURIComponent(id);
+    }
+
+    function pickRandom(arr, n) {
+      const a = (arr || []).slice();
+      // shuffle
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a.slice(0, n);
+    }
+
+    function formatMoney(v, product) {
+      const n = Number(v || 0);
+      if (!n) return "Liên hệ!";
+      let unit = "kg";
+      if (product && product.price_unit) {
+        const parts = product.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return n.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function formatPrice(n, item) {
+      const val = Number(n || 0);
+      let unit = "kg";
+      if (item && item.price_unit) {
+        const parts = item.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return val.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function renderProductCard(p) {
+      const imgSrc = buildImageUrl(p.image_url);
+      const card = document.createElement("div");
+      card.className = "product-card clickable";
+      card.dataset.id = p.id;
+      const sourceBadge = p.sourceLabel ? `<div class="ai-badge" style="background:#1d3557;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.72rem;margin-bottom:6px;display:inline-block;">${p.sourceLabel}</div>` : "";
+      const aiBadge = p.aiBadge ? `<div class="ai-badge" style="background:#40916c;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.72rem;margin:0 0 6px 6px;display:inline-block;">${p.aiBadge}</div>` : "";
+      const badges = (sourceBadge || aiBadge) ? `<div style="display:flex;flex-wrap:wrap;align-items:center;margin-bottom:2px;">${sourceBadge}${aiBadge}</div>` : "";
+      const reason = p.reason ? `<p style="font-size:0.86rem;line-height:1.4;color:#4f5d75;min-height:2.4em;">${p.reason}</p>` : "";
+      card.innerHTML = `
+        <img src="${imgSrc}" alt="${p.name}">
+        ${badges}
+        <h3>${p.name}</h3>
+        <p>${p.category || ""}</p>
+        ${reason}
+        <div class="price">${formatMoney(p.price, p)}</div>
+        <button class="btn-small" type="button">Xem chi tiết</button>
+      `;
+      card.querySelector("button").onclick = (e) => {
+        e.stopPropagation();
+        goToProductDetail(p.id);
+      };
+      card.addEventListener("click", function (e) {
+        if (e.target.closest("button")) return;
+        goToProductDetail(p.id);
+      });
+      return card;
+    }
+
+    function buildFallbackSuggestion(products, count, excludedIds) {
+      const picked = pickRandom(products, count);
+      return picked
+        .filter(p => p && p.id != null && !excludedIds.has(String(p.id)))
+        .map(p => ({
+          ...p,
+          sourceType: "temporary_frontend",
+          sourceLabel: "Gợi ý tạm thời"
+        }));
+    }
+
+    function diversifySuggestions(items, maxItems) {
+      const selected = [];
+      const seenIds = new Set();
+      const categoryCounts = new Map();
+      const roleCounts = new Map();
+
+      function canTake(item) {
+        const category = String(item.category || "").trim().toLowerCase();
+        const role = String(item.food_role || "").trim().toLowerCase();
+        if (category && (categoryCounts.get(category) || 0) >= 2) return false;
+        if (role && (roleCounts.get(role) || 0) >= 2) return false;
+        return true;
+      }
+
+      function pushItem(item) {
+        const id = item && item.id != null ? String(item.id) : "";
+        if (!id || seenIds.has(id)) return false;
+        seenIds.add(id);
+        selected.push(item);
+        const category = String(item.category || "").trim().toLowerCase();
+        const role = String(item.food_role || "").trim().toLowerCase();
+        if (category) categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+        if (role) roleCounts.set(role, (roleCounts.get(role) || 0) + 1);
+        return true;
+      }
+
+      (items || []).forEach(item => {
+        if (selected.length >= maxItems) return;
+        if (canTake(item)) pushItem(item);
+      });
+
+      (items || []).forEach(item => {
+        if (selected.length >= maxItems) return;
+        pushItem(item);
+      });
+
+      return selected.slice(0, maxItems);
+    }
+
+    function summarizeSuggestedSource(items, aiInfo, hasToken) {
+      const types = new Set((items || []).map(item => String(item.sourceType || "")).filter(Boolean));
+      if (types.has("ai")) {
+        return {
+          title: "Phù hợp với bạn hôm nay",
+          note: aiInfo && aiInfo.personalized
+            ? `Gợi ý theo mục tiêu: ${aiInfo.goal === "weight_loss" ? "Giảm cân" : aiInfo.goal === "weight_gain" ? "Tăng cân" : "Duy trì vóc dáng"}.`
+            : "Danh sách này ưu tiên các món phù hợp hơn với mục tiêu hiện tại."
+        };
+      }
+      if (types.has("behavior") || types.has("behavior_repeat")) {
+        return {
+          title: "Bạn có thể sẽ thích",
+          note: "Danh sách này dựa trên nhóm sản phẩm bạn từng xem hoặc thêm vào giỏ."
+        };
+      }
+      if (hasToken && (types.has("behavior_fallback") || types.has("temporary_frontend"))) {
+        return {
+          title: "Gợi ý tạm thời",
+          note: "Hệ thống đang dùng danh sách dự phòng vì hiện chưa lấy được đủ gợi ý cá nhân hóa."
+        };
+      }
+      return {
+        title: "Khám phá hôm nay",
+        note: ""
+      };
+    }
+
+    function updateLoginLink() {
+      const userStr = localStorage.getItem("user");
+      const loginLink = document.getElementById("login-link");
+      if (!loginLink) return;
+
+      if (userStr) {
+        loginLink.textContent = "Hồ sơ";
+        loginLink.href = "profile.html";
+        loginLink.onclick = null;
+      } else {
+        loginLink.textContent = "Đăng nhập";
+        loginLink.href = "login.html";
+      }
+    }
+
+    async function loadProducts() {
+      const listEl = document.getElementById("product-list");
+      const messageEl = document.getElementById("products-message");
+      const suggestedEl = document.getElementById("suggested-list");
+      const suggestedMsg = document.getElementById("suggested-message");
+      const suggestedTitle = document.getElementById("suggested-title");
+      messageEl.textContent = "";
+      suggestedMsg.textContent = "";
+      listEl.innerHTML = "Đang tải sản phẩm...";
+      suggestedEl.innerHTML = "";
+
+      try {
+        const res = await fetch(API_BASE + "/products");
+        const data = await res.json();
+        if (!data.ok) {
+          messageEl.textContent = "Lỗi khi tải sản phẩm";
+          listEl.innerHTML = "";
+          return;
+        }
+
+        listEl.innerHTML = "";
+        if (!data.products || data.products.length === 0) {
+          listEl.innerHTML = "<p>Hiện chưa có sản phẩm.</p>";
+          return;
+        }
+
+        // Sản phẩm dinh dưỡng: chỉ hiện thị 2 hàng (để cách lề)
+        // desktop thì hiện 3 cột => 6 item; responsive sẽ về "ít hơn"
+        const mainCount = 20;
+        const main = data.products.slice(0, mainCount);
+        const mainIds = new Set(main.map(p => String(p.id)));
+        main.forEach(p => listEl.appendChild(renderProductCard(p)));
+
+        // Gợi ý hôm nay: tách rõ theo nguồn AI, hành vi hoặc khám phá thêm
+        let suggested = [];
+        let aiInfo = null;
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            // Ưu tiên AI recommendations
+            const aiRes = await fetch(API_BASE + "/me/ai-recommendations?limit=6", {
+              headers: { Authorization: "Bearer " + token }
+            });
+            const aiData = await aiRes.json();
+            if (aiData && aiData.ok && Array.isArray(aiData.products) && aiData.products.length > 0) {
+              suggested = aiData.products
+                .filter(p => p && p.id != null)
+                .filter(p => !mainIds.has(String(p.id)));
+              aiInfo = {
+                goal: aiData.goal,
+                goalReason: aiData.goalReason,
+                personalized: aiData.personalized
+              };
+            }
+            
+            // Nếu AI không có đủ sản phẩm, fallback về behavior-based
+            if (suggested.length < 6) {
+              const recRes = await fetch(API_BASE + "/me/recommendations?limit=6", {
+                headers: { Authorization: "Bearer " + token }
+              });
+              const recData = await recRes.json();
+              if (recData && recData.ok && Array.isArray(recData.products)) {
+                const behaviorProducts = recData.products
+                  .filter(p => p && p.id != null)
+                  .filter(p => !mainIds.has(String(p.id)));
+                // Kết hợp AI và behavior, loại trùng
+                const existingIds = new Set(suggested.map(p => String(p.id)));
+                for (const p of behaviorProducts) {
+                  if (!existingIds.has(String(p.id))) {
+                    suggested.push(p);
+                    existingIds.add(String(p.id));
+                  }
+                  if (suggested.length >= 6) break;
+                }
+              }
+            }
+          } catch (err) {
+            console.error("AI recommendations error:", err);
+          }
+        }
+
+        // Nếu chưa đăng nhập hoặc chưa đủ sản phẩm, dùng nhóm khám phá thêm không trùng phần chính
+        if (suggested.length < 6) {
+          const suggestedIds = new Set(suggested.map(p => String(p.id)));
+          const remaining = data.products.filter(p => !mainIds.has(String(p.id)) && !suggestedIds.has(String(p.id)));
+          const fill = buildFallbackSuggestion(remaining.length ? remaining : data.products, 6 - suggested.length, suggestedIds);
+          suggested = suggested.concat(fill);
+        }
+
+        // Thêm badge AI cho các sản phẩm có aiScore cao
+        if (aiInfo && aiInfo.personalized) {
+          suggested.forEach(p => {
+            if (p.aiScore >= 70) {
+              p.aiBadge = "Rất Phù hợp";
+            } else if (p.aiScore >= 60) {
+              p.aiBadge = "Sơ Phù hợp";
+            }
+          });
+        }
+
+        // Loại trùng và tránh trùng với danh sách chính
+        const uniqueSuggested = [];
+        const seenSuggested = new Set();
+        for (const p of suggested) {
+          const id = p && p.id != null ? String(p.id) : null;
+          if (!id) continue;
+          if (mainIds.has(id)) continue;
+          if (seenSuggested.has(id)) continue;
+          seenSuggested.add(id);
+          uniqueSuggested.push(p);
+        }
+        suggested = diversifySuggestions(uniqueSuggested, 6);
+
+        suggested = suggested.slice(0, 6);
+        if (!suggested.length) {
+          suggestedMsg.textContent = "Chưa có sản phẩm để gợi ý.";
+        } else {
+          const suggestedMeta = summarizeSuggestedSource(suggested, aiInfo, !!token);
+          if (suggestedTitle) suggestedTitle.textContent = suggestedMeta.title;
+          suggestedMsg.textContent = suggestedMeta.note;
+          suggested.forEach(p => suggestedEl.appendChild(renderProductCard(p)));
+        }
+      } catch (err) {
+        console.error(err);
+        messageEl.textContent = "Không kết nối được tới API.";
+        listEl.innerHTML = "";
+      }
+    }
+
+    function excerpt(text, maxLen) {
+      const s = String(text || "").replace(/\s+/g, " ").trim();
+      if (!s) return "";
+      if (s.length <= maxLen) return s;
+      return s.slice(0, maxLen).trim() + "...";
+    }
+
+    async function loadTopArticle() {
+      const container = document.getElementById("top-article");
+      const msgEl = document.getElementById("article-message");
+      msgEl.textContent = "";
+      container.innerHTML = "<p>Đang tải bài viết...</p>";
+      try {
+        const res = await fetch(API_BASE + "/articles");
+        const data = await res.json();
+        if (!data.ok) {
+          container.innerHTML = "";
+          msgEl.textContent = data.message || "Không tải được bài viết.";
+          return;
+        }
+        const a = (data.articles || [])[0];
+        if (!a) {
+          container.innerHTML = "<p>Chưa có bài viết.</p>";
+          return;
+        }
+        const img = buildImageUrl(a.image_url || "articles/article1.jpg");
+        container.innerHTML = `
+          <a class="top-article-link" href="article-detail.html?id=${encodeURIComponent(a.id)}">
+            <img class="top-article-img" src="${img}" alt="${a.title}">
+            <div class="top-article-body">
+              <div class="top-article-title">${a.title}</div>
+              <div class="top-article-meta">${a.expert_name || "Chuyên gia"} ⬢ ${a.created_at ? new Date(a.created_at).toLocaleDateString("vi-VN") : ""}</div>
+              <div class="top-article-excerpt">${excerpt(a.content, 170)}</div>
+              <div class="top-article-cta">Đọc tiếp →</div>
+            </div>
+          </a>
+        `;
+      } catch (e) {
+        console.error(e);
+        container.innerHTML = "";
+        msgEl.textContent = "Không kết nối được tới API bài viết.";
+      }
+    }
+
+    updateLoginLink();
+
+    let lastHomeProductSyncAt = 0;
+
+    function syncHomeProductsIfNeeded(rawValue) {
+      try {
+        const payload = JSON.parse(rawValue || "null");
+        const updatedAt = Number(payload && payload.updatedAt);
+        if (!updatedAt || updatedAt <= lastHomeProductSyncAt) return;
+        lastHomeProductSyncAt = updatedAt;
+        loadProducts();
+      } catch (_) {}
+    }
+
+    window.addEventListener("storage", function (e) {
+      if (e.key === "product_data_updated" && document.visibilityState === "visible") {
+        syncHomeProductsIfNeeded(e.newValue);
+      }
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState !== "visible") return;
+      syncHomeProductsIfNeeded(localStorage.getItem("product_data_updated"));
+    });
+
+    loadProducts();
+    loadTopArticle();
+  </script>
+</body>
+</html>

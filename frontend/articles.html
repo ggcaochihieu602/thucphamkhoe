@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bài viết từ chuyên gia dinh dưỡng | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .articles-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+
+    .articles-container h1 {
+      font-size: 1.7rem;
+      margin-bottom: 1rem;
+      color: #2d6a4f;
+      text-align: center;
+    }
+
+    .articles-container p.subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .article-row {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-top: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    .article-row:first-of-type {
+      border-top: none;
+    }
+
+    .article-thumb {
+      flex: 0 0 130px;
+    }
+
+    .article-thumb img {
+      width: 130px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .article-info {
+      flex: 1;
+    }
+
+    .article-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1b4332;
+      margin-bottom: 0.2rem;
+    }
+
+    .article-meta {
+      font-size: 0.85rem;
+      color: #777;
+      margin-bottom: 0.4rem;
+    }
+
+    .article-excerpt {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-actions {
+      margin-top: 0.2rem;
+    }
+
+    .article-actions .read-more-btn {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid #2d6a4f;
+      color: #2d6a4f;
+      font-size: 0.9rem;
+      text-decoration: none;
+      background: #fff;
+    }
+
+    .article-actions .read-more-btn:hover {
+      background: #2d6a4f;
+      color: #fff;
+    }
+
+    .message {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #d90429;
+    }
+
+    @media (max-width: 600px) {
+      .article-row {
+        flex-direction: column;
+      }
+      .article-thumb {
+        flex: none;
+      }
+      .article-thumb img {
+        width: 100%;
+        height: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html" class="active">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html" id="login-link">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="articles-container">
+      <h1>Bài viết từ chuyên gia dinh dưỡng</h1>
+      <p class="subtitle">Các bài viết được biên soạn bởi chuyên gia để hỗ trợ bạn ăn uống lành mạnh hơn mỗi ngày.</p>
+      <div id="articles-message" class="message"></div>
+      <div id="articles-list"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com | Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+  const API_BASE = "http://localhost:3000";
+
+  function buildImageUrl(imagePath) {
+    if (!imagePath) {
+      return "img/article1.jpg";
+    }
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+    return API_BASE + "/img/" + imagePath;
+  }
+
+  function formatDateTime(isoString) {
+    if (!isoString) return "";
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("vi-VN");
+  }
+
+  // Lấy 1, 2 câu đầu làm mô tả ngắn
+  function getExcerpt(content) {
+    if (!content) return "";
+    const plain = content.replace(/\s+/g, " ").trim();
+    if (!plain) return "";
+    const parts = plain.split(/(?<=[\.!\?])\s+/);
+    let excerpt = parts.slice(0, 2).join(" ");
+    if (excerpt.length > 220) {
+      excerpt = excerpt.slice(0, 220).trim() + "...";
+    }
+    return excerpt;
+  }
+
+  function renderArticles(articles) {
+    const list = document.getElementById("articles-list");
+    if (!articles || articles.length === 0) {
+      list.innerHTML = "<p>Chưa có bài viết nào.</p>";
+      return;
+    }
+
+    list.innerHTML = articles
+      .map((a) => {
+        const img = buildImageUrl(a.image_url);
+        const metaName = a.expert_name || "Chuyên gia";
+        const dateText = formatDateTime(a.created_at);
+        const meta = metaName + (dateText ? " | " + dateText : "");
+        const excerpt = getExcerpt(a.content || "");
+
+        return `
+          <div class="article-row" data-id="${a.id}">
+            <div class="article-thumb">
+              <img src="${img}" alt="${a.title}">
+            </div>
+            <div class="article-info">
+              <div class="article-title">${a.title}</div>
+              <div class="article-meta">${meta}</div>
+              <div class="article-excerpt">${excerpt}</div>
+              <div class="article-actions">
+                <button class="read-more-btn" data-id="${a.id}">Đọc tiếp</button>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  async function loadArticles() {
+    const msgEl = document.getElementById("articles-message");
+    msgEl.textContent = "";
+    try {
+      const res = await fetch(API_BASE + "/articles");
+      const data = await res.json();
+      if (!data.ok) {
+        msgEl.textContent = data.message || "Lỗi khi tải danh sách bài viết.";
+        return;
+      }
+      window.allArticles = data.articles || [];
+      renderArticles(window.allArticles);
+    } catch (err) {
+      console.error(err);
+      msgEl.textContent = "Không kết nối được tới API bài viết.";
+    }
+  }
+
+  // Bấm card hoặc nút đọc tiếp để xem chi tiết
+  document.addEventListener("click", function (e) {
+    const btn = e.target.closest(".read-more-btn");
+    const row = e.target.closest(".article-row");
+    const target = btn || row;
+    if (!target) return;
+    const id = target.getAttribute("data-id");
+    if (!id) return;
+    window.location.href = "article-detail.html?id=" + encodeURIComponent(id);
+  });
+
+  // Đổi đăng nhập thành Hồ sơ nếu đã login
+  (function () {
+    const user = localStorage.getItem("user");
+    const loginLink = document.getElementById("login-link");
+    if (!loginLink) return;
+    if (user) {
+      loginLink.textContent = "Hồ sơ";
+      loginLink.href = "profile.html";
+    } else {
+      loginLink.textContent = "Đăng nhập";
+      loginLink.href = "login.html";
+    }
+  })();
+
+  loadArticles();
+  </script>
+</body>
+</html>
+
+
+
+

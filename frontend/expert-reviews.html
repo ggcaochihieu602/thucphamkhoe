@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duyệt AI sản phẩm | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --bg: #fff7f0;
+      --card: #ffffff;
+      --line: #ffd8ad;
+      --line-strong: #ffbf80;
+      --brand: #ff9100;
+      --brand-dark: #e67700;
+      --text: #2f2418;
+      --muted: #74614c;
+      --chip-bg: #fff2df;
+      --good: #2d6a4f;
+      --shadow: 0 18px 40px rgba(255, 145, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(255, 187, 92, 0.2), transparent 20rem),
+        linear-gradient(180deg, #fffaf6 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif;
+    }
+
+    .expert-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 191, 128, 0.35);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .expert-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .expert-brand img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+
+    .expert-brand h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .expert-badge {
+      border: 1px solid var(--line-strong);
+      color: var(--brand-dark);
+      border-radius: 999px;
+      padding: 0.55rem 1rem;
+      font-weight: 700;
+      background: #fff8ef;
+      white-space: nowrap;
+    }
+
+    .reviews-shell {
+      width: min(1500px, calc(100% - 48px));
+      margin: 2rem auto 3rem;
+    }
+
+    .reviews-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.8fr);
+      gap: 1.25rem;
+      align-items: stretch;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-card, .stats-card, .review-board {
+      background: var(--card);
+      border: 1px solid rgba(255, 191, 128, 0.45);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card { padding: 1.75rem 1.85rem; }
+
+    .hero-card h2 {
+      margin: 0 0 0.65rem;
+      color: var(--brand-dark);
+      font-size: 2rem;
+      line-height: 1.15;
+    }
+
+    .hero-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 65ch;
+    }
+
+    .hero-pills, .meta-chips, .nutrition-chips, .tag-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.65rem;
+    }
+
+    .hero-pills { gap: 0.65rem; margin-top: 1rem; }
+
+    .hero-pill, .meta-chip, .nutrition-chip, .tag-chip {
+      border-radius: 999px;
+      padding: 0.38rem 0.7rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .hero-pill, .meta-chip {
+      background: var(--chip-bg);
+      color: #8d5400;
+    }
+
+    .nutrition-chip {
+      background: #fff;
+      border: 1px solid rgba(255, 191, 128, 0.7);
+      color: #8c5606;
+    }
+
+    .tag-chip {
+      background: #f8f4ee;
+      color: #5c4b36;
+    }
+
+    .stats-card {
+      padding: 1.4rem;
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px dashed rgba(255, 191, 128, 0.5);
+    }
+
+    .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .stat-label { color: var(--muted); font-size: 0.95rem; }
+    .stat-value { font-size: 1.75rem; font-weight: 800; color: var(--brand-dark); line-height: 1; }
+
+    .review-board { padding: 1.5rem; }
+
+    .board-topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .board-title h3 {
+      margin: 0 0 0.35rem;
+      color: var(--brand-dark);
+      font-size: 1.55rem;
+    }
+
+    .board-title p, .field-hint, .small-msg, .empty-state, .product-sub { color: var(--muted); }
+    .board-title p { margin: 0; }
+
+    .search-box { min-width: min(360px, 100%); flex: 1 1 360px; position: relative; }
+
+    .search-box input,
+    .search-box select,
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fffdfa;
+      border-radius: 14px;
+      padding: 0.82rem 0.9rem;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box input,
+    .search-box select {
+      border-radius: 16px;
+      padding: 0.95rem 1rem;
+      font-size: 1rem;
+    }
+
+    .search-box input:focus,
+    .search-box select:focus,
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(255, 145, 0, 0.12);
+    }
+
+    .product-review-list { display: grid; gap: 1rem; }
+
+    .product-review-row {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff 0%, #fffaf4 100%);
+      overflow: hidden;
+    }
+
+    .product-review-item {
+      padding: 1.1rem 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+    .product-info {
+      display: flex;
+      gap: 1rem;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .product-thumb {
+      width: 118px;
+      height: 96px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 191, 128, 0.65);
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .product-meta { min-width: 0; flex: 1 1 auto; }
+
+    .product-review-name {
+      display: block;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--brand-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .product-desc { margin-top: 0.35rem; color: var(--text); line-height: 1.55; }
+
+    .product-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      flex: 0 0 220px;
+      align-items: stretch;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+    }
+
+    .action-btn:hover { transform: translateY(-1px); }
+    .action-btn.primary { background: var(--brand); color: #fff; box-shadow: 0 12px 24px rgba(255, 145, 0, 0.2); }
+    .action-btn.primary:hover { background: var(--brand-dark); }
+    .action-btn.secondary { background: #fff; color: var(--brand-dark); border: 1px solid var(--line-strong); }
+
+    .review-box { display: none; padding: 0 1.15rem 1.2rem; }
+    .review-box.open { display: block; }
+
+    .editor-shell {
+      border: 1px solid rgba(255, 191, 128, 0.65);
+      background: linear-gradient(180deg, #fffefc 0%, #fff7ef 100%);
+      border-radius: 18px;
+      padding: 1.15rem;
+    }
+
+    .editor-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .editor-head h4 { margin: 0; color: var(--brand-dark); font-size: 1.15rem; }
+    .editor-head p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.92rem; }
+
+    .editor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .editor-grid.nutrition { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    .editor-section {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed rgba(255, 191, 128, 0.65);
+    }
+
+    .section-title {
+      margin: 0 0 0.75rem;
+      color: #8d5400;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .field { display: grid; gap: 0.35rem; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 0.92rem; font-weight: 700; color: #5b4224; }
+    .field textarea { min-height: 92px; resize: vertical; }
+    .field-hint { font-size: 0.82rem; line-height: 1.4; }
+
+    .tag-groups {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .tag-group {
+      border: 1px solid rgba(255, 191, 128, 0.55);
+      background: #fff;
+      border-radius: 16px;
+      padding: 0.9rem;
+    }
+
+    .tag-group h5 { margin: 0 0 0.65rem; color: #8d5400; font-size: 0.95rem; }
+
+    .checkbox-list {
+      display: grid;
+      gap: 0.5rem;
+      max-height: 230px;
+      overflow: auto;
+      padding-right: 0.15rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      color: var(--text);
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .checkbox-item input { margin-top: 0.15rem; accent-color: var(--brand-dark); }
+
+    .review-box-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .small-msg { margin-top: 0.8rem; font-size: 0.92rem; font-weight: 600; }
+    .small-msg.error { color: #d90429; }
+    .small-msg.success { color: var(--good); }
+    .empty-state { padding: 2.25rem 1rem; text-align: center; }
+
+    @media (max-width: 1200px) {
+      .reviews-hero { grid-template-columns: 1fr; }
+      .editor-grid.nutrition { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tag-groups { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .reviews-shell { width: min(100% - 24px, 100%); }
+      .expert-header { padding: 0.9rem 1rem; }
+      .product-review-item { flex-direction: column; }
+      .product-actions { flex-direction: row; flex-wrap: wrap; width: 100%; flex: 1 1 auto; }
+      .editor-grid, .editor-grid.nutrition { grid-template-columns: 1fr; }
+      .product-thumb { width: 96px; height: 84px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="expert-header">
+    <div class="expert-brand">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo ThucPhamKhoe">
+      <div><h1>ThucPhamKhoe</h1></div>
+    </div>
+    <div class="expert-badge">Chuyên gia duyệt AI</div>
+  </header>
+
+  <main class="reviews-shell">
+    <section class="reviews-hero">
+      <article class="hero-card">
+        <h2>Các tính năng chính dành cho chuyên gia</h2>
+        <p>Tại đây, chuyên gia có thể chỉnh các dữ liệu sau: thông tin sản phẩm, dinh dưỡng trong 100g, phân loại sản phẩm, nhãn sức khỏe, chế độ ăn phù hợp, dị ứng cần lưu ý và đánh giá chuyên gia cho từng sản phẩm.</p>
+        <div class="hero-pills">
+          <span class="hero-pill">Chỉnh health_tags</span>
+          <span class="hero-pill">Chỉnh diet_flags</span>
+          <span class="hero-pill">Cập nhật food_role</span>
+          <span class="hero-pill">Viết đánh giá chuyên gia</span>
+        </div>
+      </article>
+
+      <aside class="stats-card">
+        <div class="stat-row"><span class="stat-label">Tổng sản phẩm có thể duyệt</span><span class="stat-value" id="productCount">0</span></div>
+        <div class="stat-row"><span class="stat-label">Đang hiển thị theo bộ lọc</span><span class="stat-value" id="visibleCount">0</span></div>
+      </aside>
+    </section>
+
+    <section class="review-board">
+      <div class="board-topbar">
+        <div class="board-title">
+          <h3>Expert Review</h3>
+        </div>
+        <div class="search-box">
+          <input id="productSearchInput" type="search" placeholder="Tìm theo tên sản phẩm hoặc tag..." />
+        </div>
+        <div class="search-box" style="flex:0 0 240px; min-width:240px;">
+          <select id="categoryFilterSelect"></select>
+        </div>
+        <div class="search-box" style="flex:0 0 240px; min-width:240px;">
+          <select id="foodRoleFilterSelect"></select>
+        </div>
+      </div>
+
+      <div class="product-review-list" id="productReviewList"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (user.role !== "expert") {
+        alert("Bạn cần đăng nhập tài khoản chuyên gia để truy cập trang này.");
+        window.location.href = "login.html";
+      }
+    })();
+
+    const API_BASE = "http://localhost:3000";
+    let PRODUCTS_CACHE = [];
+    let FILTERED_CACHE = [];
+    const FOOD_ROLE_OPTIONS = [
+      { value: "", label: "Chưa gán" },
+      { value: "protein_anchor", label: "Nguồn đạm chính" },
+      { value: "carb_base", label: "Tinh bột nền" },
+      { value: "fat_support", label: "Nguồn chất béo hỗ trợ" },
+      { value: "vegetable_support", label: "Rau củ hỗ trợ" },
+      { value: "mixed_support", label: "Phối hợp hỗn hợp" },
+      { value: "extreme_condiment", label: "Gia vị / thành phần cực trị" }
+    ];
+
+    const CATEGORY_OPTIONS = ["Rau xanh", "Củ quả", "Ngũ cốc", "Sữa", "Khác"];
+    const HEALTH_TAG_OPTIONS = ["low_sodium", "low_sugar", "low_fat", "high_protein", "high_fiber", "heart_friendly", "kidney_caution", "liver_friendly", "diabetes_friendly", "weight_loss_friendly", "weight_gain_friendly", "vegetarian_friendly"];
+    const DIET_FLAG_OPTIONS = ["vegetarian", "vegan", "low_carb", "low_fat", "low_salt", "high_protein", "balanced_diet"];
+    const ALLERGEN_OPTIONS = ["milk", "soy", "gluten", "egg", "peanut", "tree_nut", "fish", "shellfish", "sesame"];
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return "img/vegetable.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function formatMoney(price, product) {
+      const p = Number(price || 0);
+      if (!p) return "Liên hệ";
+      const priceUnit = String((product && product.price_unit) || "VND/kg");
+      const slashIndex = priceUnit.lastIndexOf("/");
+      const unit = slashIndex >= 0 ? priceUnit.slice(slashIndex + 1) : priceUnit;
+      const cleanedUnit = unit.replace(/^VND/i, "").replace(/^\//, "") || "kg";
+      return p.toLocaleString("vi-VN") + "đ/" + cleanedUnit;
+    }
+
+    function normalizeTag(value) { return String(value || "").trim(); }
+    function titleizeTag(tag) { return normalizeTag(tag).replace(/_/g, " "); }
+
+    function parseArrayField(value) {
+      if (Array.isArray(value)) return value.map(normalizeTag).filter(Boolean);
+      if (!value) return [];
+      if (typeof value === "string") {
+        const trimmed = value.trim();
+        if (!trimmed) return [];
+        if ((trimmed.startsWith("[") && trimmed.endsWith("]")) || (trimmed.startsWith("{") && trimmed.endsWith("}"))) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) return parsed.map(normalizeTag).filter(Boolean);
+          } catch (_) {}
+        }
+        return trimmed.split(/[\n,;|]/).map(normalizeTag).filter(Boolean);
+      }
+      return [];
+    }
+
+    function uniqueTags(values) {
+      return Array.from(new Set((values || []).map(normalizeTag).filter(Boolean)));
+    }
+
+    function formatNumber(value) {
+      if (value === null || value === undefined || value === "") return "Chưa có";
+      const n = Number(value);
+      if (!Number.isFinite(n)) return "Chưa có";
+      const rounded = Math.round(n * 100) / 100;
+      return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace(/\.?0+$/, "");
+    }
+
+    function compactText(text, maxLength) {
+      const raw = String(text || "").trim();
+      if (!raw) return "";
+      if (raw.length <= maxLength) return raw;
+      return raw.slice(0, maxLength - 1).trim() + "…";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function goToProductDetail(id) {
+      window.location.href = "product-detail.html?id=" + encodeURIComponent(id);
+    }
+
+    async function fetchProducts() {
+      const res = await fetch(API_BASE + "/products");
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không tải được sản phẩm");
+      return data.products || [];
+    }
+
+    async function submitExpertProductUpdate(productId, payload) {
+      const token = localStorage.getItem("token") || "";
+      if (!token) throw new Error("Thiếu token, hãy đăng nhập lại");
+      const res = await fetch(API_BASE + "/expert/products/" + encodeURIComponent(productId), {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Cập nhật sản phẩm thất bại");
+      return data;
+    }
+
+    function broadcastProductUpdate(productId) {
+      try {
+        localStorage.setItem("product_data_updated", JSON.stringify({
+          productId: Number(productId),
+          updatedAt: Date.now()
+        }));
+      } catch (_) {}
+    }
+
+    function updateStats() {
+      document.getElementById("productCount").textContent = String(PRODUCTS_CACHE.length);
+      document.getElementById("visibleCount").textContent = String(FILTERED_CACHE.length);
+    }
+
+    function getProductSearchText(product) {
+      const parts = [product.name, product.category, product.food_role, ...parseArrayField(product.health_tags), ...parseArrayField(product.diet_flags), ...parseArrayField(product.allergen_tags)];
+      return parts.map(normalizeTag).join(" ").toLowerCase();
+    }
+
+    function filterProducts(keyword) {
+      const q = normalizeTag(keyword).toLowerCase();
+      const category = normalizeTag(document.getElementById("categoryFilterSelect")?.value);
+      const foodRole = normalizeTag(document.getElementById("foodRoleFilterSelect")?.value);
+      return PRODUCTS_CACHE.filter((product) => {
+        if (q && !getProductSearchText(product).includes(q)) return false;
+        if (category && normalizeTag(product.category) !== category) return false;
+        if (foodRole && normalizeTag(product.food_role) !== foodRole) return false;
+        return true;
+      });
+    }
+
+    function buildCategoryOptions(selectedValue) {
+      const normalizedSelected = normalizeTag(selectedValue) || "Khác";
+      const merged = uniqueTags([...(CATEGORY_OPTIONS || []), normalizedSelected]);
+      return merged.map((option) => `<option value="${escapeHtml(option)}" ${option === normalizedSelected ? "selected" : ""}>${escapeHtml(option)}</option>`).join("");
+    }
+
+    function buildFilterOptions(options, selectedValue, emptyLabel) {
+      const rendered = options.map((option) => `<option value="${escapeHtml(option)}" ${option === selectedValue ? "selected" : ""}>${escapeHtml(titleizeTag(option))}</option>`).join("");
+      return `<option value="">${emptyLabel}</option>` + rendered;
+    }
+
+    function buildCheckboxList(name, options, selectedValues) {
+      const mergedOptions = uniqueTags([...(options || []), ...(selectedValues || [])]);
+      const selected = new Set(uniqueTags(selectedValues));
+      return mergedOptions.map((option) => `
+        <label class="checkbox-item">
+          <input type="checkbox" data-group="${name}" value="${option}" ${selected.has(option) ? "checked" : ""}>
+          <span>${titleizeTag(option)}</span>
+        </label>
+      `).join("");
+    }
+
+    function buildTagPreview(product) {
+      const chips = [];
+      const foodRole = normalizeTag(product.food_role);
+      if (foodRole) chips.push(`<span class="tag-chip">food_role: ${titleizeTag(foodRole)}</span>`);
+      parseArrayField(product.health_tags).slice(0, 4).forEach((tag) => chips.push(`<span class="tag-chip">health: ${titleizeTag(tag)}</span>`));
+      parseArrayField(product.diet_flags).slice(0, 3).forEach((tag) => chips.push(`<span class="tag-chip">diet: ${titleizeTag(tag)}</span>`));
+      return chips.length ? `<div class="tag-preview">${chips.join("")}</div>` : "";
+    }
+
+    function buildEditorMarkup(product) {
+      const healthTags = parseArrayField(product.health_tags);
+      const dietFlags = parseArrayField(product.diet_flags);
+      const allergenTags = parseArrayField(product.allergen_tags);
+      const roleOptions = FOOD_ROLE_OPTIONS.map((option) => (`<option value="${option.value}" ${String(product.food_role || "") === option.value ? "selected" : ""}>${option.label}</option>`)).join("");
+
+      return `
+        <div class="editor-shell">
+          <div class="editor-head">
+            <div>
+              <h4>Chuyên gia trực tiếp chỉnh sửa thông tin chi tiết cho sản phẩm</h4>
+            </div>
+          </div>
+
+          <div class="editor-section" style="margin-top:0;padding-top:0;border-top:none;">
+            <div class="section-title">Thông tin sản phẩm</div>
+            <div class="editor-grid">
+              <div class="field"><label>Tên sản phẩm</label><input data-field="name" value="${escapeHtml(product.name || "")}" /></div>
+              <div class="field"><label>Loại</label><select data-field="category">${buildCategoryOptions(product.category || "Khác")}</select></div>
+              <div class="field full"><label>Mô tả</label><textarea data-field="description" placeholder="Mô tả ngắn gọn về sản phẩm, điểm mạnh dinh dưỡng, đối tượng phù hợp...">${escapeHtml(product.description || "")}</textarea></div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="section-title">Dinh dưỡng (ước tính trong 100g)</div>
+            <div class="editor-grid nutrition">
+              <div class="field"><label>Calories</label><input data-field="calories" type="number" step="0.01" value="${escapeHtml(product.calories ?? "")}" /></div>
+              <div class="field"><label>Protein (g)</label><input data-field="protein" type="number" step="0.01" value="${escapeHtml(product.protein ?? "")}" /></div>
+              <div class="field"><label>Fat (g)</label><input data-field="fat" type="number" step="0.01" value="${escapeHtml(product.fat ?? "")}" /></div>
+              <div class="field"><label>Carbs (g)</label><input data-field="carbs" type="number" step="0.01" value="${escapeHtml(product.carbs ?? "")}" /></div>
+              <div class="field"><label>Natri (mg)</label><input data-field="sodium" type="number" step="0.01" value="${escapeHtml(product.sodium ?? "")}" /></div>
+              <div class="field"><label>Đường (g)</label><input data-field="sugar" type="number" step="0.01" value="${escapeHtml(product.sugar ?? "")}" /></div>
+              <div class="field"><label>Chất béo bão hòa (g)</label><input data-field="saturated_fat" type="number" step="0.01" value="${escapeHtml(product.saturated_fat ?? "")}" /></div>
+              <div class="field"><label>Chất xơ (g)</label><input data-field="fiber" type="number" step="0.01" value="${escapeHtml(product.fiber ?? "")}" /></div>
+              <div class="field"><label>Cholesterol (mg)</label><input data-field="cholesterol" type="number" step="0.01" value="${escapeHtml(product.cholesterol ?? "")}" /></div>
+            </div>
+          </div>
+          <div class="editor-section">
+            <div class="section-title">Nhãn AI và điều hướng recommendation</div>
+            <div class="editor-grid">
+              <div class="field"><label>food_role</label><select data-field="food_role">${roleOptions}</select></div>
+              <div class="field"><label>Ghi chú riêng</label><input data-field="custom_tags_note" value="" placeholder="Ghi chú nội bộ của chuyên gia, không lưu vào hệ thống" /></div>
+            </div>
+
+            <div class="tag-groups">
+              <div class="tag-group">
+                <h5>health_tags</h5>
+                <div class="checkbox-list">${buildCheckboxList("health_tags", HEALTH_TAG_OPTIONS, healthTags)}</div>
+              </div>
+
+              <div class="tag-group">
+                <h5>diet_flags</h5>
+                <div class="checkbox-list">${buildCheckboxList("diet_flags", DIET_FLAG_OPTIONS, dietFlags)}</div>
+              </div>
+
+              <div class="tag-group">
+                <h5>allergen_tags</h5>
+                <div class="checkbox-list">${buildCheckboxList("allergen_tags", ALLERGEN_OPTIONS, allergenTags)}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-section">
+            <div class="section-title">Đánh giá chuyên gia</div>
+            <div class="field full">
+              <label>expert_feedback</label>
+              <textarea data-field="expert_feedback" placeholder="Ví dụ: phù hợp cho người cần tăng đạm, nên kiểm soát khẩu phần nếu đang theo chế độ low-sodium...">${escapeHtml(product.expert_feedback || "")}</textarea>
+              <div class="field-hint">Nhận xét này sẽ được dùng để giải thích cho người dùng và hỗ trợ AI hiểu góc nhìn chuyên gia.</div>
+            </div>
+          </div>
+
+          <div class="review-box-actions">
+            <button class="action-btn secondary" data-action="cancel-review">Đóng bảng duyệt</button>
+            <button class="action-btn primary" data-action="submit-review">Lưu toàn bộ chỉnh sửa</button>
+          </div>
+          <div class="small-msg" data-role="msg"></div>
+        </div>
+      `;
+    }
+
+    function renderProductReviews(products) {
+      const list = document.getElementById("productReviewList");
+      FILTERED_CACHE = Array.isArray(products) ? products : [];
+      updateStats();
+
+      if (!FILTERED_CACHE.length) {
+        list.innerHTML = '<div class="empty-state">Không tìm thấy sản phẩm phù hợp với bộ lọc hiện tại.</div>';
+        return;
+      }
+
+      list.innerHTML = FILTERED_CACHE.map((p, idx) => {
+        const img = buildImageUrl(p.image_url);
+        const nutrition = [
+          p.calories != null ? `Calories ${formatNumber(p.calories)} kcal` : null,
+          p.protein != null ? `Protein ${formatNumber(p.protein)} g` : null,
+          p.fat != null ? `Fat ${formatNumber(p.fat)} g` : null,
+          p.carbs != null ? `Carbs ${formatNumber(p.carbs)} g` : null,
+          p.sodium != null ? `Natri ${formatNumber(p.sodium)} mg` : null
+        ].filter(Boolean);
+        const allergens = parseArrayField(p.allergen_tags);
+        const healthTags = parseArrayField(p.health_tags);
+        const dietFlags = parseArrayField(p.diet_flags);
+
+        return `
+          <div class="product-review-row" data-product-id="${p.id}">
+            <div class="product-review-item">
+              <div class="product-info">
+                <img class="product-thumb" src="${img}" alt="${p.name}">
+                <div class="product-meta">
+                  <span class="product-review-name">${idx + 1}. ${p.name || "Chưa đặt tên"}</span>
+                  <div class="product-sub">${p.category || "Khác"} • <b style="color:#d9480f;">${formatMoney(p.price, p)}</b> • ID ${p.id}</div>
+                  <div class="meta-chips">
+                    <span class="meta-chip">${p.price_unit || "VND/kg"}</span>
+                    <span class="meta-chip">${p.food_role ? titleizeTag(p.food_role) : "Chưa gán food_role"}</span>
+                    <span class="meta-chip">${healthTags.length} health_tags</span>
+                    <span class="meta-chip">${dietFlags.length} diet_flags</span>
+                    <span class="meta-chip">${allergens.length} allergen_tags</span>
+                  </div>
+                  ${nutrition.length ? `<div class="nutrition-chips">${nutrition.map((item) => `<span class="nutrition-chip">${item}</span>`).join("")}</div>` : ""}
+                  ${p.description ? `<div class="product-desc">${compactText(p.description, 220)}</div>` : ""}
+                  ${buildTagPreview(p)}
+                </div>
+              </div>
+              <div class="product-actions">
+                <button class="action-btn secondary" data-action="view-detail">Xem sản phẩm</button>
+                <button class="action-btn primary" data-action="toggle-review">Xem chi tiết</button>
+              </div>
+            </div>
+            <div class="review-box" id="review-box-${p.id}">${buildEditorMarkup(p)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function setBoxMessage(boxEl, text, isError) {
+      const msgEl = boxEl.querySelector('[data-role="msg"]');
+      if (!msgEl) return;
+      msgEl.textContent = text || "";
+      msgEl.className = "small-msg" + (text ? (isError ? " error" : " success") : "");
+    }
+
+    function openReviewBox(productId) {
+      document.querySelectorAll(".review-box.open").forEach((box) => {
+        if (box.id !== "review-box-" + productId) box.classList.remove("open");
+      });
+      const boxEl = document.getElementById("review-box-" + productId);
+      if (!boxEl) return;
+      boxEl.classList.add("open");
+      setBoxMessage(boxEl, "", false);
+      boxEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function closeReviewBox(productId) {
+      const boxEl = document.getElementById("review-box-" + productId);
+      if (!boxEl) return;
+      boxEl.classList.remove("open");
+      setBoxMessage(boxEl, "", false);
+    }
+
+    function getCheckedValues(boxEl, groupName) {
+      return uniqueTags(Array.from(boxEl.querySelectorAll(`input[data-group="${groupName}"]:checked`)).map((input) => input.value));
+    }
+
+    function getExtraValues(boxEl, fieldName) {
+      const input = boxEl.querySelector(`[data-field="${fieldName}"]`);
+      return uniqueTags(parseArrayField(input ? input.value : ""));
+    }
+
+    function getFieldValue(boxEl, fieldName) {
+      const field = boxEl.querySelector(`[data-field="${fieldName}"]`);
+      return field ? field.value : "";
+    }
+
+    function getCurrentProduct(productId) {
+      return PRODUCTS_CACHE.find((product) => String(product.id) === String(productId)) || null;
+    }
+    function collectPayload(rowEl) {
+      const boxEl = rowEl.querySelector(".review-box");
+      const productId = rowEl.getAttribute("data-product-id");
+      const currentProduct = getCurrentProduct(productId) || {};
+      return {
+        name: getFieldValue(boxEl, "name").trim(),
+        description: getFieldValue(boxEl, "description").trim(),
+        price: currentProduct.price ?? "",
+        price_unit: currentProduct.price_unit || "VND/kg",
+        image_url: currentProduct.image_url || "",
+        category: getFieldValue(boxEl, "category").trim(),
+        calories: getFieldValue(boxEl, "calories").trim(),
+        protein: getFieldValue(boxEl, "protein").trim(),
+        fat: getFieldValue(boxEl, "fat").trim(),
+        carbs: getFieldValue(boxEl, "carbs").trim(),
+        sodium: getFieldValue(boxEl, "sodium").trim(),
+        sugar: getFieldValue(boxEl, "sugar").trim(),
+        saturated_fat: getFieldValue(boxEl, "saturated_fat").trim(),
+        fiber: getFieldValue(boxEl, "fiber").trim(),
+        cholesterol: getFieldValue(boxEl, "cholesterol").trim(),
+        food_role: getFieldValue(boxEl, "food_role").trim(),
+        expert_feedback: getFieldValue(boxEl, "expert_feedback").trim(),
+        health_tags: getCheckedValues(boxEl, "health_tags"),
+        diet_flags: getCheckedValues(boxEl, "diet_flags"),
+        allergen_tags: getCheckedValues(boxEl, "allergen_tags")
+      };
+    }
+
+    function mergeProductUpdate(productId, payload) {
+      const idx = PRODUCTS_CACHE.findIndex((product) => String(product.id) === String(productId));
+      if (idx < 0) return;
+      PRODUCTS_CACHE[idx] = {
+        ...PRODUCTS_CACHE[idx],
+        ...payload,
+        health_tags: payload.health_tags,
+        diet_flags: payload.diet_flags,
+        allergen_tags: payload.allergen_tags
+      };
+    }
+
+    async function loadPage() {
+      const list = document.getElementById("productReviewList");
+      list.innerHTML = '<div class="empty-state">Đang tải danh sách sản phẩm...</div>';
+      try {
+        const products = await fetchProducts();
+        PRODUCTS_CACHE = Array.isArray(products) ? products : [];
+        document.getElementById("categoryFilterSelect").innerHTML = buildFilterOptions(
+          uniqueTags(PRODUCTS_CACHE.map((product) => normalizeTag(product.category)).filter(Boolean)),
+          "",
+          "Tất cả loại"
+        );
+        document.getElementById("foodRoleFilterSelect").innerHTML = buildFilterOptions(
+          uniqueTags(PRODUCTS_CACHE.map((product) => normalizeTag(product.food_role)).filter(Boolean)),
+          "",
+          "Tất cả food_role"
+        );
+        renderProductReviews(PRODUCTS_CACHE);
+      } catch (e) {
+        list.innerHTML = '<div class="empty-state" style="color:#d90429;">' + (e.message || "Không tải được sản phẩm") + '</div>';
+      }
+    }
+
+    document.addEventListener("input", function (e) {
+      if (e.target && e.target.id === "productSearchInput") {
+        renderProductReviews(filterProducts(e.target.value));
+      }
+    });
+
+    document.addEventListener("change", function (e) {
+      if (e.target && (e.target.id === "categoryFilterSelect" || e.target.id === "foodRoleFilterSelect")) {
+        const keyword = document.getElementById("productSearchInput").value;
+        renderProductReviews(filterProducts(keyword));
+      }
+    });
+
+    document.addEventListener("click", async function (e) {
+      const row = e.target.closest(".product-review-row");
+      if (!row) return;
+
+      const productId = row.getAttribute("data-product-id");
+      if (!productId) return;
+
+      const actionBtn = e.target.closest("button");
+      if (!actionBtn) return;
+
+      const action = actionBtn.getAttribute("data-action");
+      if (!action) return;
+
+      if (action === "view-detail") {
+        goToProductDetail(productId);
+        return;
+      }
+
+      if (action === "toggle-review") {
+        const boxEl = row.querySelector(".review-box");
+        if (boxEl && boxEl.classList.contains("open")) closeReviewBox(productId);
+        else openReviewBox(productId);
+        return;
+      }
+
+      if (action === "cancel-review") {
+        closeReviewBox(productId);
+        return;
+      }
+
+      if (action === "submit-review") {
+        const boxEl = row.querySelector(".review-box");
+        if (!boxEl) return;
+
+        const payload = collectPayload(row);
+        if (!payload.name) {
+          setBoxMessage(boxEl, "Tên sản phẩm là bắt buộc.", true);
+          return;
+        }
+
+        setBoxMessage(boxEl, "Đang lưu dữ liệu AI của sản phẩm...", false);
+        actionBtn.disabled = true;
+
+        try {
+          await submitExpertProductUpdate(productId, payload);
+          mergeProductUpdate(productId, payload);
+          broadcastProductUpdate(productId);
+          const keyword = document.getElementById("productSearchInput").value;
+          renderProductReviews(filterProducts(keyword));
+          openReviewBox(productId);
+          const currentBox = document.getElementById("review-box-" + productId);
+          if (currentBox) setBoxMessage(currentBox, "Đã cập nhật toàn bộ dữ liệu AI của sản phẩm.", false);
+        } catch (err) {
+          setBoxMessage(boxEl, err.message || "Lưu chỉnh sửa thất bại", true);
+        } finally {
+          actionBtn.disabled = false;
+        }
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", loadPage);
+  </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hỏi chuyên gia | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --bg: #f4fbf7;
+      --card: #ffffff;
+      --line: #b7e4c7;
+      --brand: #40916c;
+      --brand-dark: #2d6a4f;
+      --text: #1f2d23;
+      --muted: #52655a;
+      --soft: #e8f5ec;
+      --user: #d8f3dc;
+      --expert: #edf8f1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif;
+      background: linear-gradient(180deg, #fffdf9 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+
+    .page-shell {
+      width: min(1450px, calc(100% - 40px));
+      margin: 24px auto 32px;
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px 26px;
+      box-shadow: 0 18px 35px rgba(64, 145, 108, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 70ch;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 35px rgba(64, 145, 108, 0.07);
+    }
+
+    .sidebar { padding: 18px; }
+
+    .card-title {
+      margin: 0 0 12px;
+      color: var(--brand-dark);
+      font-size: 1.15rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #365345;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: #fffdfa;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(64, 145, 108, 0.12);
+    }
+
+    .checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 8px 0 14px;
+      color: var(--muted);
+    }
+
+    .checks label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn.secondary {
+      background: #fff;
+      color: var(--brand-dark);
+      border: 1px solid var(--line);
+    }
+
+    .conversation-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      max-height: 520px;
+      overflow: auto;
+    }
+
+    .conversation-item {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: #fffdfa;
+      cursor: pointer;
+    }
+
+    .conversation-item.active {
+      border-color: var(--brand);
+      background: #eefaf2;
+    }
+
+    .conversation-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .conversation-topic {
+      font-weight: 700;
+      color: #214d39;
+    }
+
+    .conversation-status {
+      font-size: 0.8rem;
+      color: var(--brand-dark);
+      background: var(--soft);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .conversation-preview {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .main {
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 14px;
+      min-height: 760px;
+    }
+
+    .context-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: var(--soft);
+      color: #2d6a4f;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .chat-window {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #fffdfa;
+      padding: 16px;
+      overflow: auto;
+      min-height: 380px;
+      max-height: 520px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .message {
+      max-width: 78%;
+      padding: 12px 14px;
+      border-radius: 18px;
+      line-height: 1.55;
+      color: #111111;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.03);
+    }
+
+    .message.user {
+      margin-left: auto;
+      background: var(--user);
+    }
+
+    .message.expert {
+      background: var(--expert);
+    }
+
+    .message-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .message-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .message-flag {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      color: #3d4f6b;
+    }
+
+    .composer {
+      border-top: 1px dashed var(--line);
+      padding-top: 12px;
+    }
+
+    .composer-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 150px;
+      gap: 12px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 48px 16px;
+    }
+
+    .msg {
+      font-size: 0.92rem;
+      color: var(--muted);
+      min-height: 20px;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .main { min-height: auto; }
+      .composer-row { grid-template-columns: 1fr; }
+      .message { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html" id="login-link">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <h1>Hỏi chuyên gia</h1>
+      <p>Gửi câu hỏi dinh dưỡng hoặc thực mục về sản phẩm tới chuyên gia. Bạn có thể đính kèm thông tin sức khỏe, giỏ hàng hiện tại hoặc một sản phẩm cụ thể để nhận được phản hồi sát hơn.</p>
+    </section>
+
+    <section class="layout">
+      <aside class="card sidebar">
+        <h2 class="card-title">Tạo câu hỏi mới</h2>
+        <div class="field">
+          <label for="topicSelect">Chủ đề, không bắt buộc</label>
+          <select id="topicSelect">
+            <option value="">Không chọn chủ đề</option>
+            <option value="giam_can">Giảm cân</option>
+            <option value="tang_can">Tăng cân</option>
+            <option value="an_uong_lanh_manh">Ăn uống lành mạnh</option>
+            <option value="benh_ly">Bệnh lý</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="productSelect">Đính kèm sản phẩm, không bắt buộc</label>
+          <select id="productSelect">
+            <option value="">Không đính kèm sản phẩm</option>
+          </select>
+        </div>
+
+        <div class="checks">
+          <label><input type="checkbox" id="attachProfile" checked> Đính kèm thông tin sức khỏe</label>
+          <label><input type="checkbox" id="attachCart"> Đính kèm giỏ hàng hiện tại</label>
+        </div>
+
+        <!-- Cart preview section -->
+        <div id="cartPreview" style="display:none; margin-bottom:16px; border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--soft);">
+          <h4 style="margin:0 0 8px 0; color:var(--brand-dark); font-size:0.95rem;">Giỏ hàng sẽ đính kèm</h4>
+          <div id="cartPreviewContent"></div>
+        </div>
+
+        <div class="field">
+          <label for="newQuestion">Nội dung câu hỏi</label>
+          <textarea id="newQuestion" placeholder="Ví dụ: Tôi đang có mục tiêu giảm cân và bị cao huyết áp, sản phẩm nào trong giỏ hiện tại nên thay đổi?"></textarea>
+        </div>
+
+        <button class="btn primary" id="sendNewConversationBtn">Gửi câu hỏi</button>
+        <div class="msg" id="newConversationMsg"></div>
+
+        <h2 class="card-title" style="margin-top:24px;">Lịch sử trò chuyện</h2>
+        <div class="conversation-list" id="conversationList"></div>
+      </aside>
+
+      <section class="card main">
+        <div>
+          <h2 class="card-title" id="conversationHeading">Chưa chọn cuộc trò chuyện</h2>
+          <div class="msg" id="conversationMeta"></div>
+        </div>
+
+        <div class="context-bar" id="contextBar"></div>
+
+        <div class="chat-window" id="chatWindow">
+          <div class="empty">Hãy gửi câu hỏi đầu tiên hoặc chọn một cuộc trò chuyện để xem lịch sử.</div>
+        </div>
+
+        <div class="composer">
+          <div class="field">
+            <label for="replyInput">Tiếp tục nhắn với chuyên gia</label>
+            <textarea id="replyInput" placeholder="Gửi thêm thông tin hoặc phản hồi sau khi chuyên gia đã trả lời..."></textarea>
+          </div>
+          <div class="composer-row">
+            <div class="msg" id="replyMsg"></div>
+            <button class="btn secondary" id="sendReplyBtn">Gửi tin nhắn</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+    let conversations = [];
+    let currentConversationId = null;
+
+    function getToken() {
+      return localStorage.getItem("token") || "";
+    }
+
+    function getAuthHeaders(extra) {
+      return Object.assign({
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + getToken()
+      }, extra || {});
+    }
+
+    const CONSULTATION_MESSAGE_MIN = 10;
+    const CONSULTATION_MESSAGE_MAX = 1000;
+
+    function validateConsultationMessage(value, label) {
+      const text = String(value || "").trim();
+      if (!text) {
+        return label + " không hợp lệ. Vui lòng nhập nội dung trước khi gửi.";
+      }
+      if (text.length < CONSULTATION_MESSAGE_MIN) {
+        return label + " không hợp lệ vì quá ngắn. Vui lòng nhập ít nhất " + CONSULTATION_MESSAGE_MIN + " ký tự.";
+      }
+      if (text.length > CONSULTATION_MESSAGE_MAX) {
+        return label + " không hợp lệ vì quá dài. Vui lòng nhập tối đa " + CONSULTATION_MESSAGE_MAX + " ký tự.";
+      }
+      return "";
+    }
+
+    (function ensureLogin() {
+      const token = getToken();
+      if (!token) {
+        alert("Vui lòng đăng nhập để dùng tính năng Hỏi chuyên gia.");
+        window.location.href = "login.html";
+      }
+    })();
+
+    document.addEventListener("click", function (e) {
+      const logoutLink = e.target.closest("#logout-link");
+      if (!logoutLink) return;
+      e.preventDefault();
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    });
+
+    // Đổi đăng nhập thành Hồ sơ nếu đã login
+    (function () {
+      const user = localStorage.getItem("user");
+      const loginLink = document.getElementById("login-link");
+      if (!loginLink) return;
+      if (user) {
+        loginLink.textContent = "Hồ sơ";
+        loginLink.href = "profile.html";
+        loginLink.id = "logout-link";
+      }
+    })();
+
+    function formatDateTime(value) {
+      if (!value) return "";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleString("vi-VN");
+    }
+
+    function formatTopic(topic) {
+      const map = {
+        giam_can: "Giảm cân",
+        tang_can: "Tăng cân",
+        an_uong_lanh_manh: "Ăn uống lành mạnh",
+        benh_ly: "Bệnh lý"
+      };
+      return map[String(topic || "")] || "";
+    }
+
+    function getUserId() {
+      try {
+        const u = JSON.parse(localStorage.getItem("user") || "{}");
+        return u && (u.id || u.email) ? String(u.id || u.email) : "guest";
+      } catch (_) {
+        return "guest";
+      }
+    }
+
+    function cartSessionsKey() {
+      return "cartSessions:" + getUserId();
+    }
+
+    function activeCartIdKey() {
+      return "activeCartId:" + getUserId();
+    }
+
+    function getCartSessions() {
+      try {
+        const sessions = JSON.parse(localStorage.getItem(cartSessionsKey()) || "[]");
+        return Array.isArray(sessions) ? sessions : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveCartSessions(sessions) {
+      localStorage.setItem(cartSessionsKey(), JSON.stringify(Array.isArray(sessions) ? sessions : []));
+    }
+
+    function ensureActiveCartSession() {
+      const sessions = getCartSessions();
+      let activeId = localStorage.getItem(activeCartIdKey()) || "";
+      let active = sessions.find((session) => (
+        session &&
+        session.id === activeId &&
+        String(session.userId || "guest") === getUserId()
+      ));
+
+      let legacy = [];
+      try {
+        legacy = JSON.parse(localStorage.getItem("cart") || "[]");
+      } catch (_) {
+        legacy = [];
+      }
+
+      if (Array.isArray(legacy) && legacy.length > 0) {
+        activeId = "cart_" + Date.now() + "_legacy";
+        active = {
+          id: activeId,
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: legacy
+        };
+        sessions.push(active);
+        localStorage.removeItem("cart");
+        localStorage.setItem(activeCartIdKey(), activeId);
+        saveCartSessions(sessions);
+      }
+
+      if (!active && sessions.length > 0) {
+        active = sessions[0];
+        localStorage.setItem(activeCartIdKey(), active.id);
+      }
+
+      if (!active) {
+        activeId = "cart_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+        active = {
+          id: activeId,
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: []
+        };
+        sessions.push(active);
+        localStorage.setItem(activeCartIdKey(), activeId);
+        saveCartSessions(sessions);
+      }
+
+      return active;
+    }
+
+    function getCartSnapshot() {
+      const activeCart = ensureActiveCartSession();
+      return activeCart && Array.isArray(activeCart.items) ? activeCart.items : [];
+    }
+
+    function renderCartPreview() {
+      const cartPreview = document.getElementById("cartPreview");
+      const cartContent = document.getElementById("cartPreviewContent");
+      const attachCartCheckbox = document.getElementById("attachCart");
+      
+      console.log("renderCartPreview called"); // Debug
+      console.log("attachCartCheckbox.checked:", attachCartCheckbox ? attachCartCheckbox.checked : 'checkbox not found'); // Debug
+      
+      if (!cartPreview || !cartContent || !attachCartCheckbox) {
+        console.log("Missing elements, returning"); // Debug
+        return;
+      }
+      
+      if (attachCartCheckbox.checked) {
+        const cart = getCartSnapshot();
+        console.log("Cart data for preview:", cart); // Debug
+        
+        if (cart.length === 0) {
+          console.log("Cart is empty, showing empty message"); // Debug
+          cartContent.innerHTML = '<p style="color:var(--muted); font-style:italic;">Giỏ hàng trống</p>';
+        } else {
+          console.log("Cart has items, rendering preview"); // Debug
+          let total = 0;
+          const cartHTML = cart.map(item => {
+            const itemTotal = (item.price || 0) * (item.quantity || 1);
+            total += itemTotal;
+            return `
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;">
+                <div>
+                  <div style="font-weight:600; color:var(--text);">${item.name || 'Sản phẩm'}</div>
+                  <div style="font-size:0.85rem; color:var(--muted);">Số lượng: ${item.quantity || 1}</div>
+                </div>
+                <div style="text-align:right; font-weight:600; color:var(--brand);">
+                  ${formatMoney(itemTotal, item)}
+                </div>
+              </div>
+            `;
+          }).join('');
+          
+          cartContent.innerHTML = `
+            ${cartHTML}
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0 0; border-top:2px solid var(--line); margin-top:8px;">
+              <div style="font-weight:700; color:var(--brand-dark); font-size:1rem;">Tổng cộng:</div>
+              <div style="font-weight:700; color:var(--brand); font-size:1.1rem;">${formatMoney(total)}</div>
+            </div>
+          `;
+        }
+        cartPreview.style.display = 'block';
+      } else {
+        console.log("Checkbox not checked, hiding preview"); // Debug
+        cartPreview.style.display = 'none';
+      }
+    }
+
+    function formatMoney(amount, item) {
+      const val = Number(amount || 0);
+      let unit = "kg";
+      if (item && item.price_unit) {
+        const parts = item.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return val.toLocaleString("vi-VN") + (unit === "kg" ? "đ" : "đ/" + unit);
+    }
+
+    async function fetchProducts() {
+      const res = await fetch(API_BASE + "/products");
+      const data = await res.json();
+      return data.ok ? (data.products || []) : [];
+    }
+
+    async function loadProductOptions() {
+      const select = document.getElementById("productSelect");
+      const products = await fetchProducts();
+      const options = ['<option value="">Không đính kèm sản phẩm</option>']
+        .concat(products.map((product) => `<option value="${product.id}">${product.name}</option>`));
+      select.innerHTML = options.join("");
+    }
+
+    async function loadConversationList() {
+      const res = await fetch(API_BASE + "/me/expert-conversations", {
+        headers: { "Authorization": "Bearer " + getToken() }
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không tải được danh sách trò chuyện");
+      conversations = data.conversations || [];
+      renderConversationList();
+
+      if (!currentConversationId && conversations.length) {
+        currentConversationId = conversations[0].id;
+      }
+
+      if (currentConversationId) {
+        const exists = conversations.some((item) => String(item.id) === String(currentConversationId));
+        if (exists) {
+          await openConversation(currentConversationId);
+        } else {
+          currentConversationId = null;
+        }
+      }
+    }
+
+    function renderConversationList() {
+      const list = document.getElementById("conversationList");
+      if (!conversations.length) {
+        list.innerHTML = '<div class="empty" style="padding:22px 12px;">Chưa có cuộc trò chuyện nào.</div>';
+        return;
+      }
+
+      list.innerHTML = conversations.map((conversation) => `
+        <div class="conversation-item ${String(conversation.id) === String(currentConversationId) ? "active" : ""}" data-id="${conversation.id}">
+          <div class="conversation-top">
+            <div class="conversation-topic">${formatTopic(conversation.topic) || "Câu hỏi dinh dưỡng"}</div>
+            <div class="conversation-status">${conversation.status || "pending"}</div>
+          </div>
+          <div class="conversation-preview">${conversation.latest_message_text || "Chưa có nội dung"}</div>
+          <div class="conversation-preview" style="margin-top:6px;font-size:0.82rem;">${formatDateTime(conversation.latest_message_at || conversation.created_at)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderContext(conversation) {
+      const bar = document.getElementById("contextBar");
+      const chips = [];
+      
+      console.log("Conversation context data:", conversation); // Debug log
+      console.log("All fields in conversation:", Object.keys(conversation)); // Debug log
+
+      if (conversation.topic) {
+        chips.push(`<span class="chip">Chủ đề: ${formatTopic(conversation.topic) || conversation.topic}</span>`);
+      }
+      
+      // Handle different field names for profile data
+      const profileData = conversation.profile_snapshot || conversation.profile || conversation.user_profile;
+      console.log("Profile data found:", profileData); // Debug log
+      if (profileData) {
+        chips.push('<span class="chip">Đã đính kèm thông tin sức khỏe</span>');
+      }
+      
+      // Handle different field names for cart data
+      const cartData = conversation.cart_snapshot || conversation.cart_items || conversation.cart;
+      console.log("Cart data found:", cartData); // Debug log
+      if (cartData && Array.isArray(cartData) && cartData.length) {
+        chips.push(`<span class="chip">Đã đính kèm giỏ hàng: ${cartData.length} món</span>`);
+      }
+      
+      // Handle different field names for product data
+      const productData = conversation.attached_product_snapshot || conversation.product_snapshot || conversation.product || conversation.attached_product;
+      console.log("Product data found:", productData); // Debug log
+      if (productData && productData.name) {
+        chips.push(`<span class="chip">Sản phẩm: ${productData.name}</span>`);
+      }
+      
+      chips.push(`<span class="chip">Trạng thái: ${conversation.status}</span>`);
+
+      bar.innerHTML = chips.join("");
+    }
+
+    function renderMessages(messages) {
+      const chatWindow = document.getElementById("chatWindow");
+      if (!messages.length) {
+        chatWindow.innerHTML = '<div class="empty">Chưa có tin nhắn nào trong cuộc trò chuyện này.</div>';
+        return;
+      }
+
+      chatWindow.innerHTML = messages.map((message) => `
+        <div class="message ${message.sender_type === "user" ? "user" : "expert"}">
+          <div class="message-meta">${message.sender_name || (message.sender_type === "user" ? "Bạn" : "Chuyên gia")} ⬢ ${formatDateTime(message.created_at)}</div>
+          ${Array.isArray(message.quick_flags) && message.quick_flags.length ? `<div class="message-flags">${message.quick_flags.map((flag) => `<span class="message-flag">${flag.replace(/_/g, " ")}</span>`).join("")}</div>` : ""}
+          <div>${String(message.message || "").replace(/\n/g, "<br>")}</div>
+        </div>
+      `).join("");
+
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function openConversation(id) {
+      currentConversationId = id;
+      renderConversationList();
+
+      const res = await fetch(API_BASE + "/me/expert-conversations/" + encodeURIComponent(id), {
+        headers: { "Authorization": "Bearer " + getToken() }
+      });
+      const data = await res.json();
+      console.log("Open Conversation API Response:", data); // Debug log
+      if (!data.ok) throw new Error(data.message || "Không tải được chi tiết cuộc trò chuyện");
+
+      const conversation = data.conversation;
+      console.log("Conversation data for context:", conversation); // Debug log
+      
+      document.getElementById("conversationHeading").textContent = formatTopic(conversation.topic) || "Câu hỏi dinh dưỡng";
+      document.getElementById("conversationMeta").textContent = conversation.expert_name
+        ? "Chuyên gia phụ trách: " + conversation.expert_name
+        : "Đang chờ chuyên gia tiếp nhận";
+
+      renderContext(conversation);
+      renderMessages(data.messages || []);
+    }
+
+    async function createConversation() {
+      const message = document.getElementById("newQuestion").value.trim();
+      const topic = document.getElementById("topicSelect").value;
+      const productId = document.getElementById("productSelect").value;
+      const includeProfile = document.getElementById("attachProfile").checked;
+      const includeCart = document.getElementById("attachCart").checked;
+      const msgEl = document.getElementById("newConversationMsg");
+      
+      // Debug logging
+      console.log("Creating conversation with data:", {
+        message,
+        topic,
+        productId,
+        includeProfile,
+        includeCart,
+        cartSnapshot: includeCart ? getCartSnapshot() : []
+      });
+
+      const messageError = validateConsultationMessage(message, "Câu hỏi");
+      if (messageError) {
+        msgEl.textContent = messageError;
+        return;
+      }
+
+      msgEl.textContent = "Đang gửi câu hỏi...";
+      const requestBody = {
+        message,
+        topic,
+        product_id: productId || null,
+        include_profile: includeProfile,
+        include_cart: includeCart,
+        cart_items: includeCart ? getCartSnapshot() : []
+      };
+      
+      console.log("Request body being sent:", requestBody); // Debug log
+      
+      const res = await fetch(API_BASE + "/me/expert-conversations", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(requestBody)
+      });
+      const data = await res.json();
+      console.log("Create conversation API response:", data); // Debug log
+      
+      if (!data.ok) throw new Error(data.message || "Không gửi được câu hỏi");
+
+      document.getElementById("newQuestion").value = "";
+      msgEl.textContent = data.message || "Đã gửi câu hỏi tới chuyên gia.";
+      await loadConversationList();
+
+      if (data.conversation && data.conversation.id) {
+        await openConversation(data.conversation.id);
+      }
+    }
+
+    async function sendReply() {
+      const input = document.getElementById("replyInput");
+      const msgEl = document.getElementById("replyMsg");
+      const text = input.value.trim();
+
+      if (!currentConversationId) {
+        msgEl.textContent = "Hãy chọn một cuộc trò chuyện trước khi gửi thêm tin nhắn.";
+        return;
+      }
+
+      const messageError = validateConsultationMessage(text, "Tin nhắn");
+      if (messageError) {
+        msgEl.textContent = messageError;
+        return;
+      }
+
+      msgEl.textContent = "Đang gửi...";
+      const res = await fetch(API_BASE + "/me/expert-conversations/" + encodeURIComponent(currentConversationId) + "/messages", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không gửi được tin nhắn");
+
+      input.value = "";
+      msgEl.textContent = data.message || "Đã gửi tin nhắn.";
+      await loadConversationList();
+      await openConversation(currentConversationId);
+    }
+
+    document.getElementById("attachCart").addEventListener("change", renderCartPreview);
+
+    document.getElementById("sendNewConversationBtn").addEventListener("click", async function () {
+      try {
+        await createConversation();
+      } catch (error) {
+        document.getElementById("newConversationMsg").textContent = error.message || "Không gửi được câu hỏi";
+      }
+    });
+
+    document.getElementById("sendReplyBtn").addEventListener("click", async function () {
+      try {
+        await sendReply();
+      } catch (error) {
+        document.getElementById("replyMsg").textContent = error.message || "Không gửi được tin nhắn";
+      }
+    });
+
+    document.getElementById("conversationList").addEventListener("click", async function (e) {
+      const item = e.target.closest(".conversation-item");
+      if (!item) return;
+      try {
+        await openConversation(item.getAttribute("data-id"));
+      } catch (error) {
+        document.getElementById("replyMsg").textContent = error.message || "Không tải được cuộc trò chuyện";
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      try {
+        await Promise.all([loadProductOptions(), loadConversationList()]);
+        renderCartPreview(); // Initialize cart preview on load
+      } catch (error) {
+        document.getElementById("newConversationMsg").textContent = error.message || "Không tải được dữ liệu hỏi chuyên gia";
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+

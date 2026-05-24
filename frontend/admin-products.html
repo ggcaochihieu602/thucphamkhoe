@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản lý sản phẩm | Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .admin-header {
+      background: #22223b;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .admin-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+    th, td {
+      border: 1px solid #eee;
+      padding: 0.7rem 0.5rem;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background: #f1f1f1;
+    }
+    .action-btn {
+      background: #40916c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.3rem 1rem;
+      margin-right: 0.5rem;
+      cursor: pointer;
+    }
+    .action-btn.delete {
+      background: #d90429;
+    }
+    .add-btn {
+      background: #22223b;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5rem 1.2rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+    .inline-input {
+      width: 100%;
+      padding: 0.3rem;
+      box-sizing: border-box;
+    }
+    .message {
+      margin-top: 0.8rem;
+      color: #d00000;
+      font-size: 0.9rem;
+    }
+    .thumb-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 6px;
+    }
+    .product-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .edit-link-btn {
+      background: #ff9100;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .edit-link-btn:hover {
+      background: #ff6f00;
+    }
+    .delete-btn {
+      background: #d90429;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-left: 0.4rem;
+    }
+    .delete-btn:hover {
+      background: #b8001c;
+    }
+    .filters-bar {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 0.8rem 0 0.2rem 0;
+      padding: 0.8rem;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+    .filters-bar label {
+      font-size: 0.95rem;
+      color: #333;
+      font-weight: 600;
+    }
+    .filters-bar select,
+    .filters-bar input {
+      padding: 0.5rem 0.65rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fff;
+      min-width: 220px;
+    }
+    .filters-bar input {
+      min-width: 280px;
+      flex: 1 1 280px;
+    }
+    .filters-bar .small-btn {
+      background: #22223b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .filters-bar .small-btn:hover {
+      background: #17172b;
+    }
+    .col-actions {
+      text-align: right;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <div>
+      <a href="profile.html" id="admin-profile-btn" style="background:#fff;color:#22223b;border:1px solid #fff;padding:0.45rem 1rem;border-radius:6px;font-weight:600;margin-right:0.6rem;text-decoration:none;">Hồ sơ</a>
+      <button
+        id="logout-btn"
+        style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;"
+      >
+        Đăng xuất
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Quản lý sản phẩm</h1>
+
+    <button class="add-btn" id="show-add-form-btn">+ Thêm sản phẩm</button>
+    <div id="add-form" style="display:none;margin-bottom:1rem;">
+      <h3>Sản phẩm mới</h3>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0.5rem 1rem;">
+        <input class="inline-input" type="text" id="new-name" placeholder="Tên sản phẩm" />
+        <input class="inline-input" type="number" id="new-price" placeholder="Giá (VND)" />
+        <select class="inline-input" id="new-category">
+          <option value="Rau xanh">Rau xanh</option>
+          <option value="Củ quả">Củ quả</option>
+          <option value="Ngũ cốc">Ngũ cốc</option>
+          <option value="Sữa">Sữa</option>
+          <option value="Khác" selected>Khác</option>
+        </select>
+        <input class="inline-input" type="file" id="new-image-file" accept=".jpg,.jpeg,.png" />
+
+        <textarea class="inline-input" id="new-description" placeholder="Mô tả sản phẩm" style="grid-column:1 / -1;min-height:90px;resize:vertical;"></textarea>
+
+        <input class="inline-input" type="number" id="new-calories" placeholder="Calories (kcal)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-protein" placeholder="Protein (g)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-fat" placeholder="Fat (g)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-carbs" placeholder="Carbs (g)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-sodium" placeholder="Natri (mg)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-sugar" placeholder="Đường (g)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-saturated-fat" placeholder="Chất béo bão hòa (g)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-fiber" placeholder="Chất xơ (g)" step="0.01" min="0" />
+        <input class="inline-input" type="number" id="new-cholesterol" placeholder="Cholesterol (mg)" step="0.01" min="0" />
+      </div>
+      <div style="margin-top:0.6rem;display:flex;gap:0.8rem;align-items:center;flex-wrap:wrap;">
+        <img id="new-image-preview" src="" alt="" style="display:none;width:120px;height:90px;object-fit:cover;border-radius:8px;border:1px solid #eee;">
+        <div style="font-size:0.9rem;color:#555;"></div>
+      </div>
+      <button class="action-btn" id="add-product-btn" style="margin-top:0.6rem;">Lưu sản phẩm</button>
+      <div id="add-message" class="message"></div>
+    </div>
+
+    <div class="filters-bar">
+      <div>
+        <label for="filter-category">Tìm theo loại</label><br>
+        <select id="filter-category">
+          <option value="">Tất cả loại</option>
+        </select>
+      </div>
+      <div style="flex:1 1 300px;">
+        <label for="filter-name">Tìm theo tên</label><br>
+        <input id="filter-name" type="text" placeholder="Nhập tên sản phẩm..." />
+      </div>
+      <div>
+        <label style="opacity:0;">&nbsp;</label><br>
+        <button class="small-btn" id="filter-clear" type="button">Xóa lọc</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Sản phẩm</th>
+          <th>Giá</th>
+          <th>Loại</th>
+          <th class="col-actions">Sửa / Xóa</th>
+        </tr>
+      </thead>
+      <tbody id="admin-products-tbody">
+        <!-- Hàng sản phẩm sẽ được render bằng JS -->
+      </tbody>
+    </table>
+    <div id="products-message" class="message"></div>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+    let ALL_PRODUCTS = [];
+
+    const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = localStorage.getItem("token") || "";
+
+    if (currentUser.role !== "admin") {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("logout-btn").onclick = function () {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    };
+
+    const tbody = document.getElementById("admin-products-tbody");
+    const productsMessage = document.getElementById("products-message");
+    const filterCategory = document.getElementById("filter-category");
+    const filterName = document.getElementById("filter-name");
+    const filterClear = document.getElementById("filter-clear");
+
+    const DEFAULT_CATEGORIES = ["Rau xanh", "Củ quả", "Ngũ cốc", "Sữa", "Khác"];
+
+    function formatMoney(v, product) {
+      const n = Number(v || 0);
+      if (!n) return "Liên hệ";
+      let unit = "kg";
+      if (product && product.price_unit) {
+        const parts = product.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return n.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function buildImageUrl(imageFile) {
+      const file = imageFile || "vegetable.jpg";
+      return API_BASE + "/img/" + file;
+    }
+
+    function normalizeText(s) {
+      return String(s || "").trim().toLowerCase();
+    }
+
+    function populateCategoryOptions(products) {
+      const cats = Array.from(
+        new Set((products || []).map(p => (p.category || "").trim()).filter(Boolean))
+      );
+
+      const merged = Array.from(new Set([...(DEFAULT_CATEGORIES || []), ...(cats || [])]))
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, "vi"));
+
+      filterCategory.innerHTML =
+        `<option value="">Tất cả loại</option>` +
+        merged.map(c => `<option value="${c}">${c}</option>`).join("");
+    }
+
+    function applyFilters() {
+      const cat = (filterCategory.value || "").trim();
+      const q = normalizeText(filterName.value);
+      const filtered = (ALL_PRODUCTS || []).filter((p) => {
+        const okCat = !cat || (p.category || "").trim() === cat;
+        const okName = !q || normalizeText(p.name).includes(q);
+        return okCat && okName;
+      });
+      renderProducts(filtered);
+    }
+
+    function renderProducts(products) {
+      productsMessage.textContent = "";
+      if (!products || products.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5'>Không có sản phẩm phù hợp.</td></tr>";
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => {
+        const imgSrc = buildImageUrl(p.image_url);
+        return `
+          <tr>
+            <td>${p.id}</td>
+            <td>
+              <div class="product-name-cell">
+                <img src="${imgSrc}" alt="${p.name}" class="thumb-img">
+                <div>${p.name}</div>
+              </div>
+            </td>
+            <td>${formatMoney(p.price, p)}</td>
+            <td>${p.category || ""}</td>
+            <td class="col-actions">
+              <button class="edit-link-btn" type="button"
+                onclick="window.location.href='admin-products-edit.html?id=${encodeURIComponent(p.id)}'">
+                Sửa
+              </button>
+              <button class="delete-btn" type="button" onclick="deleteProduct(${p.id})">
+                Xóa
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadProducts() {
+      productsMessage.textContent = "";
+      tbody.innerHTML = "<tr><td colspan='5'>Đang tải dữ liệu...</td></tr>";
+
+      try {
+        const res = await fetch(API_BASE + "/products");
+        const data = await res.json();
+
+        if (!data.ok) {
+          tbody.innerHTML = "";
+          productsMessage.textContent = "Lỗi khi lấy danh sách sản phẩm";
+          return;
+        }
+
+        ALL_PRODUCTS = data.products || [];
+        populateCategoryOptions(ALL_PRODUCTS);
+        renderProducts(ALL_PRODUCTS);
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = "";
+        productsMessage.textContent = "Không kết nối được tới API";
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm("Xóa sản phẩm này? Hành động không thể hoàn tác.")) return;
+      if (!token) {
+        alert("Thiếu token admin, hãy đăng nhập lại");
+        return;
+      }
+      try {
+        const res = await fetch(API_BASE + "/admin/products/" + encodeURIComponent(id), {
+          method: "DELETE",
+          headers: { Authorization: "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert(data.message || "Xóa thất bại");
+          return;
+        }
+        ALL_PRODUCTS = ALL_PRODUCTS.filter(p => String(p.id) !== String(id));
+        applyFilters();
+      } catch (err) {
+        console.error(err);
+        alert("Không xóa được sản phẩm");
+      }
+    }
+
+    document.getElementById("show-add-form-btn").onclick = function () {
+      const f = document.getElementById("add-form");
+      f.style.display = f.style.display === "none" ? "block" : "none";
+    };
+
+    document.getElementById("add-product-btn").onclick = async function () {
+      const name = document.getElementById("new-name").value.trim();
+      const price = parseInt(document.getElementById("new-price").value, 10);
+      const category = document.getElementById("new-category").value.trim();
+      const description = document.getElementById("new-description").value.trim();
+      const calories = document.getElementById("new-calories").value.trim();
+      const protein = document.getElementById("new-protein").value.trim();
+      const fat = document.getElementById("new-fat").value.trim();
+      const carbs = document.getElementById("new-carbs").value.trim();
+      const sodium = document.getElementById("new-sodium").value.trim();
+      const sugar = document.getElementById("new-sugar").value.trim();
+      const saturatedFat = document.getElementById("new-saturated-fat").value.trim();
+      const fiber = document.getElementById("new-fiber").value.trim();
+      const cholesterol = document.getElementById("new-cholesterol").value.trim();
+      const imageFile = document.getElementById("new-image-file").files[0];
+      const msgEl = document.getElementById("add-message");
+      msgEl.style.color = "#d00000";
+      msgEl.textContent = "";
+
+      if (!name || !price) {
+        msgEl.textContent = "Tên và giá sản phẩm là bắt buộc";
+        return;
+      }
+
+      if (!imageFile) {
+        msgEl.textContent = "Vui lòng chọn ảnh JPG/PNG cho sản phẩm";
+        return;
+      }
+
+      if (!token) {
+        msgEl.textContent = "Thiếu token admin, hãy đăng nhập lại";
+        return;
+      }
+
+      try {
+        const fd = new FormData();
+        fd.append("name", name);
+        fd.append("price", String(price));
+        fd.append("category", category);
+        fd.append("description", description);
+        fd.append("calories", calories);
+        fd.append("protein", protein);
+        fd.append("fat", fat);
+        fd.append("carbs", carbs);
+        fd.append("sodium", sodium);
+        fd.append("sugar", sugar);
+        fd.append("saturated_fat", saturatedFat);
+        fd.append("fiber", fiber);
+        fd.append("cholesterol", cholesterol);
+        fd.append("image", imageFile);
+
+        const res = await fetch(API_BASE + "/admin/products", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token
+          },
+          body: fd
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+          msgEl.textContent = data.message || "Lỗi khi thêm sản phẩm";
+          return;
+        }
+
+        msgEl.style.color = "#2d6a4f";
+        msgEl.textContent = "Thêm sản phẩm thành công";
+        document.getElementById("new-name").value = "";
+        document.getElementById("new-price").value = "";
+        document.getElementById("new-category").value = "Khác";
+        document.getElementById("new-description").value = "";
+        document.getElementById("new-calories").value = "";
+        document.getElementById("new-protein").value = "";
+        document.getElementById("new-fat").value = "";
+        document.getElementById("new-carbs").value = "";
+        document.getElementById("new-sodium").value = "";
+        document.getElementById("new-sugar").value = "";
+        document.getElementById("new-saturated-fat").value = "";
+        document.getElementById("new-fiber").value = "";
+        document.getElementById("new-cholesterol").value = "";
+        document.getElementById("new-image-file").value = "";
+        const prev = document.getElementById("new-image-preview");
+        prev.style.display = "none";
+        prev.src = "";
+
+        loadProducts();
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = "Không kết nối được tới API";
+      }
+    };
+
+    // preview ảnh upload
+    document.getElementById("new-image-file").addEventListener("change", function () {
+      const f = this.files && this.files[0];
+      const prev = document.getElementById("new-image-preview");
+      if (!f) {
+        prev.style.display = "none";
+        prev.src = "";
+        return;
+      }
+      prev.src = URL.createObjectURL(f);
+      prev.style.display = "block";
+    });
+
+    // lọc theo tên / loại (frontend filter)
+    let nameDebounce = null;
+    filterCategory.addEventListener("change", applyFilters);
+    filterName.addEventListener("input", function () {
+      clearTimeout(nameDebounce);
+      nameDebounce = setTimeout(applyFilters, 180);
+    });
+    filterClear.addEventListener("click", function () {
+      filterCategory.value = "";
+      filterName.value = "";
+      applyFilters();
+    });
+
+    loadProducts();
+  </script>
+</body>
+</html>
+

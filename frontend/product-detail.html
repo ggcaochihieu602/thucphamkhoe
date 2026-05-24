@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết sản phẩm | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .product-detail-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    .product-detail-image {
+      width: 320px;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #95d5b2;
+    }
+    .product-detail-info {
+      flex: 1;
+    }
+    .product-detail-name {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .product-detail-price {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #d90429;
+      margin-bottom: 1rem;
+    }
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .quantity-btn {
+      background: #40916c;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+    .quantity-input {
+      width: 50px;
+      text-align: center;
+      font-size: 1.2rem;
+      border-radius: 6px;
+      border: 1px solid #b7e4c7;
+      padding: 0.2rem;
+    }
+    .add-cart-btn {
+      margin-top: 1rem;
+      background: #2d6a4f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .add-cart-btn .cart-icon {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      display: inline-block;
+    }
+    .total-price-text {
+      margin-top: 0.7rem;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .expert-note {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 1rem;
+    }
+
+    .detail-actions .add-cart-btn,
+    .detail-actions .compare-btn {
+      margin-top: 0;
+    }
+
+    .compare-btn {
+      margin-top: 1rem;
+      background: #ff9100;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.2rem;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(255,145,0,0.10);
+    }
+
+    .compare-btn .compare-icon {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      display: inline-block;
+      filter: brightness(0) invert(1);
+    }
+
+    .compare-btn:hover {
+      background: #ff6f00;
+    }
+
+    .nutrition-box {
+      margin-top: 1.2rem;
+      padding: 1rem;
+      border: 1px solid #e9f5ee;
+      background: #f7fffb;
+      border-radius: 10px;
+    }
+
+    .nutrition-box h3 {
+      margin: 0 0 0.6rem 0;
+      font-size: 1.05rem;
+      color: #2d6a4f;
+    }
+
+    .nutrition-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.4rem 1rem;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .compare-panel {
+      max-width: 900px;
+      margin: 1.5rem auto 2rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.06);
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .compare-panel.open {
+      display: block;
+    }
+
+    .compare-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .compare-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ff9100;
+      margin: 0;
+    }
+
+    .compare-controls {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .compare-controls select {
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 0.95rem;
+      outline: none;
+      min-width: 200px;
+      background: #fff;
+    }
+
+    .compare-controls .compare-search {
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 0.95rem;
+      outline: none;
+      min-width: 240px;
+      background: #fff;
+    }
+
+    .compare-msg {
+      color: #d90429;
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+    }
+
+    .feedback-section {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+
+    .feedback-section h3 {
+      margin: 0 0 1rem 0;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .rating-summary {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .summary-stars {
+      font-size: 1.2rem;
+      color: #fbbf24;
+      margin-bottom: 0.3rem;
+    }
+
+    .summary-text {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .star-rating {
+      display: inline-flex;
+      gap: 0.2rem;
+      margin-left: 0.5rem;
+    }
+
+    .star {
+      font-size: 1.5rem;
+      color: #d1d5db;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .star:hover,
+    .star.active {
+      color: #fbbf24;
+    }
+
+    .your-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .feedback-submit-btn:hover {
+      background: #2d6a4f;
+    }
+
+    .feedback-msg.success {
+      color: #2d6a4f;
+    }
+
+    .feedback-msg.error {
+      color: #d90429;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .compare-card {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 1rem;
+      background: #fafafa;
+    }
+
+    .compare-card h4 {
+      margin: 0 0 0.6rem 0;
+      font-size: 1.05rem;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .compare-table td {
+      padding: 0.45rem 0;
+      border-bottom: 1px dashed #e6e6e6;
+      vertical-align: top;
+    }
+
+    .compare-table td:first-child {
+      color: #666;
+      width: 42%;
+      padding-right: 0.8rem;
+    }
+
+    .delta {
+      font-weight: 700;
+      margin-left: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .delta.pos { color: #2d6a4f; }
+    .delta.neg { color: #d90429; }
+    .delta.neu { color: #555; }
+
+    .reviews-box {
+      margin-top: 0.9rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #eee;
+    }
+
+    .reviews-box ul {
+      margin: 0.4rem 0 0 1rem;
+      padding: 0;
+    }
+
+    .reviews-box li {
+      margin: 0.25rem 0;
+      color: #444;
+    }
+
+    @media (max-width: 860px) {
+      .product-detail-container { flex-direction: column; }
+      .product-detail-image { width: 100%; height: 260px; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html" id="login-link">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div id="detail-message" style="max-width:900px;margin:1rem auto;color:#d90429;"></div>
+    <div class="product-detail-container" id="product-detail" style="display:none;">
+      <div>
+        <img id="product-image" src="" alt="" class="product-detail-image">
+      </div>
+      <div class="product-detail-info">
+        <div id="product-name" class="product-detail-name"></div>
+        <div id="product-price" class="product-detail-price"></div>
+        <p id="product-description"></p>
+
+        <div class="total-price-text" id="total-price"></div>
+
+        <div class="quantity-selector">
+          <button class="quantity-btn" id="btn-minus">-</button>
+          <input id="detail-qty" type="number" class="quantity-input" value="1" min="1">
+          <button class="quantity-btn" id="btn-plus">+</button>
+        </div>
+
+        <div class="detail-actions">
+          <button class="add-cart-btn" id="btn-add-cart">
+            <img class="cart-icon" src="http://localhost:3000/img/assets/cart-icon.png" alt="Giỏ hàng">Thêm vào giỏ
+          </button>
+          <button class="compare-btn" id="btn-compare" type="button">
+            <img class="compare-icon" src="http://localhost:3000/img/assets/search-icon.png" alt="So sánh">So sánh
+          </button>
+        </div>
+
+        <div class="nutrition-box">
+          <h3>Thông tin dinh dưỡng (đặc tính)</h3>
+          <div class="nutrition-grid">
+            <div>Calories: <b id="nutri-calories">?</b> kcal</div>
+            <div>Protein: <b id="nutri-protein">?</b> g</div>
+            <div>Fat: <b id="nutri-fat">?</b> g</div>
+            <div>Carbs: <b id="nutri-carbs">?</b> g</div>
+          </div>
+        </div>
+
+        <div class="feedback-section" id="feedback-section" style="display:none;">
+          <h3>Đánh giá sản phẩm</h3>
+          <div class="rating-summary" id="rating-summary">
+            <div class="summary-stars" id="summary-stars"></div>
+            <div class="summary-text" id="summary-text"></div>
+          </div>
+          <div class="user-feedback" id="user-feedback">
+            <div class="your-rating">
+              <span>Đánh giá của bạn:</span>
+              <div class="star-rating" id="star-rating">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+              </div>
+            </div>
+            <div class="feedback-comment">
+              <textarea id="feedback-comment" placeholder="Chia sẻ cảm nhận về sản phẩm..." rows="3" style="width:100%;margin-top:0.5rem;padding:0.5rem;border:1px solid #ddd;border-radius:6px;resize:vertical;"></textarea>
+            </div>
+            <button class="feedback-submit-btn" id="feedback-submit" style="margin-top:0.5rem;padding:0.5rem 1rem;background:#40916c;color:#fff;border:none;border-radius:6px;cursor:pointer;">Gửi đánh giá</button>
+            <div id="feedback-msg" style="margin-top:0.5rem;font-size:0.9rem;"></div>
+          </div>
+        </div>
+
+        <div class="expert-note">
+          <strong>Gợi ý từ chuyên gia:</strong>
+          <p id="expert-note-text">
+            Bạn có thể kết hợp sản phẩm này với các loại rau xanh và nguồn đạm lành mạnh để tạo bữa ăn cân bằng.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-panel" id="compare-panel">
+      <div class="compare-head">
+        <h3 class="compare-title">So sánh sản phẩm</h3>
+        <div class="compare-controls">
+          <input id="compare-search" class="compare-search" type="search" placeholder="Tìm sản phẩm so sánh..." autocomplete="off">
+          <select id="compare-category">
+            <option value="">Chọn danh mục...</option>
+          </select>
+          <select id="compare-product" disabled>
+            <option value="">Chọn sản phẩm để so sánh...</option>
+          </select>
+        </div>
+      </div>
+      <div id="compare-msg" class="compare-msg"></div>
+      <div id="compare-content"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const CART_ICON_URL = API_BASE + "/img/assets/cart-icon.png";
+    const SEARCH_ICON_URL = API_BASE + "/img/assets/search-icon.png";
+    let CURRENT_PRODUCT = null;
+    let ALL_PRODUCTS_CACHE = null;
+
+    function getUserId() {
+      try {
+        const u = JSON.parse(localStorage.getItem("user") || "{}");
+        return u && (u.id || u.email) ? String(u.id || u.email) : "guest";
+      } catch (_) {
+        return "guest";
+      }
+    }
+
+    function cartSessionsKey() {
+      return "cartSessions:" + getUserId();
+    }
+
+    function activeCartIdKey() {
+      return "activeCartId:" + getUserId();
+    }
+
+    function getCartSessions() {
+      try {
+        const k = cartSessionsKey();
+        const mine = JSON.parse(localStorage.getItem(k) || "[]");
+        if (Array.isArray(mine)) return mine;
+        return [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveCartSessions(sessions) {
+      localStorage.setItem(cartSessionsKey(), JSON.stringify(Array.isArray(sessions) ? sessions : []));
+    }
+
+    function ensureActiveCartSession() {
+      const sessions = getCartSessions();
+      let activeId = localStorage.getItem(activeCartIdKey()) || "";
+      let active = sessions.find(s => s && s.id === activeId && String(s.userId || "guest") === getUserId());
+
+      // migrate legacy localStorage.cart into a session
+      let legacy = [];
+      try { legacy = JSON.parse(localStorage.getItem("cart") || "[]"); } catch (_) { legacy = []; }
+      if (Array.isArray(legacy) && legacy.length > 0) {
+        sessions.push({
+          id: "cart_" + Date.now() + "_legacy",
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: legacy
+        });
+        localStorage.removeItem("cart");
+      }
+
+      if (!active) {
+        activeId = "cart_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+        active = {
+          id: activeId,
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: []
+        };
+        sessions.push(active);
+        localStorage.setItem(activeCartIdKey(), activeId);
+        saveCartSessions(sessions);
+      } else {
+        saveCartSessions(sessions);
+      }
+
+      return { sessions, activeId };
+    }
+
+    function getCart() {
+      const { sessions, activeId } = ensureActiveCartSession();
+      const active = sessions.find(s => s && s.id === activeId);
+      return Array.isArray(active?.items) ? active.items : [];
+    }
+
+    function saveCart(cart) {
+      const { sessions, activeId } = ensureActiveCartSession();
+      const idx = sessions.findIndex(s => s && s.id === activeId);
+      if (idx >= 0) {
+        sessions[idx].items = Array.isArray(cart) ? cart : [];
+        saveCartSessions(sessions);
+      }
+    }
+
+    function getProductIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    function formatPrice(number, product) {
+      if (!number) return "Liên hệ!";
+      let unit = "kg";
+      if (product && product.price_unit) {
+        const parts = product.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return Number(number).toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function buildImageUrl(imageFile) {
+      if (!imageFile) return "img/placeholder.jpg";
+      if (imageFile.startsWith("http://") || imageFile.startsWith("https://")) return imageFile;
+      if (imageFile.startsWith("/img/")) return API_BASE + imageFile;
+      if (imageFile.startsWith("img/")) return API_BASE + "/" + imageFile;
+      return API_BASE + "/img/" + imageFile;
+    }
+
+    function formatNumberOrQ(v) {
+      if (v === null || v === undefined || v === "") return "?";
+      const n = Number(v);
+      if (!Number.isFinite(n)) return "?";
+      const rounded = Math.round(n * 100) / 100;
+      return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2);
+    }
+
+    function setNutrition(p) {
+      const titleEl = document.querySelector(".nutrition-box h3");
+      if (titleEl) {
+        titleEl.textContent = "Thông tin dinh dưỡng (đặc tính trong 100g)";
+      }
+
+      const gridEl = document.querySelector(".nutrition-box .nutrition-grid");
+      if (!gridEl) return;
+
+      const items = [
+        { label: "Calories", value: p.calories, unit: "kcal", always: true },
+        { label: "Protein", value: p.protein, unit: "g", always: true },
+        { label: "Fat", value: p.fat, unit: "g", always: true },
+        { label: "Carbs", value: p.carbs, unit: "g", always: true },
+        { label: "Natri", value: p.sodium, unit: "mg" },
+        { label: "Đường", value: p.sugar, unit: "g" },
+        { label: "Chất béo bão hòa", value: p.saturated_fat, unit: "g" },
+        { label: "Chất xơ", value: p.fiber, unit: "g" },
+        { label: "Cholesterol", value: p.cholesterol, unit: "mg" }
+      ];
+
+      const html = items
+        .filter((item) => item.always || (item.value !== null && item.value !== undefined && item.value !== ""))
+        .map((item) => `<div>${item.label}: <b>${formatNumberOrQ(item.value)}</b> ${item.unit}</div>`)
+        .join("");
+
+      gridEl.innerHTML = html;
+    }
+
+    function updateTotalPrice(price) {
+      const qtyInput = document.getElementById("detail-qty");
+      const qty = parseInt(qtyInput.value) || 1;
+      const total = (Number(price) || 0) * qty;
+
+      const text =
+        total > 0
+          ? "Tổng tính: " + total.toLocaleString("vi-VN") + "đ"
+          : "Tổng tính: Liên hệ!";
+
+      document.getElementById("total-price").textContent = text;
+    }
+
+    async function fetchProduct(productId) {
+      const res = await fetch(API_BASE + "/products/" + encodeURIComponent(productId));
+      const data = await res.json();
+      if (!data.ok || !data.product) throw new Error(data.message || "Không tải được sản phẩm");
+      return data.product;
+    }
+
+    async function fetchAllProducts() {
+      if (ALL_PRODUCTS_CACHE) return ALL_PRODUCTS_CACHE;
+      const res = await fetch(API_BASE + "/products");
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không tải được danh sách sản phẩm");
+      ALL_PRODUCTS_CACHE = data.products || [];
+      return ALL_PRODUCTS_CACHE;
+    }
+
+    function setCompareMsg(text) {
+      const el = document.getElementById("compare-msg");
+      el.textContent = text || "";
+    }
+
+    function getDeltaHtml(a, b) {
+      const na = Number(a);
+      const nb = Number(b);
+      if (!Number.isFinite(na) || !Number.isFinite(nb)) return "";
+      const d = nb - na;
+      const rounded = Math.round(d * 100) / 100;
+      const cls = d > 0 ? "pos" : d < 0 ? "neg" : "neu";
+      const sign = rounded > 0 ? "+" : "";
+      return `<span class="delta ${cls}">(${sign}${formatNumberOrQ(rounded)})</span>`;
+    }
+
+    function renderCompare(currentP, otherP) {
+      const rows = [
+        { label: "Giá", get: (p) => p.price, fmt: formatPrice, delta: true },
+        { label: "Calories (kcal)", get: (p) => p.calories, fmt: formatNumberOrQ, delta: true },
+        { label: "Protein (g)", get: (p) => p.protein, fmt: formatNumberOrQ, delta: true },
+        { label: "Fat (g)", get: (p) => p.fat, fmt: formatNumberOrQ, delta: true },
+        { label: "Carbs (g)", get: (p) => p.carbs, fmt: formatNumberOrQ, delta: true },
+        { label: "Natri (mg)", get: (p) => p.sodium, fmt: formatNumberOrQ, delta: true },
+        { label: "Đường (g)", get: (p) => p.sugar, fmt: formatNumberOrQ, delta: true },
+        { label: "Chất béo bão hòa (g)", get: (p) => p.saturated_fat, fmt: formatNumberOrQ, delta: true },
+        { label: "Chất xơ (g)", get: (p) => p.fiber, fmt: formatNumberOrQ, delta: true },
+        { label: "Cholesterol (mg)", get: (p) => p.cholesterol, fmt: formatNumberOrQ, delta: true }
+      ];
+
+      const tableLeft = `
+        <table class="compare-table">
+          ${rows
+            .map((r) => {
+              const v = r.get(currentP);
+              return `
+                <tr>
+                  <td>${r.label}</td>
+                  <td>${r.fmt(v)}</td>
+                </tr>
+              `;
+            })
+            .join("")}
+        </table>
+      `;
+
+      const tableRight = `
+        <table class="compare-table">
+          ${rows
+            .map((r) => {
+              const a = r.get(currentP);
+              const b = r.get(otherP);
+              const delta = r.delta ? getDeltaHtml(a, b) : "";
+              return `
+                <tr>
+                  <td>${r.label}</td>
+                  <td>${r.fmt(b)}${delta}</td>
+                </tr>
+              `;
+            })
+            .join("")}
+        </table>
+      `;
+
+      const content = `
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>${currentP.name}</h4>
+            ${tableLeft}
+          </div>
+          <div class="compare-card">
+            <h4>${otherP.name}</h4>
+            ${tableRight}
+          </div>
+        </div>
+      `;
+
+      document.getElementById("compare-content").innerHTML = content;
+    }
+
+    async function initCompareUi(currentProduct) {
+      const panel = document.getElementById("compare-panel");
+      const btn = document.getElementById("btn-compare");
+      const categorySel = document.getElementById("compare-category");
+      const productSel = document.getElementById("compare-product");
+      const searchInput = document.getElementById("compare-search");
+      let compareOptionsCache = [];
+
+      function applyCompareFilter() {
+        const q = (searchInput?.value || "").trim().toLowerCase();
+        const options = q
+          ? compareOptionsCache.filter(o => (o.name || "").toLowerCase().includes(q))
+          : compareOptionsCache.slice();
+
+        if (options.length === 0) {
+          productSel.disabled = true;
+          productSel.innerHTML = `<option value="">Không tìm thấy sản phẩm phù hợp</option>`;
+          return;
+        }
+
+        productSel.disabled = false;
+        productSel.innerHTML =
+          `<option value="">Chọn sản phẩm để so sánh...</option>` +
+          options.map(o => `<option value="${o.id}">${o.name}</option>`).join("");
+      }
+
+      btn.onclick = async function () {
+        const isOpen = panel.classList.contains("open");
+        if (isOpen) {
+          panel.classList.remove("open");
+          return;
+        }
+        panel.classList.add("open");
+        // Đảm bảo user nhận thấy khung so sánh ngay khi bấm nút
+        try {
+          panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch (_) {}
+        setCompareMsg("");
+        document.getElementById("compare-content").innerHTML = "<p>Chọn danh mục và sản phẩm để so sánh.</p>";
+        try {
+          const all = await fetchAllProducts();
+          const cats = Array.from(
+            new Set(all.map(p => (p.category || "Khác").trim() || "Khác"))
+          ).sort((a, b) => a.localeCompare(b, "vi"));
+          categorySel.innerHTML =
+            `<option value="">Chọn danh mục...</option>` +
+            cats.map(c => `<option value="${c}">${c}</option>`).join("");
+
+          // Tự chọn danh mục hiện tại nếu có thể (vẫn có thể đổi danh mục)
+          const currentCat = (currentProduct.category || "Khác").trim() || "Khác";
+          if (cats.includes(currentCat)) {
+            categorySel.value = currentCat;
+            await categorySel.onchange();
+          }
+        } catch (e) {
+          setCompareMsg(e.message || "Không tải được danh sách sản phẩm");
+        }
+      };
+
+      categorySel.onchange = async function () {
+        setCompareMsg("");
+        productSel.disabled = true;
+        productSel.innerHTML = `<option value="">Chọn sản phẩm để so sánh...</option>`;
+        document.getElementById("compare-content").innerHTML = "<p>Chọn sản phẩm để so sánh.</p>";
+        const category = (categorySel.value || "").trim();
+        if (!category) return;
+        try {
+          const all = await fetchAllProducts();
+          compareOptionsCache = all
+            .filter(p => (p.category || "Khác").trim() === category)
+            .filter(p => String(p.id) !== String(currentProduct.id))
+            .map(p => ({ id: p.id, name: p.name }));
+
+          if (compareOptionsCache.length === 0) {
+            setCompareMsg("Danh mục này chưa có sản phẩm khác để so sánh.");
+            return;
+          }
+
+          if (searchInput) searchInput.value = "";
+          applyCompareFilter();
+        } catch (e) {
+          setCompareMsg(e.message || "Không tải được sản phẩm");
+        }
+      };
+
+      if (searchInput) {
+        searchInput.addEventListener("input", function () {
+          applyCompareFilter();
+        });
+      }
+
+      productSel.onchange = async function () {
+        setCompareMsg("");
+        const otherId = productSel.value;
+        if (!otherId) return;
+        document.getElementById("compare-content").innerHTML = "<p>Đang so sánh...</p>";
+        try {
+          const otherP = await fetchProduct(otherId);
+          renderCompare(currentProduct, otherP);
+        } catch (e) {
+          setCompareMsg(e.message || "Lỗi khi so sánh");
+          document.getElementById("compare-content").innerHTML = "";
+        }
+      };
+    }
+
+    async function loadProductDetail() {
+      const id = getProductIdFromUrl();
+      const msgEl = document.getElementById("detail-message");
+
+      if (!id) {
+        msgEl.textContent = "Không tìm thấy sản phẩm.";
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/products/" + encodeURIComponent(id));
+        const data = await res.json();
+
+        if (!data.ok || !data.product) {
+          msgEl.textContent = data.message || "Không tìm thấy sản phẩm.";
+          return;
+        }
+
+        const p = data.product;
+        CURRENT_PRODUCT = p;
+
+        const addCartIcon = document.querySelector("#btn-add-cart .cart-icon");
+        if (addCartIcon) addCartIcon.src = CART_ICON_URL;
+        const compareIcon = document.querySelector("#btn-compare .compare-icon");
+        if (compareIcon) compareIcon.src = SEARCH_ICON_URL;
+
+        const imgUrl = buildImageUrl(p.image_url);
+        document.getElementById("product-image").src = imgUrl;
+        document.getElementById("product-image").alt = p.name;
+
+        document.getElementById("product-name").textContent = p.name;
+        document.getElementById("product-price").textContent = formatPrice(p.price, p);
+        document.getElementById("product-description").textContent =
+          p.description || "Sản phẩm phù hợp cho bữa �n hàng ngày.";
+        document.getElementById("expert-note-text").textContent =
+          (p.expert_feedback && String(p.expert_feedback).trim())
+            ? String(p.expert_feedback).trim()
+            : "Chưa có góp ý từ chuyên gia.";
+        setNutrition(p);
+
+        document.getElementById("product-detail").style.display = "flex";
+
+        const basePrice = Number(p.price || 0);
+        updateTotalPrice(basePrice);
+
+        // N�t tng gi�m s� l��ng
+        document.getElementById("btn-minus").onclick = function () {
+          const input = document.getElementById("detail-qty");
+          let v = parseInt(input.value) || 1;
+          if (v > 1) v -= 1;
+          input.value = v;
+          updateTotalPrice(basePrice);
+        };
+
+        document.getElementById("btn-plus").onclick = function () {
+          const input = document.getElementById("detail-qty");
+          let v = parseInt(input.value) || 1;
+          input.value = v + 1;
+          updateTotalPrice(basePrice);
+        };
+
+        document
+          .getElementById("detail-qty")
+          .addEventListener("input", function () {
+            if (!this.value || this.value <= 0) this.value = 1;
+            updateTotalPrice(basePrice);
+          });
+
+        // Thêm vào giỏ
+        document.getElementById("btn-add-cart").onclick = function () {
+          const qty = parseInt(document.getElementById("detail-qty").value) || 1;
+          let cart = getCart();
+
+          const existingIndex = cart.findIndex((item) => item.id === p.id);
+          if (existingIndex >= 0) {
+            cart[existingIndex].quantity += qty;
+          } else {
+            cart.push({
+              id: p.id,
+              name: p.name,
+              price: basePrice,
+              image: imgUrl,
+              quantity: qty
+            });
+          }
+
+          saveCart(cart);
+          alert("Đã thêm sản phẩm vào giỏ hàng.");
+        };
+
+        initCompareUi(p);
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = "Không kết nối được tới API.";
+      }
+    }
+
+    // Đổi đăng nhập thành Hồ sơ nếu đã login
+    (function () {
+      const user = localStorage.getItem("user");
+      const loginLink = document.getElementById("login-link");
+      if (!loginLink) return;
+      if (user) {
+        loginLink.textContent = "Hồ sơ";
+        loginLink.href = "profile.html";
+      } else {
+        loginLink.textContent = "Đăng nhập";
+        loginLink.href = "login.html";
+      }
+    })();
+
+    // Gọi khi trang load
+    loadProductDetail();
+
+    let lastProductDetailSyncAt = 0;
+
+    function syncProductDetailIfNeeded(rawValue) {
+      try {
+        const payload = JSON.parse(rawValue || "null");
+        const updatedAt = Number(payload && payload.updatedAt);
+        if (!updatedAt || updatedAt <= lastProductDetailSyncAt) return;
+        lastProductDetailSyncAt = updatedAt;
+        ALL_PRODUCTS_CACHE = null;
+        loadProductDetail();
+      } catch (_) {}
+    }
+
+    window.addEventListener("storage", function (e) {
+      if (e.key === "product_data_updated" && document.visibilityState === "visible") {
+        syncProductDetailIfNeeded(e.newValue);
+      }
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState !== "visible") return;
+      syncProductDetailIfNeeded(localStorage.getItem("product_data_updated"));
+    });
+
+    // Feedback functionality
+    let currentRating = 0;
+
+    async function loadFeedbackSummary() {
+      const productId = getProductIdFromUrl();
+      if (!productId) return;
+
+      try {
+        const res = await fetch(API_BASE + "/products/" + encodeURIComponent(productId) + "/feedback/summary");
+        const data = await res.json();
+        
+        if (data.ok && data.summary.feedback_count > 0) {
+          const summary = data.summary;
+          const starsHtml = '★'.repeat(Math.round(summary.avg_rating)) + '☆ '.repeat(5 - Math.round(summary.avg_rating));
+          document.getElementById('summary-stars').innerHTML = starsHtml;
+          document.getElementById('summary-text').textContent = 
+            `${summary.avg_rating}/5 (${summary.feedback_count} đánh giá)`;
+          document.getElementById('feedback-section').style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error loading feedback summary:', error);
+      }
+    }
+
+    async function loadUserFeedback() {
+      const productId = getProductIdFromUrl();
+      const token = localStorage.getItem('token');
+      if (!productId || !token) return;
+
+      try {
+        const res = await fetch(API_BASE + "/products/" + encodeURIComponent(productId) + "/feedback", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        
+        if (data.ok && data.feedback) {
+          currentRating = data.feedback.rating;
+          updateStarDisplay(currentRating);
+          document.getElementById('feedback-comment').value = data.feedback.comment || '';
+        }
+      } catch (error) {
+        console.error('Error loading user feedback:', error);
+      }
+    }
+
+    function updateStarDisplay(rating) {
+      const stars = document.querySelectorAll('.star');
+      stars.forEach((star, index) => {
+        star.classList.toggle('active', index < rating);
+      });
+    }
+
+    // Star rating click handlers
+    document.querySelectorAll('.star').forEach(star => {
+      star.addEventListener('click', function() {
+        currentRating = parseInt(this.dataset.rating);
+        updateStarDisplay(currentRating);
+      });
+    });
+
+    // Submit feedback
+    document.getElementById('feedback-submit').addEventListener('click', async function() {
+      const productId = getProductIdFromUrl();
+      const token = localStorage.getItem('token');
+      const comment = document.getElementById('feedback-comment').value.trim();
+      const msgEl = document.getElementById('feedback-msg');
+
+      if (!productId || !token) {
+        msgEl.textContent = 'Vui lòng đăng nhập để đánh giá sản phẩm.';
+        msgEl.className = 'feedback-msg error';
+        return;
+      }
+
+      if (currentRating === 0) {
+        msgEl.textContent = 'Vui lòng chọn số sao đánh giá.';
+        msgEl.className = 'feedback-msg error';
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/products/" + encodeURIComponent(productId) + "/feedback", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            rating: currentRating,
+            comment: comment
+          })
+        });
+
+        const data = await res.json();
+        if (data.ok) {
+          msgEl.textContent = 'Đã gửi đánh giá của bạn!';
+          msgEl.className = 'feedback-msg success';
+          // Reload summary to show updated stats
+          loadFeedbackSummary();
+        } else {
+          msgEl.textContent = data.message || 'Gửi đánh giá thất bại.';
+          msgEl.className = 'feedback-msg error';
+        }
+      } catch (error) {
+        console.error('Error submitting feedback:', error);
+        msgEl.textContent = 'Có lỗi xảy ra, vui lòng thử lại.';
+        msgEl.className = 'feedback-msg error';
+      }
+    });
+
+    // Load feedback data after product loads
+    setTimeout(() => {
+      loadFeedbackSummary();
+      loadUserFeedback();
+    }, 1000);
+  </script>
+</body>
+</html>

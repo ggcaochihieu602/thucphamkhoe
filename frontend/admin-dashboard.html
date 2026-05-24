@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+
+    .admin-hero {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    .admin-hero-frame {
+      width: 740px;
+      max-width: 100%;
+      aspect-ratio: 30/10;
+    }
+    .admin-hero-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+    }
+
+    .admin-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .report-wrap {
+      margin-top: 1.2rem;
+      padding: 1.2rem;
+      border: 1px solid #edf2f7;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .report-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .report-title {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #22223b;
+    }
+
+    .report-filters {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .field label {
+      font-size: 0.85rem;
+      color: #555;
+      font-weight: 600;
+    }
+
+    .field input, .field select {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.95rem;
+      outline: none;
+      min-width: 160px;
+      background: #fff;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn.primary { background: #22223b; color: #fff; }
+    .btn.primary:hover { filter: brightness(1.05); }
+    .btn.ghost { background: #f1f5f9; color: #111827; }
+    .btn.ghost:hover { filter: brightness(0.98); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    .kpi {
+      border: 1px solid #edf2f7;
+      border-radius: 14px;
+      padding: 1rem;
+      background: linear-gradient(180deg, #ffffff, #fbfbff);
+    }
+
+    .kpi .label { font-size: 0.9rem; color: #6b7280; font-weight: 700; }
+    .kpi .value { margin-top: 0.45rem; font-size: 1.35rem; font-weight: 900; color: #111827; }
+    .kpi .delta { margin-top: 0.4rem; font-size: 0.9rem; font-weight: 800; }
+    .delta.pos { color: #2d6a4f; }
+    .delta.neg { color: #d90429; }
+    .delta.neu { color: #555; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    .panel {
+      border: 1px solid #edf2f7;
+      border-radius: 14px;
+      padding: 1rem;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .panel h3 { margin: 0 0 0.75rem 0; color: #22223b; font-size: 1.05rem; }
+    .msg { margin-top: 0.6rem; color: #d90429; font-size: 0.95rem; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.55rem 0.45rem; border-bottom: 1px solid #f1f5f9; text-align: left; font-size: 0.95rem; }
+    th { font-size: 0.85rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; }
+    .thumb { width: 44px; height: 36px; object-fit: cover; border-radius: 8px; border: 1px solid #eee; background: #fafafa; }
+    .muted { color: #6b7280; }
+
+    @media (max-width: 980px) {
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .two-col { grid-template-columns: 1fr; }
+      .field input, .field select { min-width: 200px; }
+    }
+
+    .admin-actions .admin-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60px;
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      text-align: center;
+      font-weight: 700;
+      text-decoration: none;
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+    }
+
+    .admin-actions .admin-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.14);
+      filter: brightness(1.02);
+    }
+
+    .admin-actions .admin-action:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+    }
+
+    .admin-action.products { background: linear-gradient(135deg, #40916c, #2d6a4f); }
+    .admin-action.orders { background: linear-gradient(135deg, #2d6a4f, #1b4332); }
+    .admin-action.users { background: linear-gradient(135deg, #22223b, #111122); }
+    .admin-action.transactions { background: linear-gradient(135deg, #95d5b2, #74c69d); color: #1b4332; }
+    .admin-action.support { background: linear-gradient(135deg, #d90429, #a1061f); grid-column: 1 / -1; }
+
+    @media (max-width: 720px) {
+      .admin-main { padding: 1.2rem; }
+      .admin-actions { grid-template-columns: 1fr; }
+      .admin-action.support { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <div>
+      <a href="profile.html" id="admin-profile-btn" style="background:#fff;color:#22223b;border:1px solid #fff;padding:0.45rem 1rem;border-radius:6px;font-weight:600;margin-right:0.6rem;text-decoration:none;">Hồ sơ</a>
+      <button id="logout-btn" style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;">Đăng xuất</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Report Analysis</h1>
+
+    <section class="report-wrap">
+      <div class="report-head">
+        <h2 class="report-title">Báo cáo tổng quan</h2>
+        <div class="report-filters">
+          <div class="field">
+            <label for="mode">Kiểu</label>
+            <select id="mode">
+              <option value="day">Theo ngày</option>
+              <option value="month">Theo tháng</option>
+            </select>
+          </div>
+          <div class="field" id="period-day-field">
+            <label for="period-day">Ngày</label>
+            <input id="period-day" type="date" />
+          </div>
+          <div class="field" id="period-month-field" style="display:none;">
+            <label for="period-month">Tháng</label>
+            <input id="period-month" type="month" />
+          </div>
+          <div class="field">
+            <label for="compare-enabled">So sánh</label>
+            <select id="compare-enabled">
+              <option value="off">Tắt</option>
+              <option value="on">Bật</option>
+            </select>
+          </div>
+          <div class="field" id="compare-day-field" style="display:none;">
+            <label for="compare-day">So với ngày</label>
+            <input id="compare-day" type="date" />
+          </div>
+          <div class="field" id="compare-month-field" style="display:none;">
+            <label for="compare-month">So với tháng</label>
+            <input id="compare-month" type="month" />
+          </div>
+          <button class="btn primary" id="btn-refresh" type="button">Xem báo cáo</button>
+        </div>
+      </div>
+
+      <div id="report-msg" class="msg"></div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="label">Total Sales</div>
+          <div class="value" id="kpi-sales">0</div>
+          <div class="delta neu" id="kpi-sales-delta"></div>
+        </div>
+        <div class="kpi">
+          <div class="label">Total Order</div>
+          <div class="value" id="kpi-orders">0</div>
+          <div class="delta neu" id="kpi-orders-delta"></div>
+        </div>
+        <div class="kpi">
+          <div class="label">Total Revenue</div>
+          <div class="value" id="kpi-revenue">0đ</div>
+          <div class="delta neu" id="kpi-revenue-delta"></div>
+        </div>
+        <div class="kpi">
+          <div class="label">Total Customer</div>
+          <div class="value" id="kpi-customers">0</div>
+          <div class="delta neu" id="kpi-customers-delta"></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>Top selling products</h3>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">Ảnh</th>
+                <th>Sản phẩm</th>
+                <th style="width:120px;">Số lượng</th>
+                <th style="width:160px;">Doanh thu</th>
+              </tr>
+            </thead>
+            <tbody id="top-products-body">
+              <tr><td colspan="4" class="muted">Chưa có dữ liệu.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = (function () {
+      try {
+        const origin = window.location && window.location.origin ? String(window.location.origin) : "";
+        const port = window.location && window.location.port ? String(window.location.port) : "";
+        if (origin && origin.startsWith("http") && port === "3000") return origin;
+      } catch (_) {}
+      return "http://localhost:3000";
+    })();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user.role !== "admin") {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("logout-btn").onclick = function () {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    };
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/hello.jpg";
+      if (String(imagePath).startsWith("http://") || String(imagePath).startsWith("https://")) return imagePath;
+      if (String(imagePath).startsWith("/img/")) return API_BASE + imagePath;
+      if (String(imagePath).startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function fmtMoney(v) {
+      const n = Number(v || 0);
+      return Number.isFinite(n) ? n.toLocaleString("vi-VN") + "đ" : "0đ";
+    }
+
+    function fmtPct(v) {
+      if (v === null || v === undefined) return "";
+      const n = Number(v);
+      if (!Number.isFinite(n)) return "";
+      const sign = n > 0 ? "+" : "";
+      return sign + n.toFixed(1) + "%";
+    }
+
+    function setDelta(el, pct, compareLabel) {
+      if (!el) return;
+      if (pct === null || pct === undefined || pct === "") {
+        el.textContent = compareLabel ? "Không có dữ liệu so sánh" : "";
+        el.className = "delta neu";
+        return;
+      }
+      const p = Number(pct);
+      const cls = p > 0 ? "pos" : p < 0 ? "neg" : "neu";
+      el.className = "delta " + cls;
+      el.textContent = fmtPct(p) + (compareLabel ? (" so với " + compareLabel) : "");
+    }
+
+    function getTodayStr() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function getThisMonthStr() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      return `${yyyy}-${mm}`;
+    }
+
+    function wireFilterVisibility() {
+      const mode = document.getElementById("mode").value;
+      const compareEnabled = document.getElementById("compare-enabled").value === "on";
+
+      document.getElementById("period-day-field").style.display = mode === "day" ? "flex" : "none";
+      document.getElementById("period-month-field").style.display = mode === "month" ? "flex" : "none";
+      document.getElementById("compare-day-field").style.display = compareEnabled && mode === "day" ? "flex" : "none";
+      document.getElementById("compare-month-field").style.display = compareEnabled && mode === "month" ? "flex" : "none";
+    }
+
+    async function loadReport() {
+      const token = localStorage.getItem("token") || "";
+      const msgEl = document.getElementById("report-msg");
+      msgEl.textContent = "";
+
+      const mode = document.getElementById("mode").value;
+      const compareEnabled = document.getElementById("compare-enabled").value === "on";
+      const period = mode === "day" ? (document.getElementById("period-day").value || "") : (document.getElementById("period-month").value || "");
+      const compare = !compareEnabled
+        ? ""
+        : (mode === "day" ? (document.getElementById("compare-day").value || "") : (document.getElementById("compare-month").value || ""));
+
+      if (!token) {
+        msgEl.textContent = "Thiếu token. Vui lòng đăng nhập lại.";
+        return;
+      }
+      if (!period) {
+        msgEl.textContent = "Vui lòng chọn ngày/tháng.";
+        return;
+      }
+      if (compareEnabled && !compare) {
+        msgEl.textContent = "Vui lòng chọn kỳ so sánh.";
+        return;
+      }
+
+      document.getElementById("kpi-sales").textContent = "...";
+      document.getElementById("kpi-orders").textContent = "...";
+      document.getElementById("kpi-revenue").textContent = "...";
+      document.getElementById("kpi-customers").textContent = "...";
+      document.getElementById("top-products-body").innerHTML = '<tr><td colspan="4" class="muted">Đang tải...</td></tr>';
+
+      try {
+        const url = API_BASE + "/admin/analytics/report?mode=" + encodeURIComponent(mode) + "&period=" + encodeURIComponent(period) + (compare ? ("&compare=" + encodeURIComponent(compare)) : "");
+        const res = await fetch(url, {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const ct = (res.headers.get("content-type") || "").toLowerCase();
+        const data = ct.includes("application/json") ? await res.json() : null;
+        if (!res.ok) {
+          msgEl.textContent = (data && data.message) ? data.message : ("Lỗi API: " + res.status);
+          return;
+        }
+        if (!data || !data.ok) {
+          msgEl.textContent = (data && data.message) ? data.message : "Không tải được báo cáo";
+          return;
+        }
+
+        const cur = data.current || {};
+        const deltas = data.deltas || null;
+        const compareLabel = data.compare && data.compare.period ? data.compare.period : "";
+
+        document.getElementById("kpi-sales").textContent = (cur.total_sales || 0).toLocaleString("vi-VN");
+        document.getElementById("kpi-orders").textContent = (cur.total_orders || 0).toLocaleString("vi-VN");
+        document.getElementById("kpi-revenue").textContent = fmtMoney(cur.total_revenue || 0);
+        document.getElementById("kpi-customers").textContent = (cur.total_customers || 0).toLocaleString("vi-VN");
+
+        setDelta(document.getElementById("kpi-sales-delta"), deltas ? deltas.total_sales : "", compareLabel);
+        setDelta(document.getElementById("kpi-orders-delta"), deltas ? deltas.total_orders : "", compareLabel);
+        setDelta(document.getElementById("kpi-revenue-delta"), deltas ? deltas.total_revenue : "", compareLabel);
+        setDelta(document.getElementById("kpi-customers-delta"), deltas ? deltas.total_customers : "", compareLabel);
+
+        const note = "Kỳ hiện tại: " + (cur.period || "") + (compareLabel ? (" | So sánh: " + compareLabel) : "");
+        const noteEl = document.getElementById("report-note");
+        if (noteEl) noteEl.textContent = note;
+
+        const rows = Array.isArray(data.top_products) ? data.top_products : [];
+        if (rows.length === 0) {
+          document.getElementById("top-products-body").innerHTML = '<tr><td colspan="4" class="muted">Không có dữ liệu.</td></tr>';
+        } else {
+          document.getElementById("top-products-body").innerHTML = rows
+            .map(r => {
+              const img = buildImageUrl(r.image_url);
+              return `
+                <tr>
+                  <td><img class="thumb" src="${img}" alt="${r.name || ""}"></td>
+                  <td>${r.name || ""}</td>
+                  <td>${Number(r.quantity || 0).toLocaleString("vi-VN")}</td>
+                  <td>${fmtMoney(r.amount || 0)}</td>
+                </tr>
+              `;
+            })
+            .join("");
+        }
+      } catch (e) {
+        console.error(e);
+        msgEl.textContent = "Không kết nối được tới API." + (e && e.message ? (" " + e.message) : "");
+      }
+    }
+
+    (function initReportUi() {
+      document.getElementById("mode").value = "day";
+      document.getElementById("period-day").value = getTodayStr();
+      document.getElementById("period-month").value = getThisMonthStr();
+      document.getElementById("compare-day").value = getTodayStr();
+      document.getElementById("compare-month").value = getThisMonthStr();
+
+      wireFilterVisibility();
+      document.getElementById("mode").addEventListener("change", function () {
+        wireFilterVisibility();
+      });
+      document.getElementById("compare-enabled").addEventListener("change", function () {
+        wireFilterVisibility();
+      });
+      document.getElementById("btn-refresh").addEventListener("click", loadReport);
+
+      loadReport();
+    })();
+  </script>
+</body>
+</html>
+
+
+

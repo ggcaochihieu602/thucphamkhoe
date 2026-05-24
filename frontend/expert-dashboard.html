@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bảng điều khiển chuyên gia | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --orange-700: #c75a00;
+      --orange-600: #e87500;
+      --orange-500: #ff9100;
+      --orange-200: #ffd4a0;
+      --orange-100: #fff0d9;
+      --orange-050: #fff8ef;
+      --ink: #2e1c08;
+      --muted: #71563e;
+      --white: #ffffff;
+      --shadow: 0 24px 50px rgba(232, 117, 0, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(255, 177, 72, 0.18) 0%, transparent 24%),
+        radial-gradient(circle at left center, rgba(255, 196, 120, 0.16) 0%, transparent 20%),
+        linear-gradient(180deg, #fff8f0 0%, #fff2e4 100%);
+    }
+
+    .expert-header {
+      background: linear-gradient(135deg, var(--orange-600) 0%, var(--orange-500) 100%);
+      color: var(--white);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 10px 28px rgba(232, 117, 0, 0.18);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .header-role {
+      font-size: 1rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.92);
+      margin-right: 4px;
+    }
+
+    .header-link,
+    .logout-btn {
+      border: none;
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--orange-700);
+      text-decoration: none;
+      padding: 11px 16px;
+      border-radius: 14px;
+      font-size: 0.98rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .page-shell {
+      width: min(1320px, calc(100% - 40px));
+      margin: 24px auto 34px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) 320px;
+      gap: 24px;
+      align-items: center;
+      background: linear-gradient(135deg, var(--orange-600) 0%, var(--orange-500) 100%);
+      color: var(--white);
+      border-radius: 30px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -30px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 2.6rem;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      max-width: 720px;
+      font-size: 1.08rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.94);
+    }
+
+    .hero-image {
+      position: relative;
+      z-index: 1;
+      justify-self: end;
+      width: 100%;
+      max-width: 320px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 28px;
+      padding: 14px;
+      backdrop-filter: blur(6px);
+    }
+
+    .hero-image img {
+      display: block;
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin: 30px 0 16px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--orange-700);
+      font-size: 2rem;
+      line-height: 1.1;
+    }
+
+    .section-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.6;
+    }
+
+    .expert-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .expert-action {
+      background: linear-gradient(180deg, #fffdf9 0%, var(--orange-050) 100%);
+      border: 2px solid var(--orange-200);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .action-badge {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--orange-100);
+      color: var(--orange-700);
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .expert-action h3 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    .expert-action-desc {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+
+    .expert-action-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 56px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e87500 0%, #ff9100 100%) !important;
+      color: #ffffff !important;
+      box-shadow: 0 12px 24px rgba(232, 117, 0, 0.18);
+    }
+
+    .expert-action-link:hover {
+      background: linear-gradient(135deg, #cf6500 0%, #f08200 100%) !important;
+      color: #ffffff !important;
+    }
+
+    .quick-note {
+      margin-top: 28px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 2px dashed var(--orange-200);
+      border-radius: 24px;
+      padding: 20px 22px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .quick-note strong {
+      color: var(--orange-700);
+    }
+
+    @media (max-width: 1080px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-image {
+        justify-self: start;
+        max-width: 360px;
+      }
+
+      .expert-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .expert-header {
+        padding: 14px 18px;
+        align-items: flex-start;
+      }
+
+      .brand-title {
+        font-size: 1.7rem;
+      }
+
+      .page-shell {
+        width: calc(100% - 20px);
+        margin: 12px auto 22px;
+      }
+
+      .hero {
+        padding: 22px 20px;
+        border-radius: 24px;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .section-head h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="expert-header">
+    <div class="brand">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;">
+      <div class="brand-title">ThucPhamKhoe</div>
+    </div>
+    <div class="header-actions">
+      <div class="header-role">Chuyên gia</div>
+      <a href="profile.html" id="expert-profile-btn" class="header-link">Hồ sơ</a>
+      <button class="logout-btn" onclick="logout()">Đăng xuất</button>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="hero-kicker">Bảng điều khiển chuyên gia</div>
+        <h1>Không gian làm việc dành cho chuyên gia dinh dưỡng</h1>
+        <p>Quản lý bài viết, theo dõi đánh giá sản phẩm và phản hồi cho người dùng trong một giao diện rõ ràng, nổi bật và dễ thao tác mỗi ngày.</p>
+      </div>
+      <div class="hero-image">
+        <img src="http://localhost:3000/img/assets/hello.jpg" alt="Hello chuyên gia">
+      </div>
+    </section>
+
+    <div class="section-head">
+      <div>
+        <h2>Tác vụ chính</h2>
+        <p>Chọn khu vực bạn muốn làm việc. Mỗi thẻ được thiết kế để vào việc nhanh và dễ nhìn hơn.</p>
+      </div>
+    </div>
+
+    <section class="expert-actions">
+      <article class="expert-action">
+        <div class="action-badge">Nội dung</div>
+        <h3>Quản lý bài viết</h3>
+        <div class="expert-action-desc">
+          Tạo mới, chỉnh sửa, cập nhật trạng thái và theo dõi danh sách bài viết chuyên môn của bạn.
+        </div>
+        <a href="expert-articles.html" class="expert-action-link" style="background:linear-gradient(135deg, #e87500 0%, #ff9100 100%) !important;color:#ffffff !important;">Mở quản lý bài viết</a>
+      </article>
+
+      <article class="expert-action">
+        <div class="action-badge">Sản phẩm</div>
+        <h3>Đánh giá sản phẩm</h3>
+        <div class="expert-action-desc">
+          Xem dữ liệu, nhận xét chuyên môn và tối ưu thông tin sản phẩm để hỗ trợ người dùng tốt hơn.
+        </div>
+        <a href="expert-reviews.html" class="expert-action-link" style="background:linear-gradient(135deg, #e87500 0%, #ff9100 100%) !important;color:#ffffff !important;">Mở đánh giá sản phẩm</a>
+      </article>
+
+      <article class="expert-action">
+        <div class="action-badge">Tư vấn</div>
+        <h3>Tư vấn người dùng</h3>
+        <div class="expert-action-desc">
+          Theo dõi câu hỏi, xem ngữ cảnh liên quan và phản hồi theo từng cuộc trò chuyện với giao diện rõ ràng.
+        </div>
+        <a href="expert-consultations.html" class="expert-action-link" style="background:linear-gradient(135deg, #e87500 0%, #ff9100 100%) !important;color:#ffffff !important;">Mở tư vấn người dùng</a>
+      </article>
+    </section>
+
+    <div class="quick-note">
+      <strong>Gợi ý:</strong> Nếu bạn thường xuyên trả lời người dùng, hãy ưu tiên vào mục <b>Tư vấn người dùng</b>. Nếu đang cập nhật nội dung chuyên môn, hãy bắt đầu từ <b>Quản lý bài viết</b>.
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (user.role !== "expert") {
+        alert("Bạn cần đăng nhập tài khoản chuyên gia để truy cập trang này.");
+        window.location.href = "login.html";
+      }
+    })();
+
+    function logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

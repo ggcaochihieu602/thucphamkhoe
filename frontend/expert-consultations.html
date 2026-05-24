@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tư vấn người dùng | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --orange-700: #c85d00;
+      --orange-600: #e87500;
+      --orange-500: #ff9100;
+      --orange-200: #ffd7a6;
+      --orange-100: #fff0da;
+      --orange-050: #fff8ef;
+      --white: #ffffff;
+      --text: #2f1b06;
+      --muted: #76563a;
+      --border: #f4bf7b;
+      --shadow: 0 20px 45px rgba(232, 117, 0, 0.14);
+      --user-bubble: #fff2df;
+      --expert-bubble: #fff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, #fff4e5 0%, #fff4e5 18%, transparent 18%),
+        linear-gradient(180deg, #fff8f0 0%, #fff2e2 100%);
+      color: var(--text);
+    }
+
+    .expert-header {
+      background: linear-gradient(135deg, var(--orange-600) 0%, var(--orange-500) 100%);
+      color: var(--white);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 4px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 10px 30px rgba(232, 117, 0, 0.18);
+    }
+
+    .expert-header a {
+      color: var(--orange-700);
+      background: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 1rem;
+    }
+
+    .page-shell {
+      width: min(1500px, calc(100% - 40px));
+      margin: 22px auto 34px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--orange-600) 0%, var(--orange-500) 100%);
+      color: var(--white);
+      border-radius: 28px;
+      padding: 30px 34px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel,
+    .detail {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 22px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .detail {
+      padding: 24px;
+      min-height: 760px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 18px;
+    }
+
+    .panel-title {
+      margin: 0 0 14px;
+      color: var(--orange-700);
+      font-size: 1.7rem;
+      line-height: 1.2;
+    }
+
+    .filter-row {
+      margin-bottom: 16px;
+    }
+
+    .filter-row select,
+    .field select,
+    .field textarea {
+      width: 100%;
+      font: inherit;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--orange-050);
+      border: 2px solid var(--orange-200);
+      border-radius: 18px;
+      padding: 14px 16px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 160px;
+      resize: vertical;
+      background: #fffdf9;
+    }
+
+    .consultation-list {
+      display: grid;
+      gap: 12px;
+      max-height: 760px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .consultation-item {
+      background: #fffaf4;
+      border: 2px solid var(--orange-200);
+      border-radius: 22px;
+      padding: 16px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .consultation-item:hover {
+      transform: translateY(-1px);
+      border-color: var(--orange-500);
+      box-shadow: 0 10px 20px rgba(232, 117, 0, 0.1);
+    }
+
+    .consultation-item.active {
+      background: linear-gradient(135deg, #fff1df 0%, #ffe0bb 100%);
+      border-color: var(--orange-500);
+    }
+
+    .consultation-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .consultation-user {
+      font-size: 1.16rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .consultation-status {
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      white-space: nowrap;
+      background: #fff2cb;
+      color: #8b5a00;
+    }
+
+    .consultation-status.answered,
+    .consultation-status.closed {
+      background: #ffe2bb;
+      color: var(--orange-700);
+    }
+
+    .consultation-meta,
+    .consultation-preview,
+    .hint,
+    .msg {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .mini-product-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-product-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mini-product-thumb {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid #ffd6a3;
+      background: #fff7ed;
+      flex-shrink: 0;
+    }
+
+    .mini-product-name {
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .mini-product-more {
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .detail-heading {
+      margin: 0;
+      color: var(--orange-700);
+      font-size: 2rem;
+      line-height: 1.15;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      background: var(--orange-100);
+      color: var(--orange-700);
+      border: 1px solid var(--orange-200);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .context-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      background: #fffaf4;
+      border: 2px solid var(--orange-200);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .info-card h3 {
+      margin: 0 0 10px;
+      color: var(--orange-700);
+      font-size: 1.2rem;
+      line-height: 1.3;
+    }
+
+    .info-card p {
+      margin: 7px 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .chat-window {
+      background:
+        linear-gradient(180deg, rgba(255, 244, 230, 0.9) 0%, rgba(255, 249, 242, 0.96) 100%);
+      border: 2px solid var(--orange-200);
+      border-radius: 28px;
+      padding: 18px;
+      min-height: 360px;
+      max-height: 460px;
+      overflow: auto;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .message {
+      max-width: 82%;
+      padding: 14px 16px;
+      border-radius: 22px;
+      line-height: 1.7;
+      font-size: 1.02rem;
+      color: #111111;
+      border: 1px solid rgba(232, 117, 0, 0.08);
+    }
+
+    .message.user {
+      background: var(--user-bubble);
+    }
+
+    .message.expert {
+      background: var(--expert-bubble);
+      margin-left: auto;
+      border: 2px solid var(--orange-200);
+    }
+
+    .message-meta {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .message-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .message-flag {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid var(--orange-200);
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--orange-700);
+      font-weight: 700;
+    }
+
+    .reply-box {
+      border-top: 2px dashed var(--orange-200);
+      padding-top: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--orange-700);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 18px;
+      padding: 14px 20px;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--orange-600) 0%, var(--orange-500) 100%);
+      color: var(--white);
+      box-shadow: 0 10px 22px rgba(232, 117, 0, 0.18);
+    }
+
+    .btn.secondary {
+      background: var(--orange-100);
+      color: var(--orange-700);
+      border: 2px solid var(--orange-200);
+    }
+
+    .msg {
+      min-height: 24px;
+      margin-top: 8px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 56px 18px;
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1120px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        position: static;
+      }
+
+      .detail {
+        min-height: auto;
+      }
+
+      .context-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .expert-header {
+        padding: 14px 18px;
+      }
+
+      .page-shell {
+        width: calc(100% - 20px);
+        margin: 12px auto 20px;
+      }
+
+      .hero {
+        padding: 22px 20px;
+        border-radius: 22px;
+      }
+
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .panel,
+      .detail {
+        border-radius: 22px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .detail {
+        padding: 16px;
+      }
+
+      .panel-title {
+        font-size: 1.45rem;
+      }
+
+      .detail-heading {
+        font-size: 1.7rem;
+      }
+
+      .message {
+        max-width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="expert-header">
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <div>
+      <a href="expert-dashboard.html">Dashboard</a>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <h1>Tư vấn người dùng</h1>
+    </section>
+
+    <section class="layout">
+      <aside class="panel">
+        <h2 class="panel-title">Danh sách câu hỏi</h2>
+        <div class="filter-row">
+          <select id="statusFilter">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ trả lời</option>
+            <option value="in_progress">Đang xử lý</option>
+            <option value="answered">Đã trả lời</option>
+            <option value="closed">Đã đóng</option>
+          </select>
+        </div>
+        <div class="consultation-list" id="consultationList"></div>
+      </aside>
+
+      <section class="detail">
+        <div class="topbar">
+          <div>
+            <h2 class="detail-heading" id="detailHeading">Chưa chọn yêu cầu tư vấn</h2>
+            <div class="hint" id="detailMeta"></div>
+          </div>
+          <div class="chips" id="detailChips"></div>
+        </div>
+
+        <div class="context-grid">
+          <article class="info-card">
+            <h3>Thông tin người dùng</h3>
+            <div id="userContext"><p>Chưa có dữ liệu.</p></div>
+          </article>
+          <article class="info-card">
+            <h3>Sản phẩm đính kèm</h3>
+            <div id="productContext"><p>Không có sản phẩm được đính kèm.</p></div>
+          </article>
+          <article class="info-card">
+            <h3>Giỏ hàng / bài đăng</h3>
+            <div id="cartContext"><p>Không có giỏ hàng đính kèm.</p></div>
+          </article>
+        </div>
+
+        <div class="chat-window" id="detailMessages">
+          <div class="empty">Chọn một câu hỏi ở cột bên trái để xem toàn bộ nội dung trao đổi.</div>
+        </div>
+
+        <div class="reply-box">
+          <div class="field">
+            <label for="statusSelect">Trạng thái</label>
+            <select id="statusSelect">
+              <option value="in_progress">Đang xử lý</option>
+              <option value="answered">Đã trả lời</option>
+              <option value="closed">Đã đóng</option>
+              <option value="pending">Chờ trả lời</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="replyInput">Phản hồi của chuyên gia</label>
+            <textarea id="replyInput" placeholder="Nhập câu trả lời cho người dùng..."></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn secondary" id="updateStatusBtn">Chỉ cập nhật trạng thái</button>
+            <button class="btn primary" id="sendReplyBtn">Gửi phản hồi</button>
+          </div>
+          <div class="msg" id="replyMsg"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+    let consultations = [];
+    let currentConsultationId = null;
+
+    function getToken() {
+      return localStorage.getItem("token") || "";
+    }
+
+    function getHeaders() {
+      return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + getToken()
+      };
+    }
+
+    const CONSULTATION_REPLY_MIN = 10;
+    const CONSULTATION_REPLY_MAX = 1000;
+
+    function validateConsultationReply(value) {
+      const text = String(value || "").trim();
+      if (!text) {
+        return "Phản hồi không hợp lệ. Vui lòng nhập nội dung trước khi gửi.";
+      }
+      if (text.length < CONSULTATION_REPLY_MIN) {
+        return "Phản hồi không hợp lệ vì quá ngắn. Vui lòng nhập ít nhất " + CONSULTATION_REPLY_MIN + " ký tự.";
+      }
+      if (text.length > CONSULTATION_REPLY_MAX) {
+        return "Phản hồi không hợp lệ vì quá dài. Vui lòng nhập tối đa " + CONSULTATION_REPLY_MAX + " ký tự.";
+      }
+      return "";
+    }
+
+    (function ensureExpert() {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (user.role !== "expert") {
+        alert("Bạn cần đăng nhập tài khoản chuyên gia để truy cập trang này.");
+        window.location.href = "login.html";
+      }
+    })();
+
+    function formatDateTime(value) {
+      if (!value) return "";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleString("vi-VN");
+    }
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/hello.jpg";
+      const value = String(imagePath).trim();
+      if (!value) return API_BASE + "/img/assets/hello.jpg";
+      if (value.startsWith("http://") || value.startsWith("https://")) return value;
+      if (value.startsWith("/img/")) return API_BASE + value;
+      if (value.startsWith("img/")) return API_BASE + "/" + value;
+      return API_BASE + "/img/" + value;
+    }
+
+    function formatTopic(topic) {
+      const map = {
+        giam_can: "Giảm cân",
+        tang_can: "Tăng cân",
+        an_uong_lanh_manh: "Ăn uống lành mạnh",
+        benh_ly: "Bệnh lý",
+        san_pham_cu_the: "Sản phẩm cụ thể",
+        gio_hang: "Giỏ hàng hiện tại",
+        khac: "Khác"
+      };
+      return map[String(topic || "")] || "";
+    }
+
+    function statusClass(status) {
+      return status === "answered" || status === "closed" ? "answered" : "";
+    }
+
+    async function loadConsultations() {
+      const status = document.getElementById("statusFilter").value;
+      const qs = status ? ("?status=" + encodeURIComponent(status)) : "";
+      const res = await fetch(API_BASE + "/expert/consultations" + qs, {
+        headers: { "Authorization": "Bearer " + getToken() }
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không tải được danh sách tư vấn");
+      consultations = data.consultations || [];
+      renderConsultationList();
+      if (!currentConsultationId && consultations.length) {
+        currentConsultationId = consultations[0].id;
+      }
+      if (currentConsultationId) {
+        const exists = consultations.some((item) => String(item.id) === String(currentConsultationId));
+        if (exists) await openConsultation(currentConsultationId);
+      }
+    }
+
+    function renderConsultationList() {
+      const list = document.getElementById("consultationList");
+      if (!consultations.length) {
+        list.innerHTML = '<div class="empty" style="padding:24px 16px;">Chưa có câu hỏi nào cần xử lý.</div>';
+        return;
+      }
+      list.innerHTML = consultations.map((item) => `
+        <div class="consultation-item ${String(item.id) === String(currentConsultationId) ? "active" : ""}" data-id="${item.id}">
+          <div class="consultation-top">
+            <div class="consultation-user">${item.user_name || "Người dùng"}</div>
+            <div class="consultation-status ${statusClass(item.status)}">${item.status}</div>
+          </div>
+          <div class="consultation-meta">${formatTopic(item.topic) || "Không chọn chủ đề"} • ${item.user_email || ""}</div>
+          <div class="consultation-preview">${item.latest_message_text || "Chưa có nội dung"}</div>
+          <div class="consultation-preview" style="margin-top:8px;font-size:0.92rem;">${formatDateTime(item.latest_message_at || item.created_at)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderUserContext(profile) {
+      const container = document.getElementById("userContext");
+      if (!profile) {
+        container.innerHTML = "<p>Người dùng không đính kèm thông tin sức khỏe.</p>";
+        return;
+      }
+      container.innerHTML = `
+        <p><b>${profile.name || "Người dùng"}</b></p>
+        <p>Email: ${profile.email || "Chưa có"}</p>
+        <p>Tuổi / Giới tính: ${profile.age || "?"} / ${profile.gender || "?"}</p>
+        <p>Chiều cao / Cân nặng: ${profile.height || "?"} cm / ${profile.weight || "?"} kg</p>
+        <p>Mức vận động: ${profile.activity_level || "Chưa có"}</p>
+        <p>Bệnh lý: ${(profile.health_conditions || []).join(", ") || "Không có"}</p>
+        <p>Ăn uống: ${(profile.diet_preferences || []).join(", ") || "Không có"}</p>
+      `;
+    }
+
+    function renderProductContext(product) {
+      const container = document.getElementById("productContext");
+      if (!product) {
+        container.innerHTML = "<p>Không có sản phẩm được đính kèm.</p>";
+        return;
+      }
+      container.innerHTML = `
+        <p><b>${product.name || "Sản phẩm"}</b></p>
+        <p>Loại: ${product.category || "Khác"}</p>
+        <p>food_role: ${product.food_role || "Chưa có"}</p>
+        <p>Calories / Protein / Fat / Carbs: ${product.calories || 0} / ${product.protein || 0} / ${product.fat || 0} / ${product.carbs || 0}</p>
+      `;
+    }
+
+    function renderCartContext(cartSnapshot) {
+      const container = document.getElementById("cartContext");
+      if (!Array.isArray(cartSnapshot) || !cartSnapshot.length) {
+        container.innerHTML = "<p>Không có giỏ hàng đính kèm.</p>";
+        return;
+      }
+      container.innerHTML = `
+        <div class="mini-product-list">
+          ${cartSnapshot.slice(0, 6).map((item) => `
+            <div class="mini-product-item">
+              <img
+                class="mini-product-thumb"
+                src="${buildImageUrl(item.image_url)}"
+                alt="${item.name || "Sản phẩm"}"
+                onerror="this.onerror=null;this.src='${API_BASE}/img/assets/hello.jpg';"
+              >
+              <div class="mini-product-name">${item.name || "Sản phẩm"} x ${item.quantity || 1}</div>
+            </div>
+          `).join("")}
+          ${cartSnapshot.length > 6 ? `<div class="mini-product-more">+ ${cartSnapshot.length - 6} món khác</div>` : ""}
+        </div>
+      `;
+    }
+
+    function renderMessages(messages) {
+      const el = document.getElementById("detailMessages");
+      if (!messages.length) {
+        el.innerHTML = '<div class="empty">Chưa có tin nhắn.</div>';
+        return;
+      }
+      el.innerHTML = messages.map((message) => `
+        <div class="message ${message.sender_type === "expert" ? "expert" : "user"}">
+          <div class="message-meta">${message.sender_name || (message.sender_type === "expert" ? "Chuyên gia" : "Người dùng")} • ${formatDateTime(message.created_at)}</div>
+          ${Array.isArray(message.quick_flags) && message.quick_flags.length ? `<div class="message-flags">${message.quick_flags.map((flag) => `<span class="message-flag">${flag.replace(/_/g, " ")}</span>`).join("")}</div>` : ""}
+          <div>${String(message.message || "").replace(/\n/g, "<br>")}</div>
+        </div>
+      `).join("");
+      el.scrollTop = el.scrollHeight;
+    }
+
+    async function openConsultation(id) {
+      currentConsultationId = id;
+      renderConsultationList();
+      const res = await fetch(API_BASE + "/expert/consultations/" + encodeURIComponent(id), {
+        headers: { "Authorization": "Bearer " + getToken() }
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không tải được chi tiết tư vấn");
+
+      const item = data.consultation;
+      const profileData = item.profile_snapshot || item.profile || item.user_profile;
+      const productData = item.attached_product_snapshot || item.product_snapshot || item.product || item.attached_product;
+      const cartData = item.cart_snapshot || item.cart_items || item.cart;
+
+      document.getElementById("detailHeading").textContent = item.user_name || "Người dùng";
+      document.getElementById("detailMeta").textContent = (formatTopic(item.topic) || "Không chọn chủ đề") + " • " + (item.user_email || "") + " • " + formatDateTime(item.created_at);
+      document.getElementById("detailChips").innerHTML = [
+        `<span class="chip">Trạng thái: ${item.status}</span>`,
+        item.expert_name ? `<span class="chip">Chuyên gia: ${item.expert_name}</span>` : "",
+        productData ? `<span class="chip">Có sản phẩm đính kèm</span>` : "",
+        Array.isArray(cartData) && cartData.length ? `<span class="chip">Có giỏ hàng đính kèm</span>` : ""
+      ].filter(Boolean).join("");
+      document.getElementById("statusSelect").value = item.status || "in_progress";
+      renderUserContext(profileData);
+      renderProductContext(productData);
+      renderCartContext(cartData);
+      renderMessages(data.messages || []);
+    }
+
+    async function sendReply() {
+      if (!currentConsultationId) throw new Error("Hãy chọn một yêu cầu tư vấn trước");
+      const message = document.getElementById("replyInput").value.trim();
+      const messageError = validateConsultationReply(message);
+      if (messageError) throw new Error(messageError);
+      const status = document.getElementById("statusSelect").value;
+
+      const res = await fetch(API_BASE + "/expert/consultations/" + encodeURIComponent(currentConsultationId) + "/reply", {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify({ message, status })
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không gửi được phản hồi");
+      document.getElementById("replyInput").value = "";
+      document.getElementById("replyMsg").textContent = data.message || "Đã gửi phản hồi.";
+      await loadConsultations();
+      await openConsultation(currentConsultationId);
+    }
+
+    async function updateStatusOnly() {
+      if (!currentConsultationId) throw new Error("Hãy chọn một yêu cầu tư vấn trước");
+      const status = document.getElementById("statusSelect").value;
+      const res = await fetch(API_BASE + "/expert/consultations/" + encodeURIComponent(currentConsultationId) + "/status", {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || "Không cập nhật được trạng thái");
+      document.getElementById("replyMsg").textContent = data.message || "Đã cập nhật trạng thái.";
+      await loadConsultations();
+      await openConsultation(currentConsultationId);
+    }
+
+    document.getElementById("consultationList").addEventListener("click", async function (e) {
+      const item = e.target.closest(".consultation-item");
+      if (!item) return;
+      try {
+        await openConsultation(item.getAttribute("data-id"));
+      } catch (error) {
+        document.getElementById("replyMsg").textContent = error.message || "Không tải được yêu cầu tư vấn";
+      }
+    });
+
+    document.getElementById("statusFilter").addEventListener("change", async function () {
+      try {
+        await loadConsultations();
+      } catch (error) {
+        document.getElementById("replyMsg").textContent = error.message || "Không tải được danh sách tư vấn";
+      }
+    });
+
+    document.getElementById("sendReplyBtn").addEventListener("click", async function () {
+      try {
+        await sendReply();
+      } catch (error) {
+        document.getElementById("replyMsg").textContent = error.message || "Không gửi được phản hồi";
+      }
+    });
+
+    document.getElementById("updateStatusBtn").addEventListener("click", async function () {
+      try {
+        await updateStatusOnly();
+      } catch (error) {
+        document.getElementById("replyMsg").textContent = error.message || "Không cập nhật được trạng thái";
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      try {
+        await loadConsultations();
+      } catch (error) {
+        document.getElementById("replyMsg").textContent = error.message || "Không tải được dữ liệu tư vấn";
+      }
+    });
+  </script>
+</body>
+</html>

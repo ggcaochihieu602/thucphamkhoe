@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Theo dõi giao dịch | Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { border: 1px solid #eee; padding: 0.7rem 0.5rem; text-align: left; }
+    th { background: #f1f1f1; }
+    .message { margin-top: 0.8rem; color: #d00000; font-size: 0.95rem; }
+
+    .filters {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      align-items: end;
+      margin-top: 0.8rem;
+      padding: 0.8rem;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+    .filters label { font-weight: 700; font-size: 0.95rem; color: #333; }
+    .filters input, .filters select {
+      padding: 0.5rem 0.65rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.95rem;
+      background: #fff;
+      min-width: 210px;
+      box-sizing: border-box;
+    }
+    .filters .small-btn {
+      background: #22223b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 0.95rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .filters .small-btn:hover { background: #17172b; }
+
+    tr.clickable { cursor: pointer; }
+    tr.clickable:hover { background: #fafafa; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .badge.ok { background: #b7e4c7; color: #1b4332; }
+    .badge.warn { background: #ffe066; color: #7f4f24; }
+    .badge.bad { background: #ffc9c9; color: #c92a2a; }
+
+    /* modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 999;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(920px, 96vw);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+    }
+    .modal-head h3 { margin: 0; font-size: 1.1rem; }
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      color: #444;
+    }
+    .modal-body { padding: 1rem 1.2rem 1.2rem 1.2rem; }
+    .meta { color: #555; font-size: 0.95rem; margin: 0.25rem 0; }
+    .items-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; }
+    .items-table th, .items-table td { border: 1px solid #eee; padding: 0.6rem 0.45rem; }
+    .items-table th { background: #f6f6f6; }
+    .thumb { width: 54px; height: 54px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <div>
+      <a href="profile.html" id="admin-profile-btn" style="background:#fff;color:#22223b;border:1px solid #fff;padding:0.45rem 1rem;border-radius:6px;font-weight:600;margin-right:0.6rem;text-decoration:none;">Hồ sơ</a>
+      <button id="logout-btn" style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;">Đăng xuất</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Theo dõi giao dịch</h1>
+
+    <div class="filters">
+      <div>
+        <label for="filter-code">Mã giao dịch</label><br>
+        <input id="filter-code" type="text" placeholder="Ví dụ: TX12" />
+      </div>
+      <div>
+        <label for="filter-from">Từ ngày</label><br>
+        <input id="filter-from" type="date" />
+      </div>
+      <div>
+        <label for="filter-to">Đến ngày</label><br>
+        <input id="filter-to" type="date" />
+      </div>
+      <div>
+        <label for="filter-status">Trạng thái</label><br>
+        <select id="filter-status">
+          <option value="">Tất cả</option>
+          <option value="processing">Đang xử lý</option>
+          <option value="delivered">Thành công</option>
+          <option value="cancelled">Đã hủy</option>
+        </select>
+      </div>
+      <div>
+        <button class="small-btn" id="filter-clear" type="button">Xóa lọc</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Mã giao dịch</th><th>Khách hàng</th><th>Ngày</th><th>Số tiền</th><th>Trạng thái</th></tr>
+      </thead>
+      <tbody id="tx-tbody">
+        <tr><td colspan="5">Đang tải...</td></tr>
+      </tbody>
+    </table>
+    <div id="tx-message" class="message"></div>
+  </main>
+
+  <div class="modal-backdrop" id="tx-modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modal-title">Chi tiết giao dịch</h3>
+        <button class="modal-close" id="modal-close" title="Đóng">×</button>
+      </div>
+      <div class="modal-body" id="modal-body">Đang tải...</div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = localStorage.getItem("token") || "";
+    if (user.role !== "admin") {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("logout-btn").onclick = function () {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    };
+
+    const tbody = document.getElementById("tx-tbody");
+    const msgEl = document.getElementById("tx-message");
+    const codeEl = document.getElementById("filter-code");
+    const fromEl = document.getElementById("filter-from");
+    const toEl = document.getElementById("filter-to");
+    const statusEl = document.getElementById("filter-status");
+    const clearBtn = document.getElementById("filter-clear");
+
+    function formatMoney(v, product) {
+      const n = Number(v || 0);
+      if (!n) return "Liên hệ";
+      let unit = "kg";
+      if (product && product.price_unit) {
+        const parts = product.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return n.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function formatMoneyPlain(n) {
+      return Number(n || 0).toLocaleString("vi-VN") + "đ";
+    }
+
+    function formatDateTime(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return "";
+      return d.toLocaleString("vi-VN");
+    }
+
+    function formatStatusLabel(st) {
+      const s = String(st || "").toLowerCase();
+      if (s === "delivered") return { text: "Thành công", cls: "ok" };
+      if (s === "cancelled_by_admin") return { text: "Đã hủy", cls: "bad" };
+      if (s === "cancelled" || s === "canceled") return { text: "Đã hủy", cls: "bad" };
+      if (s === "pending" || s === "processing" || s === "shipping") return { text: "Đang xử lý", cls: "warn" };
+      return { text: "Đang xử lý", cls: "warn" };
+    }
+
+    function openModal(html, title) {
+      document.getElementById("modal-title").textContent = title || "Chi tiết giao dịch";
+      document.getElementById("modal-body").innerHTML = html || "";
+      document.getElementById("tx-modal").classList.add("open");
+    }
+    function closeModal() {
+      document.getElementById("tx-modal").classList.remove("open");
+    }
+    document.getElementById("modal-close").onclick = closeModal;
+    document.getElementById("tx-modal").addEventListener("click", function (e) {
+      if (e.target.id === "tx-modal") closeModal();
+    });
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return "img/vegetable.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function makeQuery() {
+      const p = new URLSearchParams();
+      const code = (codeEl.value || "").trim();
+      const from = (fromEl.value || "").trim();
+      const to = (toEl.value || "").trim();
+      if (code) p.set("code", code);
+      if (from) p.set("from", from);
+      if (to) p.set("to", to);
+      const s = p.toString();
+      return s ? "?" + s : "";
+    }
+
+    async function loadTransactions() {
+      msgEl.textContent = "";
+      tbody.innerHTML = "<tr><td colspan='5'>Đang tải...</td></tr>";
+      try {
+        const res = await fetch(API_BASE + "/admin/transactions" + makeQuery(), {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          tbody.innerHTML = "";
+          msgEl.textContent = data.message || "Lỗi khi tải giao dịch";
+          return;
+        }
+        let txs = data.transactions || [];
+
+        const group = String((statusEl.value || "").trim()).toLowerCase();
+        if (group === "processing") {
+          txs = txs.filter(t => {
+            const s = String(t.status || "").toLowerCase();
+            return s === "pending" || s === "processing" || s === "shipping";
+          });
+        } else if (group === "delivered") {
+          txs = txs.filter(t => String(t.status || "").toLowerCase() === "delivered");
+        } else if (group === "cancelled") {
+          txs = txs.filter(t => {
+            const s = String(t.status || "").toLowerCase();
+            return s === "cancelled" || s === "canceled" || s === "cancelled_by_admin";
+          });
+        }
+
+        if (txs.length === 0) {
+          tbody.innerHTML = "<tr><td colspan='5'>Không có giao dịch phù hợp.</td></tr>";
+          return;
+        }
+        tbody.innerHTML = txs.map(t => {
+          const st = formatStatusLabel(t.status);
+          return `
+            <tr class="clickable" data-order-id="${t.order_id}" data-tx="${t.tx_code}">
+              <td>${t.tx_code}</td>
+              <td>${t.user_name || ""}<div style="font-size:0.85rem;color:#777;">${t.user_email || ""}</div></td>
+              <td>${formatDateTime(t.created_at)}</td>
+              <td>${formatMoney(t.amount)}</td>
+              <td><span class="badge ${st.cls}">${st.text}</span></td>
+            </tr>
+          `;
+        }).join("");
+      } catch (e) {
+        tbody.innerHTML = "";
+        msgEl.textContent = "Không kết nối được tới API";
+      }
+    }
+
+    async function showTransactionDetail(orderId, txCode) {
+      openModal("Đang tải...", "Chi tiết giao dịch " + (txCode || ""));
+      try {
+        const res = await fetch(API_BASE + "/admin/orders/" + encodeURIComponent(orderId), {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          openModal('<div style="color:#d00000;">' + (data.message || "Lỗi khi tải chi tiết") + "</div>", "Chi tiết giao dịch " + (txCode || ""));
+          return;
+        }
+        const o = data.order;
+        const items = data.items || [];
+        const st = formatStatusLabel(o.status);
+        const rows = items.map(it => {
+          const img = buildImageUrl(it.image_url);
+          const line = Number(it.unit_price || 0) * Number(it.quantity || 0);
+          return `
+            <tr>
+              <td><img class="thumb" src="${img}" alt="${it.name || ""}"></td>
+              <td>${it.name || ""}</td>
+              <td>${it.quantity || 0}</td>
+              <td>${formatMoney(it.unit_price, it)}</td>
+              <td>${formatMoneyPlain(line)}</td>
+            </tr>
+          `;
+        }).join("");
+
+        const html = `
+          <div class="meta"><b>Mã giao d�9ch:</b> ${txCode || ""}</div>
+          <div class="meta"><b>Mã đơn:</b> #${o.id}</div>
+          <div class="meta"><b>Khách hàng:</b> ${o.user_name || ""} (${o.user_email || ""})</div>
+          <div class="meta"><b>Thời gian đặt:</b> ${formatDateTime(o.created_at)}</div>
+          <div class="meta"><b>Trạng thái:</b> <span class="badge ${st.cls}">${st.text}</span></div>
+          <div class="meta"><b>Số tiền:</b> ${formatMoney(o.total_price)}</div>
+          <table class="items-table">
+            <thead>
+              <tr><th>Ảnh</th><th>Sản phẩm</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr>
+            </thead>
+            <tbody>${rows || "<tr><td colspan='5'>Không có sản phẩm.</td></tr>"}</tbody>
+          </table>
+        `;
+        openModal(html, "Chi tiết giao dịch " + (txCode || ""));
+      } catch (e) {
+        openModal('<div style="color:#d00000;">Không kết nối được tới API</div>', "Chi tiết giao dịch " + (txCode || ""));
+      }
+    }
+
+    document.addEventListener("click", function (e) {
+      const tr = e.target.closest("tr[data-order-id]");
+      if (!tr) return;
+      const orderId = tr.getAttribute("data-order-id");
+      const tx = tr.getAttribute("data-tx");
+      if (!orderId) return;
+      showTransactionDetail(orderId, tx);
+    });
+
+    let debounce = null;
+    function scheduleReload() {
+      clearTimeout(debounce);
+      debounce = setTimeout(loadTransactions, 180);
+    }
+    codeEl.addEventListener("input", scheduleReload);
+    fromEl.addEventListener("change", loadTransactions);
+    toEl.addEventListener("change", loadTransactions);
+    statusEl.addEventListener("change", loadTransactions);
+    clearBtn.addEventListener("click", function () {
+      codeEl.value = "";
+      fromEl.value = "";
+      toEl.value = "";
+      statusEl.value = "";
+      loadTransactions();
+    });
+
+    loadTransactions();
+  </script>
+</body>
+</html>
+
+

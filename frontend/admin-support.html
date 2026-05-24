@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hỗ trợ khách hàng | Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .admin-header { background: #22223b; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .admin-nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    .admin-nav a { color: #fff; text-decoration: none; font-weight: 500; }
+    .admin-nav a:hover { text-decoration: underline; }
+    .admin-main { max-width: 1100px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 0 16px rgba(0,0,0,0.07); padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { border: 1px solid #eee; padding: 0.7rem 0.5rem; text-align: left; }
+    th { background: #f1f1f1; }
+    .message { margin-top: 0.8rem; color: #d00000; font-size: 0.95rem; }
+    .status-btn { padding:0.4rem 1.1rem;border:none;border-radius:5px;font-weight:600;cursor:pointer; }
+    .call-btn { padding:0.4rem 1.1rem;border:none;border-radius:5px;font-weight:600;cursor:pointer;background:#22223b;color:#fff; }
+    .call-btn:hover { background:#17172b; }
+    tr.clickable { cursor: pointer; }
+    .section-title { margin-top: 1.8rem; }
+    .order-link { color: #40916c; text-decoration: none; font-weight: 600; }
+    .order-link:hover { text-decoration: underline; }
+
+    /* modal (order detail) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 999;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(920px, 96vw);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+    }
+    .modal-head h3 { margin: 0; font-size: 1.1rem; }
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      color: #444;
+    }
+    .modal-body { padding: 1rem 1.2rem 1.2rem 1.2rem; }
+    .meta { color: #555; font-size: 0.95rem; margin: 0.25rem 0; }
+    .items-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; }
+    .items-table th, .items-table td { border: 1px solid #eee; padding: 0.6rem 0.45rem; }
+    .items-table th { background: #f6f6f6; }
+    .thumb { width: 54px; height: 54px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo"><b>Admin Panel</b></div>
+    <nav class="admin-nav">
+      <ul>
+        <li><a href="admin-dashboard.html">Dashboard</a></li>
+        <li><a href="admin-products.html">Sản phẩm</a></li>
+        <li><a href="admin-orders.html">Đơn hàng</a></li>
+        <li><a href="admin-users.html">Người dùng</a></li>
+        <li><a href="admin-transactions.html">Giao dịch</a></li>
+        <li><a href="admin-support.html">Hỗ trợ</a></li>
+      </ul>
+    </nav>
+    <div>
+      <a href="profile.html" id="admin-profile-btn" style="background:#fff;color:#22223b;border:1px solid #fff;padding:0.45rem 1rem;border-radius:6px;font-weight:600;margin-right:0.6rem;text-decoration:none;">Hồ sơ</a>
+      <button id="logout-btn" style="background:#d90429;color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:6px;font-weight:500;cursor:pointer;font-size:1rem;">Đăng xuất</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Hỗ trợ khách hàng</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Mã báo cáo</th>
+          <th>Khách hàng</th>
+          <th>Đơn hàng</th>
+          <th>Vấn đề</th>
+          <th>Liên hệ!</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody id="support-tbody">
+        <tr><td colspan="6">Đang tải...</td></tr>
+      </tbody>
+    </table>
+    <div id="support-message" class="message"></div>
+
+    <h2 class="section-title">Báo cáo đã xử lý</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Mã báo cáo</th>
+          <th>Khách hàng</th>
+          <th>Đơn hàng</th>
+          <th>Vấn đề</th>
+          <th>Liên hệ!</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody id="support-tbody-resolved">
+        <tr><td colspan="6">�</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <div class="modal-backdrop" id="order-modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modal-title">Chi tiết đơn hàng</h3>
+        <button class="modal-close" id="modal-close" title="Đóng">×</button>
+      </div>
+      <div class="modal-body" id="modal-body">Đang tải...</div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const token = localStorage.getItem("token") || "";
+    if (user.role !== "admin") {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("logout-btn").onclick = function () {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+    };
+
+    const tbody = document.getElementById("support-tbody");
+    const tbodyResolved = document.getElementById("support-tbody-resolved");
+    const msgEl = document.getElementById("support-message");
+    let REPORTS = [];
+
+    function formatDateTime(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return "";
+      return d.toLocaleString("vi-VN");
+    }
+
+    function statusLabel(st) {
+      const s = String(st || "").toLowerCase();
+      return s === "resolved" ? { text: "Đã xử lý", ok: true } : { text: "Chưa xử lý", ok: false };
+    }
+
+    function formatStatus(st) {
+      const s = String(st || "").toLowerCase();
+      if (s === "pending" || s === "processing") return "Đang xử lý";
+      if (s === "shipping") return "Đang vận chuyển";
+      if (s === "cancelled_by_admin") return "Đã hủy";
+      if (s === "cancelled" || s === "canceled") return "Đã hủy";
+      if (s === "delivered") return "Đã giao";
+      return st || "";
+    }
+
+    function buildRows(rows) {
+      if (!rows || rows.length === 0) return '<tr><td colspan="6">Chưa có báo cáo.</td></tr>';
+      return rows.map((r) => {
+        const st = statusLabel(r.status);
+        const btnStyle = st.ok ? "background:#40916c;color:#fff;" : "background:#d90429;color:#fff;";
+        const phone = (r.user_phone || "").trim();
+        const callText = phone ? "Gọi" : "Chưa có SĐT";
+        const callDisabled = phone ? "" : "disabled";
+        const callBtnStyle = phone ? "" : "opacity:0.5;cursor:not-allowed;";
+        return `
+          <tr class="clickable" data-id="${r.report_id}">
+            <td>RP${r.report_id}</td>
+            <td>
+              <div><b>${r.user_name || ""}</b></div>
+              <div style="font-size:0.85rem;color:#777;">${r.user_email || ""}</div>
+              <div style="font-size:0.85rem;color:#777;">${formatDateTime(r.created_at)}</div>
+            </td>
+            <td><a href="javascript:void(0)" class="order-link" data-action="view-order" data-order-id="${r.order_id}">#${r.order_id}</a></td>
+            <td>${r.issue_type || ""}</td>
+            <td>
+              <button class="call-btn" data-action="call" ${callDisabled} style="${callBtnStyle}">${callText}</button>
+            </td>
+            <td>
+              <button class="status-btn" data-action="toggle" style="${btnStyle}">${st.text}</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderReports() {
+      const openReports = (REPORTS || []).filter(r => String(r.status || "").toLowerCase() !== "resolved");
+      const resolvedReports = (REPORTS || []).filter(r => String(r.status || "").toLowerCase() === "resolved");
+
+      tbody.innerHTML = openReports.length
+        ? buildRows(openReports)
+        : '<tr><td colspan="6">Chưa có báo cáo nào.</td></tr>';
+
+      tbodyResolved.innerHTML = resolvedReports.length
+        ? buildRows(resolvedReports)
+        : '<tr><td colspan="6">Chưa có báo cáo đã xử lý.</td></tr>';
+    }
+
+    async function loadReports() {
+      msgEl.textContent = "";
+      tbody.innerHTML = '<tr><td colspan="6">Đang tải...</td></tr>';
+      try {
+        const res = await fetch(API_BASE + "/admin/order-reports", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          tbody.innerHTML = "";
+          msgEl.textContent = data.message || "Lỗi khi tải báo cáo";
+          return;
+        }
+        REPORTS = data.reports || [];
+        renderReports();
+      } catch (e) {
+        tbody.innerHTML = "";
+        msgEl.textContent = "Không kết nối được tới API";
+      }
+    }
+
+    async function updateReportStatus(reportId, nextStatus) {
+      msgEl.textContent = "";
+      try {
+        const res = await fetch(API_BASE + "/admin/order-reports/" + encodeURIComponent(reportId) + "/status", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ status: nextStatus })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          msgEl.textContent = data.message || "Cập nhật thất bại";
+          return;
+        }
+        msgEl.style.color = "#2d6a4f";
+        msgEl.textContent = data.message || "Đã cập nhật";
+        await loadReports();
+      } catch (e) {
+        msgEl.textContent = "Không kết nối được tới API";
+      }
+    }
+
+    function wireTableClicks(tableEl) {
+      tableEl.addEventListener("click", function (e) {
+        const tr = e.target.closest("tr[data-id]");
+        if (!tr) return;
+        const reportId = tr.getAttribute("data-id");
+        const btn = e.target.closest("button[data-action]");
+        const link = e.target.closest("a[data-action]");
+        const action = btn ? btn.getAttribute("data-action") : (link ? link.getAttribute("data-action") : "");
+
+        if (action === "view-order") {
+          const orderId = link.getAttribute("data-order-id");
+          if (!orderId) return;
+          openModal("Đang tải...", "Chi tiết đơn hàng #" + orderId);
+          fetch(API_BASE + "/admin/orders/" + encodeURIComponent(orderId), {
+            headers: { "Authorization": "Bearer " + token }
+          })
+            .then(r => r.json())
+            .then(data => {
+              if (!data.ok) {
+                openModal('<div style="color:#d00000;">' + (data.message || "Lỗi khi tải chi tiết") + "</div>", "Chi tiết đơn hàng #" + orderId);
+                return;
+              }
+              const o = data.order;
+              const items = data.items || [];
+              const rows = items.map(it => {
+                const img = buildImageUrl(it.image_url);
+                const line = Number(it.unit_price || 0) * Number(it.quantity || 0);
+                return `
+                  <tr>
+                    <td><img class="thumb" src="${img}" alt="${it.name || ""}"></td>
+                    <td>${it.name || ""}</td>
+                    <td>${it.quantity || 0}</td>
+                    <td>${Number(it.unit_price || 0).toLocaleString("vi-VN")}đ</td>
+                    <td>${Number(line || 0).toLocaleString("vi-VN")}đ</td>
+                  </tr>
+                `;
+              }).join("");
+              const html = `
+                <div class="meta"><b>Khách hàng:</b> ${o.user_name || ""} (${o.user_email || ""})</div>
+                <div class="meta"><b>Ngày đặt:</b> ${formatDateTime(o.created_at)}</div>
+                <div class="meta"><b>Trạng thái:</b> ${o.status || ""}</div>
+                <div class="meta"><b>Tổng tiền:</b> ${Number(o.total_price || 0).toLocaleString("vi-VN")}đ</div>
+                <table class="items-table">
+                  <thead>
+                    <tr><th>Ảnh</th><th>Sản phẩm</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr>
+                  </thead>
+                  <tbody>${rows || "<tr><td colspan='5'>Không có sản phẩm.</td></tr>"}</tbody>
+                </table>
+              `;
+              openModal(html, "Chi tiết đơn hàng #" + orderId);
+            })
+            .catch(() => {
+              openModal('<div style="color:#d00000;">Không kết nối được tới API</div>', "Chi tiết đơn hàng #" + orderId);
+            });
+          return;
+        }
+
+        if (action === "call") {
+          const r = (REPORTS || []).find(x => String(x.report_id) === String(reportId));
+          const phone = (r && r.user_phone) ? String(r.user_phone).trim() : "";
+          if (!phone) return;
+          if (confirm("Số điện thoại: " + phone + "\nBấm OK để gọi.")) {
+            window.location.href = "tel:" + phone.replace(/\s+/g, "");
+          }
+          return;
+        }
+
+        if (action === "toggle") {
+          const r = (REPORTS || []).find(x => String(x.report_id) === String(reportId));
+          if (!r) return;
+          const current = String(r.status || "").toLowerCase();
+          const next = current === "resolved" ? "open" : "resolved";
+          updateReportStatus(reportId, next);
+        }
+      });
+    }
+
+    wireTableClicks(tbody);
+    wireTableClicks(tbodyResolved);
+
+    loadReports();
+  </script>
+</body>
+</html>
+
+

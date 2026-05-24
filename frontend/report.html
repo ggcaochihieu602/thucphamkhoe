@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Báo cáo đơn hàng | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .report-container {
+      max-width: 520px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    .report-header {
+      margin-bottom: 1.5rem;
+    }
+    .report-header h2 {
+      margin-bottom: 0.3rem;
+    }
+    .report-header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .report-form label {
+      display: block;
+      margin-bottom: 0.7rem;
+      font-weight: 500;
+    }
+    .report-form .options {
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+    .report-form .options label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-weight: normal;
+    }
+    .report-form textarea {
+      width: 100%;
+      min-height: 90px;
+      border-radius: 6px;
+      border: 1px solid #b7e4c7;
+      padding: 0.6rem;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      resize: vertical;
+    }
+    .report-form button {
+      background: #d90429;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    .report-form button:hover {
+      background: #a8001c;
+    }
+    .success-message {
+      color: #2d6a4f;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      text-align: center;
+    }
+    .back-link {
+      display: block;
+      margin-top: 1rem;
+      text-align: center;
+      text-decoration: none;
+      color: #40916c;
+      font-size: 0.95rem;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html" id="login-link">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="report-container">
+      <div class="report-header" id="report-header">
+        <!-- JS sï¿½ ï¿½iï¿½n thï¿½ng tin mï¿½ ï¿½ï¿½n -->
+      </div>
+
+      <form class="report-form" id="report-form">
+        <label>V�n �� b�n g�p ph�i v�:i ��n h�ng n�y:</label>
+        <div class="options">
+          <label><input type="radio" name="problem" value="S�n ph�m b�9 h�ng" required> S�n ph�m b�9 h�ng</label>
+          <label><input type="radio" name="problem" value="Thiếu sản phẩm"> Thiếu sản phẩm</label>
+          <label><input type="radio" name="problem" value="Giao h�ng tr�&"> Giao h�ng tr�&</label>
+          <label><input type="radio" name="problem" value="Kh�c"> Kh�c (ghi ch� b�n d��:i)</label>
+        </div>
+
+        <textarea name="note" placeholder="M� t� chi ti�t v�n �� ho�c g�p � th�m..."></textarea>
+
+        <button type="submit">Gửi báo cáo</button>
+      </form>
+
+      <div class="success-message" id="success-message" style="display:none;">
+        C�m �n b�n �� g�i b�o c�o. Ch�ng t�i s� xem x�t v� ph�n h�i s�:m nh�t c� th�.
+      </div>
+
+      <a href="order.html" class="back-link">&larr; Quay l�i chi ti�t ��n h�ng</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    function getOrderIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id') || 'N/A';
+    }
+
+    function initHeader() {
+      const orderId = getOrderIdFromUrl();
+      const header = document.getElementById('report-header');
+      header.innerHTML = `
+        <h2>B�o c�o ��n h�ng #${orderId}</h2>
+        <p>N�u b�n g�p v�n �� v�:i ��n h�ng, h�y ch�n l� do v� m� t� chi ti�t �� ch�ng t�i h� tr�.</p>
+      `;
+    }
+
+    function initNavLogin() {
+      const nav = document.querySelector('nav ul');
+      if (!nav) return;
+      const user = localStorage.getItem('user');
+      const loginLi = document.getElementById('login-link').parentElement;
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      }
+    }
+
+    document.getElementById('report-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const problem = formData.get('problem');
+      const note = formData.get('note') || '';
+
+      // Demo: in thï¿½c ra chï¿½0 log ra console, khï¿½ng gï¿½i API
+      console.log('Report submit:', {
+        orderId: getOrderIdFromUrl(),
+        problem,
+        note
+      });
+
+      form.style.display = 'none';
+      document.getElementById('success-message').style.display = 'block';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initHeader();
+      initNavLogin();
+    });
+  </script>
+</body>
+</html>
+
+
+

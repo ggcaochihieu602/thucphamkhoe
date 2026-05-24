@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết bài viết | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Tahoma', 'Verdana', sans-serif; }
+    .article-detail-wrapper {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.07);
+      padding: 2rem;
+    }
+
+    .article-detail-title {
+      font-size: 1.8rem;
+      color: #2d6a4f;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-detail-meta {
+      color: #888;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .article-detail-content {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #333;
+      text-align: left;
+      white-space: pre-line; /* hi�n th�9 xu�ng d�ng t� content */
+    }
+
+    .article-detail-image {
+      width: 100%;
+      max-width: 650px;
+      display: block;
+      margin: 0 auto 1.5rem auto;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #40916c;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html" class="active">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html" id="login-link">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="article-detail-wrapper" id="article-detail">
+      <p>Đang tải bài viết...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com | Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    function getArticleIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      return id ? Number(id) : null;
+    }
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) {
+        return API_BASE + "/img/assets/vegetable.jpg"; // ảnh dự phòng từ backend
+      }
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+      }
+      // n�u ch�0 l� t�n file (vd: "article1.jpg") th� m�c ��9nh n�m trong folder img/articles
+      const p = imagePath.includes("/") ? imagePath : ("articles/" + imagePath);
+      return API_BASE + "/img/" + p;
+    }
+
+    function formatDateTime(isoString) {
+      if (!isoString) return "";
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return "";
+      return d.toLocaleString("vi-VN");
+    }
+
+    function renderArticle(article) {
+      const container = document.getElementById("article-detail");
+      if (!article) {
+        container.innerHTML =
+          '<p style="color:#d90429;">Không tìm thấy bài viết.</p>' +
+          '<a href="articles.html" class="back-link">&larr; Quay lại danh sách bài viết</a>';
+        return;
+      }
+
+      const imgSrc = buildImageUrl(article.image_url);
+      const expert = article.expert_name || "Chuyên gia dinh dưỡng";
+      const dateText = formatDateTime(article.created_at);
+      const meta =
+        expert + (dateText ? " | " + dateText : "");
+
+      container.innerHTML = `
+        <img src="${imgSrc}" alt="${article.title}" class="article-detail-image">
+        <h1 class="article-detail-title">${article.title}</h1>
+        <div class="article-detail-meta">${meta}</div>
+        <div class="article-detail-content">
+          ${article.content || ""}
+        </div>
+        <a href="articles.html" class="back-link">&larr; Quay lại danh sách bài viết</a>
+      `;
+    }
+
+    async function loadArticle() {
+      const id = getArticleIdFromUrl();
+      const container = document.getElementById("article-detail");
+
+      if (!id) {
+        container.innerHTML =
+          '<p style="color:#d90429;">Thi�u tham s� id b�i vi�t.</p>' +
+          '<a href="articles.html" class="back-link">&larr; Quay lại danh sách bài viết</a>';
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/articles/" + encodeURIComponent(id));
+        const data = await res.json();
+
+        if (!data.ok || !data.article) {
+          container.innerHTML =
+            '<p style="color:#d90429;">' +
+            (data.message || "Không tìm thấy bài viết.") +
+            "</p>" +
+            '<a href="articles.html" class="back-link">&larr; Quay lại danh sách bài viết</a>';
+          return;
+        }
+
+        renderArticle(data.article);
+      } catch (err) {
+        console.error(err);
+        container.innerHTML =
+          '<p style="color:#d90429;">Kh�ng k�t n�i ���c t�:i API b�i vi�t.</p>' +
+          '<a href="articles.html" class="back-link">&larr; Quay lại danh sách bài viết</a>';
+      }
+    }
+
+    // ��"i ng nh�p �  H� s�
+    (function () {
+      const user = localStorage.getItem("user");
+      const loginLink = document.getElementById("login-link");
+      if (!loginLink) return;
+      if (user) {
+        loginLink.textContent = "Hồ sơ";
+        loginLink.href = "profile.html";
+      } else {
+        loginLink.textContent = "Đăng nhập";
+        loginLink.href = "login.html";
+      }
+    })();
+
+    loadArticle();
+  </script>
+</body>
+</html>
+
+
+

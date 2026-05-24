@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sản phẩm | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.06);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    .product-card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .product-card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    .product-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .product-card .price {
+      font-weight: bold;
+      color: #d90429;
+      font-size: 1.1rem;
+    }
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+    .quantity-btn {
+      background: #40916c;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    .quantity-input {
+      width: 42px;
+      text-align: center;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #b7e4c7;
+      padding: 0.1rem;
+    }
+    .add-cart-btn {
+      margin-top: 0.4rem;
+      background: #2d6a4f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      justify-content: center;
+    }
+    .add-cart-btn .cart-icon {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      display: inline-block;
+    }
+    .filters-bar {
+      background: #f5f5f5;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+    }
+    .filters-bar .product-search {
+      margin-left: auto;
+      padding: 0.45rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 0.95rem;
+      min-width: 240px;
+      background: #fff;
+      outline: none;
+    }
+    .filters-bar button {
+      border-radius: 5px;
+      border: 1px solid #eee;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      background: #fff;
+      font-size: 0.9rem;
+    }
+    .filters-bar button.active {
+      background: #40916c;
+      color: #fff;
+      border-color: #40916c;
+    }
+    .message {
+      margin-top: 0.7rem;
+      font-size: 0.9rem;
+      color: #d90429;
+    }
+  </style>
+</head>
+<body class="products-page">
+  <header>
+    <div class="logo">
+      <!-- dùng ảnh logo từ backend -->
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html" id="login-link">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Sản phẩm dinh dưỡng cho bữa ăn lành mạnh</h1>
+        <p>Chọn thực phẩm tươi, dễ chế biến, phù hợp với mục tiêu sức khỏe của bạn.</p>
+      </div>
+    </section>
+
+    <section class="products">
+      <div class="filters-bar">
+        <span style="font-size:0.95rem;color:#555;">Lọc nhanh:</span>
+        <button data-category="all" class="active">Tất cả</button>
+        <button data-category="Rau xanh">Rau xanh</button>
+        <button data-category="Củ quả">Củ quả</button>
+        <button data-category="Ngũ cốc">Ngũ cốc</button>
+        <button data-category="Sữa">Sữa</button>
+        <button data-category="Khác">Khác</button>
+        <input id="product-search" class="product-search" type="search" placeholder="Tìm sản phẩm..." autocomplete="off">
+      </div>
+
+      <div id="products-message" class="message"></div>
+      <div id="product-list" class="product-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const CART_ICON_URL = API_BASE + "/img/assets/cart-icon.png";
+
+    function getUserId() {
+      try {
+        const u = JSON.parse(localStorage.getItem("user") || "{}");
+        return u && (u.id || u.email) ? String(u.id || u.email) : "guest";
+      } catch (_) {
+        return "guest";
+      }
+    }
+
+    function cartSessionsKey() {
+      return "cartSessions:" + getUserId();
+    }
+
+    function activeCartIdKey() {
+      return "activeCartId:" + getUserId();
+    }
+
+    function getCartSessions() {
+      try {
+        const k = cartSessionsKey();
+        const mine = JSON.parse(localStorage.getItem(k) || "[]");
+        if (Array.isArray(mine)) return mine;
+        return [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveCartSessions(sessions) {
+      localStorage.setItem(cartSessionsKey(), JSON.stringify(Array.isArray(sessions) ? sessions : []));
+    }
+
+    function ensureActiveCartSession() {
+      const sessions = getCartSessions();
+      let activeId = localStorage.getItem(activeCartIdKey()) || "";
+      let active = sessions.find(s => s && s.id === activeId && String(s.userId || "guest") === getUserId());
+
+      // migrate legacy localStorage.cart into a session
+      let legacy = [];
+      try { legacy = JSON.parse(localStorage.getItem("cart") || "[]"); } catch (_) { legacy = []; }
+      if (Array.isArray(legacy) && legacy.length > 0) {
+        sessions.push({
+          id: "cart_" + Date.now() + "_legacy",
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: legacy
+        });
+        localStorage.removeItem("cart");
+      }
+
+      if (!active) {
+        activeId = "cart_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+        active = {
+          id: activeId,
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: []
+        };
+        sessions.push(active);
+        localStorage.setItem(activeCartIdKey(), activeId);
+        saveCartSessions(sessions);
+      } else {
+        saveCartSessions(sessions);
+      }
+
+      return { sessions, activeId };
+    }
+
+    function getCart() {
+      const { sessions, activeId } = ensureActiveCartSession();
+      const active = sessions.find(s => s && s.id === activeId);
+      return Array.isArray(active?.items) ? active.items : [];
+    }
+
+    function saveCart(cart) {
+      const { sessions, activeId } = ensureActiveCartSession();
+      const idx = sessions.findIndex(s => s && s.id === activeId);
+      if (idx >= 0) {
+        sessions[idx].items = Array.isArray(cart) ? cart : [];
+        saveCartSessions(sessions);
+      }
+    }
+
+    function formatMoney(price, product) {
+      const p = Number(price || 0);
+      if (!p) return "Liên hệ";
+      let unit = "kg";
+      if (product && product.price_unit) {
+        const parts = product.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return p.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function buildImageUrl(imageFile) {
+      const file = imageFile || "vegetable.jpg"; // ảnh mặc định
+      return API_BASE + "/img/" + file;
+    }
+
+    function renderProducts(products) {
+      const list = document.getElementById("product-list");
+      if (!products || products.length === 0) {
+        list.innerHTML = "<p>Chưa có sản phẩm nào.</p>";
+        return;
+      }
+
+      list.innerHTML = products.map(p => {
+        const price = Number(p.price || 0);
+        const priceText = formatMoney(price, p);
+        const img = buildImageUrl(p.image_url);
+        const desc = p.description || "Sản phẩm phù hợp cho bữa ăn hàng ngày.";
+        return `
+          <div class="product-card"
+               data-id="${p.id}"
+               data-name="${p.name}"
+               data-price="${price}"
+               data-image="${img}">
+            <img src="${img}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>${desc}</p>
+            <p class="price">${priceText}</p>
+            <div class="quantity-selector">
+              <button class="quantity-btn" data-action="minus">-</button>
+              <input class="quantity-input" type="number" value="1" min="1">
+              <button class="quantity-btn" data-action="plus">+</button>
+            </div>
+            <button class="add-cart-btn">
+              <img class="cart-icon" src="${CART_ICON_URL}" alt="Giỏ hàng">Thêm vào giỏ
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function applyFilters() {
+      const category = window.currentCategory || "all";
+      const q = (document.getElementById("product-search")?.value || "")
+        .trim()
+        .toLowerCase();
+
+      let filtered = Array.isArray(window.allProducts) ? window.allProducts.slice() : [];
+      if (category !== "all") {
+        filtered = filtered.filter(p => (p.category || "") === category);
+      }
+      if (q) {
+        filtered = filtered.filter(p => (p.name || "").toLowerCase().includes(q));
+      }
+      renderProducts(filtered);
+    }
+
+    async function loadProducts() {
+      const msgEl = document.getElementById("products-message");
+      msgEl.textContent = "";
+      try {
+        const res = await fetch(API_BASE + "/products");
+        const data = await res.json();
+        if (!data.ok) {
+          msgEl.textContent = data.message || "Lỗi khi tải danh sách sản phẩm.";
+          return;
+        }
+        window.allProducts = data.products || [];
+        window.currentCategory = "all";
+        applyFilters();
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = "Không kết nối được tới API sản phẩm.";
+      }
+    }
+
+    // xử lý click trên toàn trang
+    document.addEventListener("click", function(e) {
+      const card = e.target.closest(".product-card");
+
+      // nút thêm vào giỏ
+      if (e.target.closest(".add-cart-btn") && card) {
+        const qtyInput = card.querySelector(".quantity-input");
+        const quantity = parseInt(qtyInput.value) || 1;
+        const id = Number(card.dataset.id);
+        const name = card.dataset.name;
+        const price = Number(card.dataset.price || 0);
+        const image = card.dataset.image;
+
+        let cart = getCart();
+        const idx = cart.findIndex(item => item.id === id);
+        if (idx >= 0) {
+          cart[idx].quantity += quantity;
+        } else {
+          cart.push({ id, name, price, image, quantity });
+        }
+        saveCart(cart);
+        alert("Đã thêm sản phẩm vào giỏ hàng.");
+      }
+
+      // nút cộng trừ
+      if (e.target.classList.contains("quantity-btn") && card) {
+        const input = card.querySelector(".quantity-input");
+        let value = parseInt(input.value) || 1;
+        if (e.target.dataset.action === "minus") {
+          if (value > 1) value -= 1;
+        } else {
+          value += 1;
+        }
+        input.value = value;
+      }
+
+      // click vào thẻ để sang trang chi tiết
+      if (card &&
+          !e.target.closest(".add-cart-btn") &&
+          !e.target.classList.contains("quantity-btn") &&
+          e.target.tagName !== "INPUT") {
+        const id = card.dataset.id;
+        window.location.href = "product-detail.html?id=" + encodeURIComponent(id);
+      }
+    });
+
+    // lọc theo category
+    document.querySelector(".filters-bar").addEventListener("click", function(e) {
+      if (e.target.tagName !== "BUTTON" || !window.allProducts) return;
+      const category = e.target.dataset.category;
+
+      document
+        .querySelectorAll(".filters-bar button")
+        .forEach(btn => btn.classList.remove("active"));
+      e.target.classList.add("active");
+
+      window.currentCategory = category;
+      applyFilters();
+    });
+
+    document.getElementById("product-search").addEventListener("input", function () {
+      applyFilters();
+    });
+
+    let lastProductSyncAt = 0;
+
+    function syncProductsIfNeeded(rawValue) {
+      try {
+        const payload = JSON.parse(rawValue || "null");
+        const updatedAt = Number(payload && payload.updatedAt);
+        if (!updatedAt || updatedAt <= lastProductSyncAt) return;
+        lastProductSyncAt = updatedAt;
+        loadProducts();
+      } catch (_) {}
+    }
+
+    window.addEventListener("storage", function (e) {
+      if (e.key === "product_data_updated" && document.visibilityState === "visible") {
+        syncProductsIfNeeded(e.newValue);
+      }
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState !== "visible") return;
+      syncProductsIfNeeded(localStorage.getItem("product_data_updated"));
+    });
+
+    // đổi Đăng nhập thành Hồ sơ nếu đã login
+    (function() {
+      const nav = document.querySelector("nav ul");
+      if (!nav) return;
+      const user = localStorage.getItem("user");
+      const loginLi = Array.from(nav.children).find(li =>
+        li.textContent.includes("Đăng nhập") || li.textContent.includes("Hồ sơ")
+      );
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+
+    // tải sản phẩm khi mở trang
+    loadProducts();
+  </script>
+</body>
+</html>
+
+
+
+
+

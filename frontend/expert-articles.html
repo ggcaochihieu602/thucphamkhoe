@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý bài viết | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #fff7f0;
+      margin: 0;
+      font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, "Tahoma", "Verdana", sans-serif;
+    }
+    .expert-header {
+      background: #ff9100;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 0 0 10px 10px;
+    }
+    .articles-admin-container {
+      max-width: 1280px;
+      margin: 2.5rem auto 3rem auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 18px 48px rgba(255, 145, 0, 0.08);
+      padding: 2.75rem 2.5rem 2.5rem 2.5rem;
+    }
+    .articles-admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #ffe8cc;
+    }
+    .articles-admin-header h2 {
+      margin: 0;
+      color: #ff9100;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    .add-article-btn {
+      background: #ff9100;
+      color: #fff;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(255, 145, 0, 0.08);
+    }
+    .add-article-btn:hover {
+      background: #ff6f00;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border: 1px solid #ffe4bf;
+      border-radius: 14px;
+      background: #fffaf5;
+    }
+    .filter-group label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #8c4b00;
+    }
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.7rem 0.75rem;
+      border: 1px solid #f4cf9f;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fff;
+    }
+    .filter-group input:focus,
+    .filter-group select:focus {
+      border-color: #ff9100;
+      box-shadow: 0 0 0 3px rgba(255, 145, 0, 0.12);
+    }
+    .filter-actions {
+      display: flex;
+      align-items: end;
+    }
+    .reset-btn {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      background: #fff1dd;
+      color: #8c4b00;
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .summary-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      color: #7a5a35;
+      font-size: 0.95rem;
+    }
+    .article-admin-list {
+      margin-top: 1.2rem;
+    }
+    .article-admin-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.4rem;
+      padding: 1.35rem 0;
+      border-bottom: 1px solid #ffe0b2;
+    }
+    .article-admin-main {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .article-admin-thumb {
+      width: 88px;
+      height: 88px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid #ffe6c7;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .article-admin-content {
+      min-width: 0;
+      flex: 1;
+    }
+    .article-admin-title {
+      font-size: 1.28rem;
+      font-weight: 700;
+      color: #ff9100;
+      line-height: 1.35;
+    }
+    .article-admin-meta {
+      font-size: 0.96rem;
+      color: #777;
+      margin-top: 0.35rem;
+      line-height: 1.6;
+    }
+    .tag-row {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      margin-top: 0.65rem;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #fff4e5;
+      color: #9a5a00;
+      border: 1px solid #ffe1b3;
+    }
+    .chip.status-draft {
+      background: #f4f4f5;
+      color: #52525b;
+      border-color: #d4d4d8;
+    }
+    .chip.status-in_review {
+      background: #fff7d6;
+      color: #9a6700;
+      border-color: #f5d06f;
+    }
+    .chip.status-published {
+      background: #e9f9ef;
+      color: #1f7a46;
+      border-color: #9ed8b2;
+    }
+    .chip.status-archived {
+      background: #f2f1ff;
+      color: #5b56a8;
+      border-color: #cbc8f5;
+    }
+    .article-admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: flex-end;
+      min-width: 180px;
+      flex-shrink: 0;
+    }
+    .article-admin-actions button {
+      background: #ffe0b2;
+      color: #ff9100;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .article-admin-actions button.edit {
+      background: #ff9100;
+      color: #fff;
+    }
+    .article-admin-actions button.edit:hover {
+      background: #ff6f00;
+    }
+    .article-admin-actions button.delete {
+      background: #d90429;
+      color: #fff;
+    }
+    .article-admin-actions button.delete:hover {
+      background: #b8001c;
+    }
+    .article-admin-actions button.view {
+      background: #40916c;
+      color: #fff;
+    }
+    .article-admin-actions button.view:hover {
+      background: #2d6a4f;
+    }
+    @media (max-width: 1180px) {
+      .filters {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 980px) {
+      .articles-admin-container {
+        margin: 1.5rem 1rem 2rem 1rem;
+        padding: 1.5rem;
+      }
+      .articles-admin-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .article-admin-item {
+        flex-direction: column;
+      }
+      .article-admin-actions {
+        justify-content: flex-start;
+        min-width: 0;
+      }
+    }
+    @media (max-width: 640px) {
+      .filters {
+        grid-template-columns: 1fr;
+      }
+      .summary-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="expert-header">
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <div>
+      <b style="margin-right:1rem;">Chuyên gia</b>
+      <a href="profile.html" id="expert-profile-btn" style="background:#fff;color:#ff9100;border:1px solid #fff;padding:0.35rem 0.8rem;border-radius:18px;font-weight:700;margin-right:0.6rem;text-decoration:none;">Hồ sơ</a>
+    </div>
+  </header>
+
+  <div class="articles-admin-container">
+    <div class="articles-admin-header">
+      <h2>Quản lý bài viết</h2>
+      <button class="add-article-btn" onclick="addArticle()">+ Viết bài mới</button>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group" style="grid-column: span 2;">
+        <label for="searchInput">Tìm kiếm</label>
+        <input id="searchInput" type="text" placeholder="Tìm theo tiêu đề, từ khóa hoặc tag" />
+      </div>
+      <div class="filter-group">
+        <label for="statusFilter">Trạng thái</label>
+        <select id="statusFilter">
+          <option value="">Tất cả trạng thái</option>
+          <option value="draft">Bản nháp</option>
+          <option value="in_review">Chờ duyệt</option>
+          <option value="published">Đã xuất bản</option>
+          <option value="archived">Lưu trữ</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="categoryFilter">Chủ đề</label>
+        <select id="categoryFilter">
+          <option value="">Tất cả chủ đề</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="authorFilter">Tác giả</label>
+        <select id="authorFilter">
+          <option value="">Tất cả tác giả</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="dateFromFilter">Từ ngày</label>
+        <input id="dateFromFilter" type="date" />
+      </div>
+      <div class="filter-group">
+        <label for="dateToFilter">Đến ngày</label>
+        <input id="dateToFilter" type="date" />
+      </div>
+      <div class="filter-actions">
+        <button class="reset-btn" type="button" id="resetFilters">Xóa bộ lọc</button>
+      </div>
+    </div>
+
+    <div class="summary-bar">
+      <div id="resultCount">Đang tải bài viết...</div>
+      <div>Tìm kiếm theo tiêu đề, nội dung và tag.</div>
+    </div>
+
+    <div class="article-admin-list" id="articleList"></div>
+  </div>
+
+  <script>
+    (function ensureExpert() {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (user.role !== "expert") {
+        alert("Bạn cần đăng nhập tài khoản chuyên gia để truy cập trang này.");
+        window.location.href = "login.html";
+      }
+    })();
+
+    const API_BASE = "http://localhost:3000";
+    let allArticles = [];
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/hello.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function excerpt(text, maxLen) {
+      const value = String(text || "").replace(/\s+/g, " ").trim();
+      if (!value) return "";
+      if (value.length <= maxLen) return value;
+      return value.slice(0, maxLen).trim() + "...";
+    }
+
+    function formatDate(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleDateString("vi-VN");
+    }
+
+    function getStatusLabel(status) {
+      const map = {
+        draft: "Bản nháp",
+        in_review: "Chờ duyệt",
+        published: "Đã xuất bản",
+        archived: "Lưu trữ"
+      };
+      return map[String(status || "")] || "Bản nháp";
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function parseTags(tags) {
+      return String(tags || "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    function populateFilterOptions() {
+      const categoryFilter = document.getElementById("categoryFilter");
+      const authorFilter = document.getElementById("authorFilter");
+      const categories = Array.from(new Set(allArticles.map((item) => String(item.category || "").trim()).filter(Boolean))).sort();
+      const authors = Array.from(new Set(allArticles.map((item) => String(item.expert_name || "").trim()).filter(Boolean))).sort();
+
+      categoryFilter.innerHTML = '<option value="">Tất cả chủ đề</option>' +
+        categories.map((item) => '<option value="' + escapeHtml(item) + '">' + escapeHtml(item) + "</option>").join("");
+      authorFilter.innerHTML = '<option value="">Tất cả tác giả</option>' +
+        authors.map((item) => '<option value="' + escapeHtml(item) + '">' + escapeHtml(item) + "</option>").join("");
+    }
+
+    function getFilteredArticles() {
+      const q = String(document.getElementById("searchInput").value || "").trim().toLowerCase();
+      const status = String(document.getElementById("statusFilter").value || "").trim().toLowerCase();
+      const category = String(document.getElementById("categoryFilter").value || "").trim().toLowerCase();
+      const author = String(document.getElementById("authorFilter").value || "").trim().toLowerCase();
+      const dateFrom = document.getElementById("dateFromFilter").value || "";
+      const dateTo = document.getElementById("dateToFilter").value || "";
+
+      return allArticles.filter((article) => {
+        const articleStatus = String(article.status || "draft").toLowerCase();
+        const articleCategory = String(article.category || "").trim().toLowerCase();
+        const articleAuthor = String(article.expert_name || "").trim().toLowerCase();
+        const tagText = parseTags(article.tags).join(" ").toLowerCase();
+        const haystack = [
+          article.title,
+          article.content,
+          article.tags,
+          article.category
+        ].join(" ").toLowerCase();
+
+        if (status && articleStatus !== status) return false;
+        if (category && articleCategory !== category) return false;
+        if (author && articleAuthor !== author) return false;
+        if (q && !haystack.includes(q) && !tagText.includes(q)) return false;
+
+        const createdDate = article.created_at ? new Date(article.created_at) : null;
+        if (dateFrom && createdDate) {
+          const fromDate = new Date(dateFrom + "T00:00:00");
+          if (createdDate < fromDate) return false;
+        }
+        if (dateTo && createdDate) {
+          const toDate = new Date(dateTo + "T23:59:59");
+          if (createdDate > toDate) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function renderArticles() {
+      const list = document.getElementById("articleList");
+      const countEl = document.getElementById("resultCount");
+      const filtered = getFilteredArticles();
+      countEl.textContent = "Hiển thị " + filtered.length + " / " + allArticles.length + " bài viết";
+
+      if (!filtered.length) {
+        list.innerHTML = "<p>Không có bài viết nào khớp bộ lọc hiện tại.</p>";
+        return;
+      }
+
+      list.innerHTML = filtered.map((article) => {
+        const img = buildImageUrl(article.image_url);
+        const tags = parseTags(article.tags);
+        const canViewPublic = String(article.status || "") === "published";
+
+        return `
+          <div class="article-admin-item">
+            <div class="article-admin-main">
+              <img src="${img}" alt="${escapeHtml(article.title)}" class="article-admin-thumb">
+              <div class="article-admin-content">
+                <div class="article-admin-title">${escapeHtml(article.title)}</div>
+                <div class="article-admin-meta">Tác giả: ${escapeHtml(article.expert_name || "Chuyên gia")} | Ngày tạo: ${formatDate(article.created_at)} | Cập nhật: ${formatDate(article.updated_at || article.created_at)}</div>
+                <div class="article-admin-meta">${escapeHtml(excerpt(article.content, 140))}</div>
+                <div class="tag-row">
+                  <span class="chip status-${escapeHtml(article.status || "draft")}">${escapeHtml(getStatusLabel(article.status))}</span>
+                  ${article.category ? `<span class="chip">${escapeHtml(article.category)}</span>` : ""}
+                  ${tags.map((tag) => `<span class="chip">#${escapeHtml(tag)}</span>`).join("")}
+                </div>
+              </div>
+            </div>
+            <div class="article-admin-actions">
+              <button class="view" onclick="viewArticle(${article.id}, '${escapeHtml(article.status || "draft")}')">${canViewPublic ? "Xem" : "Mở"}</button>
+              <button class="edit" onclick="editArticle(${article.id})">Sửa</button>
+              <button class="delete" onclick="deleteArticle(${article.id})">Xóa</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function addArticle() {
+      window.location.href = "expert-article-upload.html";
+    }
+
+    function editArticle(id) {
+      window.location.href = "expert-article-edit.html?id=" + encodeURIComponent(id);
+    }
+
+    function viewArticle(id, status) {
+      if (status !== "published") {
+        window.location.href = "expert-article-edit.html?id=" + encodeURIComponent(id);
+        return;
+      }
+      window.location.href = "article-detail.html?id=" + encodeURIComponent(id);
+    }
+
+    async function deleteArticle(id) {
+      const article = allArticles.find((item) => String(item.id) === String(id));
+      const title = article ? String(article.title || "") : "";
+      const ok = confirm("Bạn chắc chắn muốn xóa bài viết" + (title ? (": " + title) : "") + "?");
+      if (!ok) return;
+
+      const token = localStorage.getItem("token") || "";
+      if (!token) {
+        alert("Thiếu token. Hãy đăng nhập lại.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/expert/articles/" + encodeURIComponent(id), {
+          method: "DELETE",
+          headers: { Authorization: "Bearer " + token }
+        });
+        const ct = (res.headers.get("content-type") || "").toLowerCase();
+        const data = ct.includes("application/json") ? await res.json() : null;
+        if (!res.ok || !data || !data.ok) {
+          alert((data && data.message) ? data.message : ("Xóa thất bại (" + res.status + ")"));
+          return;
+        }
+        alert(data.message || "Đã xóa bài viết");
+        loadArticles();
+      } catch (err) {
+        console.error(err);
+        alert("Không kết nối được tới API.");
+      }
+    }
+
+    async function loadArticles() {
+      const token = localStorage.getItem("token") || "";
+      const list = document.getElementById("articleList");
+      list.innerHTML = "<p>Đang tải...</p>";
+      try {
+        const res = await fetch(API_BASE + "/expert/articles", {
+          headers: { Authorization: "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          list.innerHTML = "<p style='color:#d90429;'>" + (data.message || "Không tải được bài viết") + "</p>";
+          return;
+        }
+        allArticles = data.articles || [];
+        populateFilterOptions();
+        renderArticles();
+      } catch (err) {
+        console.error(err);
+        list.innerHTML = "<p style='color:#d90429;'>Không kết nối được tới API.</p>";
+      }
+    }
+
+    function resetFilters() {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("statusFilter").value = "";
+      document.getElementById("categoryFilter").value = "";
+      document.getElementById("authorFilter").value = "";
+      document.getElementById("dateFromFilter").value = "";
+      document.getElementById("dateToFilter").value = "";
+      renderArticles();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      loadArticles();
+      document.getElementById("searchInput").addEventListener("input", renderArticles);
+      document.getElementById("statusFilter").addEventListener("change", renderArticles);
+      document.getElementById("categoryFilter").addEventListener("change", renderArticles);
+      document.getElementById("authorFilter").addEventListener("change", renderArticles);
+      document.getElementById("dateFromFilter").addEventListener("change", renderArticles);
+      document.getElementById("dateToFilter").addEventListener("change", renderArticles);
+      document.getElementById("resetFilters").addEventListener("click", resetFilters);
+    });
+  </script>
+</body>
+</html>

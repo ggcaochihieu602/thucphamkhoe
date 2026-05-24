@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thanh toán | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .checkout-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 2rem;
+    }
+    .checkout-section h3 {
+      margin-top: 0;
+      margin-bottom: 0.8rem;
+    }
+    .checkout-section label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+    .checkout-section input,
+    .checkout-section textarea,
+    .checkout-section select {
+      width: 100%;
+      padding: 0.45rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ced4da;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .order-summary {
+      font-size: 0.95rem;
+    }
+    .order-summary ul {
+      padding-left: 1.1rem;
+      margin: 0.5rem 0 0.8rem 0;
+    }
+    .order-summary li {
+      margin-bottom: 0.3rem;
+    }
+    .summary-row {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .summary-thumb {
+      width: 34px;
+      height: 26px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid #eee;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+    .summary-total {
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+    .primary-btn {
+      background: #2d6a4f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.6rem 1.4rem;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 0.6rem;
+    }
+    .secondary-btn {
+      background: #40916c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.45rem 1.2rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    .message {
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+    .goal-box {
+      margin: 0.8rem 0 0.2rem 0;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      background: #f5fbf7;
+      border: 1px solid #d7eadd;
+    }
+    .goal-box label {
+      margin-bottom: 0.35rem;
+      font-weight: 600;
+      color: #2d6a4f;
+    }
+    .goal-note {
+      margin-top: 0.15rem;
+      color: #5c6f65;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div id="checkout-empty" style="max-width:900px;margin:2rem auto;display:none;text-align:center;color:#555;">
+      Giỏ hàng đang trống. Hãy quay lại trang sản phẩm để chọn thêm.
+    </div>
+
+    <div class="checkout-container" id="checkout-container" style="display:none;">
+      <div class="checkout-section">
+        <h3>Thông tin nhận hàng</h3>
+        <label for="full-name">Họ tên</label>
+        <input id="full-name" placeholder="Nhập đầy đủ họ tên của bạn">
+
+        <label for="phone">Số điện thoại</label>
+        <input id="phone" placeholder="Ví dụ: 0901 234 567">
+
+        <label for="address">Địa chỉ giao hàng</label>
+        <textarea id="address" rows="3" placeholder="Số nhà, đường, phường, quận, thành phố"></textarea>
+
+        <button class="primary-btn" id="btn-place-order">Đặt hàng</button>
+        <div id="order-message" class="message"></div>
+      </div>
+
+      <div class="checkout-section order-summary">
+        <h3>Tóm tắt giỏ hàng</h3>
+        <ul id="summary-list"></ul>
+        <div class="summary-total" id="summary-total"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const PURCHASE_GOAL_KEY = "purchaseGoal";
+    window.lastRecommendationItems = [];
+
+    function getStoredPurchaseGoal() {
+      const value = localStorage.getItem(PURCHASE_GOAL_KEY) || "balanced";
+      if (value === "muscle_gain") return "weight_gain";
+      if (value === "weight_loss" || value === "weight_gain" || value === "balanced") return value;
+      return "balanced";
+    }
+
+    function setStoredPurchaseGoal(goal) {
+      localStorage.setItem(PURCHASE_GOAL_KEY, goal);
+    }
+
+    function goalLabel(goal) {
+      if (goal === "weight_loss") return "giam can";
+      if (goal === "weight_gain") return "tang can";
+      return "duy tri voc dang";
+    }
+
+    function getUserId() {
+      try {
+        const u = JSON.parse(localStorage.getItem("user") || "{}");
+        return u && (u.id || u.email) ? String(u.id || u.email) : "guest";
+      } catch (_) {
+        return "guest";
+      }
+    }
+
+    function cartSessionsKey() {
+      return "cartSessions:" + getUserId();
+    }
+
+    function activeCartIdKey() {
+      return "activeCartId:" + getUserId();
+    }
+
+    function getCartSessions() {
+      try {
+        const k = cartSessionsKey();
+        const mine = JSON.parse(localStorage.getItem(k) || "[]");
+        if (Array.isArray(mine)) return mine;
+        return [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveCartSessions(sessions) {
+      localStorage.setItem(cartSessionsKey(), JSON.stringify(Array.isArray(sessions) ? sessions : []));
+    }
+
+    function ensureActiveCartSession() {
+      const sessions = getCartSessions();
+      let activeId = localStorage.getItem(activeCartIdKey()) || "";
+      let active = sessions.find(s => s && s.id === activeId && String(s.userId || "guest") === getUserId());
+
+      // migrate legacy localStorage.cart into a session
+      let legacy = [];
+      try { legacy = JSON.parse(localStorage.getItem("cart") || "[]"); } catch (_) { legacy = []; }
+      if (Array.isArray(legacy) && legacy.length > 0) {
+        sessions.push({
+          id: "cart_" + Date.now() + "_legacy",
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: legacy
+        });
+        localStorage.removeItem("cart");
+      }
+
+      if (!active) {
+        activeId = "cart_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+        active = {
+          id: activeId,
+          createdAt: new Date().toISOString(),
+          userId: getUserId(),
+          items: []
+        };
+        sessions.push(active);
+        localStorage.setItem(activeCartIdKey(), activeId);
+        saveCartSessions(sessions);
+      } else {
+        saveCartSessions(sessions);
+      }
+
+      return { sessions, activeId };
+    }
+
+    function getCart() {
+      const { sessions, activeId } = ensureActiveCartSession();
+      const active = sessions.find(s => s && s.id === activeId);
+      return Array.isArray(active?.items) ? active.items : [];
+    }
+    function saveCart(cart) {
+      const { sessions, activeId } = ensureActiveCartSession();
+      const idx = sessions.findIndex(s => s && s.id === activeId);
+      if (idx >= 0) {
+        sessions[idx].items = Array.isArray(cart) ? cart : [];
+        saveCartSessions(sessions);
+      }
+    }
+
+    function formatPrice(n, item) {
+      const val = Number(n || 0);
+      let unit = "kg";
+      if (item && item.price_unit) {
+        const parts = item.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return val.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function formatPricePlain(n) {
+      return Number(n || 0).toLocaleString("vi-VN") + "đ";
+    }
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/vegetable.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    async function prefillShippingFromProfile() {
+      const fullNameEl = document.getElementById("full-name");
+      const phoneEl = document.getElementById("phone");
+      const addressEl = document.getElementById("address");
+
+      const token = localStorage.getItem("token") || "";
+      if (!token) return;
+
+      // 1) Prefill nhanh từ localStorage.user
+      let u = {};
+      try { u = JSON.parse(localStorage.getItem("user") || "{}"); } catch {}
+      if (u && typeof u === "object") {
+        if (!fullNameEl.value.trim() && u.name) fullNameEl.value = u.name;
+        if (!phoneEl.value.trim() && u.phone) phoneEl.value = u.phone;
+        if (!addressEl.value.trim() && u.address) addressEl.value = u.address;
+      }
+
+      // 2) Prefill từ DB profile (nếu có token)
+      try {
+        const res = await fetch(API_BASE + "/me/profile", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!data.ok || !data.profile) return;
+        const p = data.profile;
+
+        if (!fullNameEl.value.trim() && p.name) fullNameEl.value = p.name;
+        if (!phoneEl.value.trim() && p.phone) phoneEl.value = p.phone;
+        if (!addressEl.value.trim() && p.address) addressEl.value = p.address;
+      } catch (_) {}
+    }
+
+    async function saveShippingToProfile(fullName, phone, address) {
+      const token = localStorage.getItem("token") || "";
+      if (!token) return;
+      try {
+        const fd = new FormData();
+        fd.append("name", fullName);
+        fd.append("phone", phone);
+        fd.append("address", address);
+        await fetch(API_BASE + "/me/profile", {
+          method: "PUT",
+          headers: { "Authorization": "Bearer " + token },
+          body: fd
+        });
+      } catch (_) {}
+    }
+
+    function loadSummary() {
+      const cart = getCart();
+      if (!cart.length) {
+        document.getElementById("checkout-empty").style.display = "block";
+        document.getElementById("checkout-container").style.display = "none";
+        return false;
+      }
+      const listEl = document.getElementById("summary-list");
+      const totalEl = document.getElementById("summary-total");
+      let total = 0;
+      listEl.innerHTML = cart.map(item => {
+        const line = (Number(item.price || 0) * item.quantity) || 0;
+        total += line;
+        const imgSrc = buildImageUrl(item.image || "");
+        return `
+          <li>
+            <div class="summary-row">
+              <img class="summary-thumb" src="${imgSrc}" alt="${item.name || ""}">
+              <div class="summary-info">
+                <div class="summary-name">${item.name || ""}</div>
+                <div class="summary-price">${formatPrice(item.price, item)} × ${item.quantity}</div>
+              </div>
+              <div class="summary-total">${formatPricePlain(line)}</div>
+            </div>
+          </li>
+        `;
+      }).join("");
+      totalEl.textContent = "Tổng tạm tính: " + formatPricePlain(total);
+      document.getElementById("checkout-container").style.display = "grid";
+      document.getElementById("checkout-empty").style.display = "none";
+      return true;
+    }
+
+    function syncCheckoutGoal() {
+      const selectEl = document.getElementById("checkout-goal");
+      const noteEl = document.getElementById("checkout-goal-note");
+      if (!selectEl || !noteEl) return;
+      const goal = getStoredPurchaseGoal();
+      selectEl.value = goal;
+      noteEl.textContent = `Dang ap dung muc tieu ${goalLabel(goal)} cho dot mua hang nay.`;
+    }
+
+    function addRecommendedProduct(product) {
+      const cart = getCart();
+      const id = Number(product.id);
+      const idx = cart.findIndex((item) => item.id === id);
+      const image = buildImageUrl(product.image_url || "");
+      if (idx >= 0) {
+        cart[idx].quantity += 1;
+      } else {
+        cart.push({
+          id,
+          name: product.name,
+          price: Number(product.price || 0),
+          image,
+          quantity: 1
+        });
+      }
+      saveCart(cart);
+      loadSummary();
+    }
+
+    async function placeOrder() {
+      const fullName = document.getElementById("full-name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const msgEl = document.getElementById("order-message");
+
+      if (!fullName || !phone || !address) {
+        msgEl.textContent = "Vui lòng điền đầy đủ họ tên, số điện thoại và địa chỉ.";
+        msgEl.style.color = "#d90429";
+        return;
+      }
+
+      const cart = getCart();
+      if (!cart.length) {
+        msgEl.textContent = "Giỏ hàng đang trống.";
+        msgEl.style.color = "#d90429";
+        return;
+      }
+
+      // Lưu lại phone/address để lần sau không phải nhập lại
+      let u = {};
+      try { u = JSON.parse(localStorage.getItem("user") || "{}"); } catch {}
+      if (u && typeof u === "object") {
+        localStorage.setItem("user", JSON.stringify({
+          ...u,
+          name: fullName || u.name,
+          phone,
+          address
+        }));
+      }
+      // Nếu có đăng nhập thì lưu luôn vào DB profile
+      await saveShippingToProfile(fullName, phone, address);
+
+      const token = localStorage.getItem("token") || "";
+      if (!token) {
+        msgEl.textContent = "Vui lòng đăng nhập để đặt hàng.";
+        msgEl.style.color = "#d90429";
+        window.location.href = "login.html";
+        return;
+      }
+
+      msgEl.textContent = "Đang tạo đơn hàng...";
+      msgEl.style.color = "#555";
+
+      try {
+        const items = cart.map((it) => ({
+          productId: it.id,
+          quantity: it.quantity || 1
+        }));
+        const res = await fetch(API_BASE + "/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ items })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          msgEl.textContent = data.message || "Đặt hàng thất bại.";
+          msgEl.style.color = "#d90429";
+          return;
+        }
+
+        saveCart([]); // clear cart
+        msgEl.textContent = "Đặt hàng thành công. Đang chuyển tới trang chi tiết đơn hàng...";
+        msgEl.style.color = "#2d6a4f";
+
+        // fallback localStorage để một số trang demo vẫn dùng được
+        const orderStub = {
+          id: data.order_id,
+          created_at: new Date().toISOString(),
+          status: "pending",
+          customer: { fullName, phone, address },
+          items: cart,
+          total_price: data.total_price
+        };
+        localStorage.setItem("lastOrder", JSON.stringify(orderStub));
+
+        setTimeout(() => {
+          window.location.href = "order.html?id=" + encodeURIComponent(data.order_id);
+        }, 600);
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = "Không kết nối được tới API đặt hàng.";
+        msgEl.style.color = "#d90429";
+      }
+    }
+
+    document.getElementById("btn-place-order").onclick = placeOrder;
+
+    (function() {
+      const nav = document.querySelector("nav ul");
+      if (!nav) return;
+      const user = localStorage.getItem("user");
+      const loginLi = Array.from(nav.children).find(li => li.textContent.includes("Đăng nhập"));
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+
+    if (loadSummary()) {
+      prefillShippingFromProfile();
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+

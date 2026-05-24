@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng ký - ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page-body">
+  <div class="auth-container">
+    <h2>Đăng ký tài khoản</h2>
+    <form id="register-form">
+      <input type="text" id="reg-name" placeholder="Họ tên" required />
+      <input type="email" id="reg-email" placeholder="Email" required />
+      <input type="password" id="reg-password" placeholder="Mật khẩu" required />
+      <input type="password" id="reg-password2" placeholder="Xác nhận mật khẩu" required />
+      <button type="submit">Đăng ký</button>
+    </form>
+    <div id="register-message" class="message"></div>
+    <a href="login.html" class="back-link">??ng nh?p</a>
+    <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
+  </div>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    function getUserId() {
+      try {
+        const u = JSON.parse(localStorage.getItem("user") || "{}");
+        return u && (u.id || u.email) ? String(u.id || u.email) : "guest";
+      } catch (_) {
+        return "guest";
+      }
+    }
+
+    function cartSessionsKey() {
+      return "cartSessions:" + getUserId();
+    }
+
+    function activeCartIdKey() {
+      return "activeCartId:" + getUserId();
+    }
+
+    function getCartSessions() {
+      try {
+        const k = cartSessionsKey();
+        const mine = JSON.parse(localStorage.getItem(k) || "[]");
+        if (Array.isArray(mine)) return mine;
+        return [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveCartSessions(sessions) {
+      localStorage.setItem(cartSessionsKey(), JSON.stringify(Array.isArray(sessions) ? sessions : []));
+    }
+
+    function startNewCartSession(user) {
+      const sessions = getCartSessions();
+
+      let legacy = [];
+      try { legacy = JSON.parse(localStorage.getItem("cart") || "[]"); } catch (_) { legacy = []; }
+      if (Array.isArray(legacy) && legacy.length > 0) {
+        sessions.push({
+          id: "cart_" + Date.now() + "_legacy",
+          createdAt: new Date().toISOString(),
+          userId: (user && (user.id || user.email)) ? String(user.id || user.email) : getUserId(),
+          items: legacy
+        });
+        localStorage.removeItem("cart");
+      }
+
+      const id = "cart_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+      sessions.push({
+        id,
+        createdAt: new Date().toISOString(),
+        userId: (user && (user.id || user.email)) ? String(user.id || user.email) : getUserId(),
+        items: []
+      });
+      saveCartSessions(sessions);
+      localStorage.setItem(activeCartIdKey(), id);
+    }
+
+    document.getElementById("register-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const name = document.getElementById("reg-name").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const password2 = document.getElementById("reg-password2").value;
+      const messageEl = document.getElementById("register-message");
+      messageEl.textContent = "";
+
+      if (password !== password2) {
+        messageEl.textContent = "Mật khẩu xác nhận không kh�:p";
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+          messageEl.textContent = data.message || "ĐĒng ký thất bại";
+          return;
+        }
+
+        const loginRes = await fetch(API_BASE + "/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, password })
+        });
+        const loginData = await loginRes.json();
+
+        if (!loginData.ok) {
+          alert("Đăng ký thành công. Nhưng đăng nhập tự động thất bại, vui lòng đăng nhập lại.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        localStorage.setItem("token", loginData.token);
+        localStorage.setItem("user", JSON.stringify(loginData.user));
+
+        startNewCartSession(loginData.user);
+
+        alert("ĐĒng ký thành công. Bạn �ã �ược �Ēng nhập!");
+        if (loginData.user && loginData.user.role === "admin") {
+          window.location.href = "admin-dashboard.html";
+        } else if (loginData.user && loginData.user.role === "expert") {
+          window.location.href = "expert-dashboard.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      } catch (err) {
+        console.error(err);
+        messageEl.textContent = "Không kết n�i �ược t�:i server";
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+

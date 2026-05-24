@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Giỏ hàng | ThucPhamKhoe.com</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .cart-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 16px rgba(0,0,0,0.07);
+      padding: 2rem;
+    }
+    .cart-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .cart-main {
+      min-width: 0;
+    }
+    .cart-sidebar {
+      min-width: 0;
+      width: 100%;
+      padding-top: 0.5rem;
+      border-top: 1px solid #e9ecef;
+    }
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+    }
+    .cart-table th, .cart-table td {
+      border: 1px solid #eee;
+      padding: 0.7rem 0.5rem;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .cart-table th {
+      background: #f1f1f1;
+    }
+    .cart-product-img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .cart-product-link {
+      color: #1b4332;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .cart-product-link:hover {
+      text-decoration: underline;
+    }
+    .qty-buttons {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .qty-buttons button {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      border: none;
+      background: #40916c;
+      color: #fff;
+      cursor: pointer;
+    }
+    .qty-buttons span {
+      min-width: 20px;
+      display: inline-block;
+    }
+    .remove-btn {
+      background: #d90429;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+    }
+    .cart-total {
+      text-align: right;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: #2d6a4f;
+      color: #fff;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+    .cart-empty {
+      text-align: center;
+      margin-top: 1rem;
+      color: #555;
+    }
+
+    /* Goal Selection Styles */
+    .goal-section {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .goal-section h4 {
+      margin: 0 0 0.8rem 0;
+      color: #2d6a4f;
+      font-size: 1rem;
+    }
+    .goal-select {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ced4da;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .goal-note {
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-top: 0.3rem;
+    }
+
+    /* AI Analysis Styles */
+    .ai-section {
+      margin-top: 1.5rem;
+    }
+    .ai-btn {
+      width: 100%;
+      background: #40916c;
+      color: #fff;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    .ai-btn:hover {
+      background: #2d6a4f;
+    }
+    .ai-result {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .ai-result h4 {
+      margin: 0 0 0.8rem 0;
+      color: #2d6a4f;
+    }
+    .ai-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem 0.8rem;
+      margin-top: 0.7rem;
+    }
+    .ai-summary-item {
+      background: #fff;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 0.65rem 0.75rem;
+      font-size: 0.92rem;
+    }
+    .ai-status-box {
+      margin-top: 0.75rem;
+      padding: 0.7rem 0.8rem;
+      background: #eef7f1;
+      border: 1px solid #d4eadb;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    .ai-next-steps {
+      margin-top: 0.9rem;
+    }
+    .ai-next-steps-title {
+      font-weight: 700;
+      color: #1b4332;
+      margin-bottom: 0.6rem;
+    }
+    .ai-suggestion-list {
+      display: grid;
+      gap: 0.55rem;
+    }
+    .ai-suggestion-card {
+      background: #fff;
+      border: 1px solid #e4ece7;
+      border-left: 4px solid #40916c;
+      border-radius: 8px;
+      padding: 0.7rem 0.8rem;
+    }
+    .ai-suggestion-tag {
+      display: inline-block;
+      margin-bottom: 0.35rem;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      background: #e9f7ef;
+      color: #2d6a4f;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .ai-suggestion-text {
+      color: #334155;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+    @media (max-width: 640px) {
+      .ai-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .ai-recommendations {
+      margin-top: 1rem;
+    }
+    .ai-rec-card {
+      display: flex;
+      gap: 0.8rem;
+      background: #fff;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+    .ai-rec-card img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .ai-rec-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .ai-rec-meta {
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-bottom: 0.3rem;
+    }
+    .ai-rec-reason {
+      font-size: 0.85rem;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+    .ai-rec-add-btn {
+      background: #40916c;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .ai-rec-add-btn:hover {
+      background: #2d6a4f;
+    }
+    .message {
+      margin-top: 0.7rem;
+      font-size: 0.9rem;
+      color: #d90429;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="http://localhost:3000/img/assets/logo.png" alt="Logo" style="height:60px;vertical-align:middle;">
+      <span style="font-size:2rem;font-weight:bold;margin-left:0.5rem;vertical-align:middle;">ThucPhamKhoe</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="articles.html">Bài viết</a></li>
+        <li><a href="cart.html">Giỏ hàng</a></li>
+        <li><a href="ask-expert.html">Hỏi chuyên gia</a></li>
+        <li><a href="login.html">Đăng nhập</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="cart-container">
+      <h2>Giỏ hàng của bạn</h2>
+      
+      <div class="cart-layout">
+        <!-- Main Cart Area -->
+        <div class="cart-main">
+          <div id="cart-content">
+            <!-- Cart items will be rendered here -->
+          </div>
+          <div class="cart-empty" id="cart-empty" style="display:none;">
+            Giỏ hàng đang trống. Hãy quay lại trang sản phẩm để chọn thêm.
+          </div>
+        </div>
+
+        <!-- Sidebar with Goal & AI -->
+        <div class="cart-sidebar">
+          <!-- Goal Selection -->
+          <div class="goal-section">
+            <h4>Mục tiêu cho đơn mua hàng này</h4>
+            <select id="purchase-goal" class="goal-select">
+              <option value="balanced">Duy trì vóc dáng</option>
+              <option value="weight_loss">Giảm cân</option>
+              <option value="weight_gain">Tăng cân</option>
+            </select>
+            <div class="goal-note" id="goal-note">Đang áp dụng mục tiêu duy trì vóc dáng cho đơn mua hàng này.</div>
+          </div>
+
+          <!-- Cart Total -->
+          <div class="cart-total" id="cart-total">Tổng cộng: 0đ</div>
+          
+          <!-- Checkout Button -->
+          <a href="checkout.html" class="checkout-btn" id="checkout-btn">Tiếp tục thanh toán</a>
+
+          <!-- AI Analysis Section -->
+          <div class="ai-section">
+            <button class="ai-btn" id="btn-analyze">Phân tích dinh dưỡng bằng AI</button>
+            <div id="ai-message" class="message"></div>
+            <div id="ai-result" class="ai-result" style="display:none;"></div>
+            <div id="ai-recommendations" class="ai-recommendations"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ThucPhamKhoe.com - Website thực phẩm dinh dưỡng</p>
+  </footer>
+
+  <script src="analytics.js"></script>
+  <script>
+    const API_BASE = "http://localhost:3000";
+    const PURCHASE_GOAL_KEY = "purchaseGoal";
+    window.lastRecommendationItems = [];
+
+    function getStoredPurchaseGoal() {
+      const value = localStorage.getItem(PURCHASE_GOAL_KEY) || "balanced";
+      if (value === "muscle_gain") return "weight_gain";
+      if (value === "weight_loss" || value === "weight_gain" || value === "balanced") return value;
+      return "balanced";
+    }
+
+    function setStoredPurchaseGoal(goal) {
+      localStorage.setItem(PURCHASE_GOAL_KEY, goal);
+    }
+
+    function goalLabel(goal) {
+      if (goal === "weight_loss") return "giảm cân";
+      if (goal === "weight_gain") return "tăng cân";
+      return "duy trì vóc dáng";
+    }
+
+    function formatBmi(height, weight) {
+      const h = Number(height || 0);
+      const w = Number(weight || 0);
+      if (!h || !w) return null;
+      const meters = h / 100;
+      if (!meters) return null;
+      const bmi = w / (meters * meters);
+      return Number.isFinite(bmi) ? bmi.toFixed(1) : null;
+    }
+
+    function getActivityLabel(activityLevel) {
+      if (activityLevel === "low") return "ít vận động";
+      if (activityLevel === "high") return "vận động nhiều";
+      if (activityLevel === "moderate") return "vận động vừa phải";
+      return "";
+    }
+
+    function isProfileComplete(profile) {
+      if (!profile) return false;
+      return (
+        Number(profile.age || 0) > 0 &&
+        !!String(profile.gender || "").trim() &&
+        Number(profile.height || 0) > 0 &&
+        Number(profile.weight || 0) > 0 &&
+        !!String(profile.activity_level || "").trim()
+      );
+    }
+
+    async function fetchUserProfileForGoalNote() {
+      const token = localStorage.getItem("token");
+      if (!token) return null;
+
+      try {
+        const res = await fetch(API_BASE + "/me/profile", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        if (!res.ok) return null;
+
+        const data = await res.json();
+        return data && data.ok ? (data.profile || null) : null;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function inferSuggestedGoalFromProfile(profile) {
+      const bmi = Number(formatBmi(profile && profile.height, profile && profile.weight));
+      if (!Number.isFinite(bmi)) return "balanced";
+      if (bmi < 18.5) return "weight_gain";
+      if (bmi >= 25) return "weight_loss";
+      return "balanced";
+    }
+
+    async function updateGoalNote(_goal, options) {
+      const goalNoteEl = document.getElementById("goal-note");
+      const profile = await fetchUserProfileForGoalNote();
+
+      if (isProfileComplete(profile)) {
+        const suggestedGoal = inferSuggestedGoalFromProfile(profile);
+        const bmi = formatBmi(profile.height, profile.weight);
+        const activityLabel = getActivityLabel(String(profile.activity_level || "").trim().toLowerCase());
+        if (options && options.syncSelection) {
+          goalSelect.value = suggestedGoal;
+          setStoredPurchaseGoal(suggestedGoal);
+        }
+        goalNoteEl.textContent = `Hệ thống ưu tiên mục tiêu ${goalLabel(suggestedGoal)} vì BMI của bạn đang là ${bmi || "chưa rõ"} và mức vận động là ${activityLabel || "chưa rõ"}.`;
+        return;
+      }
+
+      goalNoteEl.innerHTML = 'Bạn có vấn đề về bệnh lý, thói quen ăn uống riêng hoặc muốn hệ thống đề xuất mục tiêu mua hàng? <a href="profile-edit.html#health-nutrition-section">Điền thêm thông tin ngay!</a>';
+    }
+
+    function getUserId() {
+      try {
+        const u = JSON.parse(localStorage.getItem("user") || "{}");
+        return u && (u.id || u.email) ? String(u.id || u.email) : "guest";
+      } catch (_) {
+        return "guest";
+      }
+    }
+
+    function cartSessionsKey() {
+      return "cartSessions:" + getUserId();
+    }
+
+    function activeCartIdKey() {
+      return "activeCartId:" + getUserId();
+    }
+
+    function getCartSessions() {
+      try {
+        const k = cartSessionsKey();
+        const mine = JSON.parse(localStorage.getItem(k) || "[]");
+        if (Array.isArray(mine)) return mine;
+        return [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveCartSessions(sessions) {
+      localStorage.setItem(cartSessionsKey(), JSON.stringify(Array.isArray(sessions) ? sessions : []));
+    }
+
+    function getActiveCart() {
+      const sessions = getCartSessions();
+      const activeId = localStorage.getItem(activeCartIdKey()) || "";
+      const active = sessions.find(s => s && s.id === activeId && String(s.userId || "guest") === getUserId());
+      return active || (sessions.length > 0 ? sessions[0] : null);
+    }
+
+    function getCartItems() {
+      const active = getActiveCart();
+      return active && Array.isArray(active.items) ? active.items : [];
+    }
+
+    function saveCartItems(items) {
+      const sessions = getCartSessions();
+      const activeId = localStorage.getItem(activeCartIdKey()) || "";
+      const idx = sessions.findIndex(s => s && s.id === activeId);
+      if (idx >= 0) {
+        sessions[idx].items = items;
+        saveCartSessions(sessions);
+      }
+    }
+
+    function buildImageUrl(imagePath) {
+      if (!imagePath) return API_BASE + "/img/assets/vegetable.jpg";
+      if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) return imagePath;
+      if (imagePath.startsWith("/img/")) return API_BASE + imagePath;
+      if (imagePath.startsWith("img/")) return API_BASE + "/" + imagePath;
+      return API_BASE + "/img/" + imagePath;
+    }
+
+    function formatPrice(n, item) {
+      const val = Number(n || 0);
+      let unit = "kg";
+      if (item && item.price_unit) {
+        const parts = item.price_unit.split("/");
+        unit = parts[parts.length - 1] || "kg";
+      }
+      return val.toLocaleString("vi-VN") + "đ/" + unit;
+    }
+
+    function formatPricePlain(n) {
+      return Number(n || 0).toLocaleString("vi-VN") + "đ";
+    }
+
+    function renderCart() {
+      const items = getCartItems();
+      const contentEl = document.getElementById("cart-content");
+      const emptyEl = document.getElementById("cart-empty");
+      const totalEl = document.getElementById("cart-total");
+
+      if (!items.length) {
+        contentEl.innerHTML = "";
+        emptyEl.style.display = "block";
+        totalEl.textContent = "Tổng cộng: 0đ";
+        return;
+      }
+
+      emptyEl.style.display = "none";
+      
+      let total = 0;
+      const rows = items.map((item, index) => {
+        const line = (Number(item.price || 0) * item.quantity) || 0;
+        total += line;
+        const img = buildImageUrl(item.image || "");
+        const productId = encodeURIComponent(item.id || "");
+        return `
+          <tr data-index="${index}">
+            <td><img src="${img}" alt="${item.name}" class="cart-product-img"></td>
+            <td><a class="cart-product-link" href="product-detail.html?id=${productId}">${item.name}</a></td>
+            <td>${formatPrice(item.price, item)}</td>
+            <td>
+              <div class="qty-buttons">
+                <button data-action="minus" data-index="${index}">-</button>
+                <span>${item.quantity}</span>
+                <button data-action="plus" data-index="${index}">+</button>
+              </div>
+            </td>
+            <td>${formatPricePlain(line)}</td>
+            <td><button class="remove-btn" data-action="remove" data-index="${index}">Xóa</button></td>
+          </tr>
+        `;
+      }).join("");
+
+      contentEl.innerHTML = `
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Ảnh</th>
+              <th>Sản phẩm</th>
+              <th>Giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      
+      totalEl.textContent = `Tổng cộng: ${formatPricePlain(total)}`;
+    }
+
+    // Cart actions
+    document.getElementById("cart-content").addEventListener("click", function(e) {
+      const actionEl = e.target.closest("[data-action]");
+      if (!actionEl) return;
+
+      const action = actionEl.getAttribute("data-action");
+      const index = Number(actionEl.getAttribute("data-index"));
+      
+      const items = getCartItems();
+      if (!items[index]) return;
+
+      if (action === "minus") {
+        if (items[index].quantity > 1) {
+          items[index].quantity -= 1;
+          saveCartItems(items);
+          renderCart();
+        }
+      } else if (action === "plus") {
+        items[index].quantity += 1;
+        saveCartItems(items);
+        renderCart();
+      } else if (action === "remove") {
+        items.splice(index, 1);
+        saveCartItems(items);
+        renderCart();
+        // Clear AI results if cart is empty
+        if (items.length === 0) {
+          document.getElementById("ai-result").style.display = "none";
+          document.getElementById("ai-recommendations").innerHTML = "";
+        }
+      }
+    });
+
+    // Goal selection
+    const goalSelect = document.getElementById("purchase-goal");
+    goalSelect.value = getStoredPurchaseGoal();
+    goalSelect.addEventListener("change", async function() {
+      const goal = this.value;
+      setStoredPurchaseGoal(goal);
+      await updateGoalNote(goal, { syncSelection: false });
+    });
+    updateGoalNote(getStoredPurchaseGoal(), { syncSelection: true });
+
+    // AI Analysis
+    async function analyzeCart(goal) {
+      const items = getCartItems();
+      const itemsPayload = items.map(item => ({
+        productId: item.id,
+        quantity: item.quantity
+      }));
+      const msgEl = document.getElementById("ai-message");
+      const resultEl = document.getElementById("ai-result");
+      const recommendationEl = document.getElementById("ai-recommendations");
+      
+      msgEl.textContent = "Đang phân tích...";
+      resultEl.style.display = "none";
+      recommendationEl.innerHTML = "";
+      
+      try {
+        if (!itemsPayload.length) {
+          msgEl.textContent = "Giỏ hàng đang trống.";
+          return;
+        }
+
+        msgEl.style.color = "#555";
+
+        const token = localStorage.getItem("token");
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers.Authorization = "Bearer " + token;
+
+        const res = await fetch(API_BASE + "/ai/cart", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ items: itemsPayload, goal: goal || "balanced" })
+        });
+        
+        const data = await res.json();
+        
+        if (!res.ok || !data || !data.ok || !data.analysis) {
+          msgEl.textContent = (data && data.message) ? data.message : "Không phân tích được giỏ hàng.";
+          msgEl.style.color = "#d90429";
+          return;
+        }
+
+        const s = data.analysis.summary || {};
+        const fmt = (v) => {
+          const n = Number(v || 0);
+          return Number.isFinite(n) ? n.toLocaleString("vi-VN") : "0";
+        };
+
+        msgEl.textContent = "";
+        const suggestions = Array.isArray(data.analysis.suggestions) ? data.analysis.suggestions : [];
+        const suggestionHtml = suggestions.length
+          ? `<div style="margin-top:0.6rem;"><b>Đề xuất tiếp theo:</b><ul style="margin:0.35rem 0 0 1.1rem;padding:0;">${suggestions.map(item => `<li>${item}</li>`).join("")}</ul></div>`
+          : "";
+        const profileModeText = data.personalized ? "Cá nhân hóa theo hồ sơ của bạn" : "Đang ở chế độ gợi ý chung";
+        
+        const ratioComparison = data.analysis.ratioComparison;
+        let ratioHtml = "";
+        if (ratioComparison) {
+          const getRatioText = (status, nutrient) => {
+            if (status === "low") return `<span style="color:#d90429;">Thiếu ${nutrient} (>15%)</span>`;
+            if (status === "high") return `<span style="color:#d90429;">Thừa ${nutrient} (>15%)</span>`;
+            return `<span style="color:#2d6a4f;">${nutrient} hợp lý</span>`;
+          };
+          
+          ratioHtml = `
+            <div style="margin-top:0.6rem;padding:0.5rem;background:#f8f9fa;border-radius:4px;">
+              <b>So sánh với mục tiêu:</b><br>
+              ${getRatioText(ratioComparison.proteinStatus, "Protein")} · 
+              ${getRatioText(ratioComparison.carbsStatus, "Carbs")} · 
+              ${getRatioText(ratioComparison.fatStatus, "Chất béo")}
+            </div>
+          `;
+        }
+        
+        resultEl.innerHTML = `
+          <h4>Kết quả phân tích giỏ hàng</h4>
+          <div><b>Chế độ:</b> ${profileModeText}</div>
+          <div><b>Mục tiêu:</b> ${goalLabel(goal || "balanced")}</div>
+          <div><b>Tổng Calories:</b> ${fmt(s.totalCalories)} kcal</div>
+          <div><b>Tổng Protein:</b> ${fmt(s.totalProtein)} g</div>
+          <div><b>Tổng Fat:</b> ${fmt(s.totalFat)} g</div>
+          <div><b>Tổng Carbs:</b> ${fmt(s.totalCarbs)} g</div>
+          <div><b>Độ tin cậy:</b> ${String(data.analysis.confidence || "medium")}</div>
+          <div style="margin-top:0.55rem;"><b>Gợi ý:</b> ${String(data.analysis.advice || "").trim() || "(Không có gợi ý)"}</div>
+          ${ratioHtml}
+          ${suggestionHtml}
+        `;
+        resultEl.style.display = "block";
+
+        // Get recommendations
+        try {
+          const recRes = await fetch(API_BASE + "/ai/cart/recommendations", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ items: itemsPayload, goal: goal || "balanced" })
+          });
+          
+          const recData = await recRes.json();
+          if (recData && recData.ok) {
+            renderCartRecommendations(recData.recommendations || []);
+          }
+        } catch (recErr) {
+          console.error("Recommendation API error:", recErr);
+        }
+      } catch (err) {
+        console.error("AI Analysis error:", err);
+        msgEl.textContent = "Không gọi được API AI. Vui lòng thử lại sau.";
+        msgEl.style.color = "#d90429";
+      }
+    }
+
+    function buildSuggestionTag(text) {
+      const value = String(text || "").toLowerCase();
+      if (value.includes("protein") || value.includes("đạm")) return "Thiếu protein";
+      if (value.includes("tinh bột") || value.includes("carb")) return "Thiếu carb";
+      if (value.includes("chất béo")) return "Thiếu fat tốt";
+      if (value.includes("rau") || value.includes("củ")) return "Thiếu rau";
+      return "Gợi ý";
+    }
+
+    async function analyzeCart(goal) {
+      const items = getCartItems();
+      const itemsPayload = items.map(item => ({
+        productId: item.id,
+        quantity: item.quantity
+      }));
+      const msgEl = document.getElementById("ai-message");
+      const resultEl = document.getElementById("ai-result");
+      const recommendationEl = document.getElementById("ai-recommendations");
+
+      msgEl.textContent = "Đang phân tích...";
+      resultEl.style.display = "none";
+      recommendationEl.innerHTML = "";
+
+      try {
+        if (!itemsPayload.length) {
+          msgEl.textContent = "Giỏ hàng đang trống.";
+          return;
+        }
+
+        msgEl.style.color = "#555";
+
+        const token = localStorage.getItem("token");
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers.Authorization = "Bearer " + token;
+
+        const res = await fetch(API_BASE + "/ai/cart", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ items: itemsPayload, goal: goal || "balanced" })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data || !data.ok || !data.analysis) {
+          msgEl.textContent = (data && data.message) ? data.message : "Không phân tích được giỏ hàng.";
+          msgEl.style.color = "#d90429";
+          return;
+        }
+
+        const s = data.analysis.summary || {};
+        const fmt = (v) => {
+          const n = Number(v || 0);
+          return Number.isFinite(n) ? n.toLocaleString("vi-VN") : "0";
+        };
+
+        msgEl.textContent = "";
+        const suggestions = Array.isArray(data.analysis.suggestions) ? data.analysis.suggestions : [];
+        const healthWarnings = Array.isArray(data.analysis.healthWarnings) ? data.analysis.healthWarnings : [];
+        const suggestionHtml = suggestions.length
+          ? `
+            <div class="ai-next-steps">
+              <div class="ai-next-steps-title">Đề xuất tiếp theo</div>
+              <div class="ai-suggestion-list">
+                ${suggestions.map(item => `
+                  <div class="ai-suggestion-card">
+                    <div class="ai-suggestion-tag">${buildSuggestionTag(item)}</div>
+                    <div class="ai-suggestion-text">${item}</div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          `
+          : "";
+        const profileModeText = data.personalized ? "Cá nhân hóa theo hồ sơ của bạn" : "Đang ở chế độ gợi ý chung";
+        const healthWarningHtml = healthWarnings.length
+          ? `
+            <div class="ai-status-box" style="border-color:#f4a261;background:#fff7ed;">
+              <b>Cảnh báo theo hồ sơ sức khỏe & thói quen:</b>
+              <ul style="margin:0.5rem 0 0 1.1rem;padding:0;">
+                ${healthWarnings.map((warning) => `
+                  <li>
+                    <b>${warning.title || "Cần lưu ý"}:</b> ${warning.message || ""}
+                    ${Array.isArray(warning.products) && warning.products.length ? `<div style="margin-top:0.25rem;color:#8a5a13;">Món đóng góp chính: ${warning.products.join(", ")}</div>` : ""}
+                  </li>
+                `).join("")}
+              </ul>
+            </div>
+          `
+          : "";
+
+        const ratioComparison = data.analysis.ratioComparison;
+        let ratioHtml = "";
+        if (ratioComparison) {
+          const getRatioText = (status, nutrient) => {
+            if (status === "low") return `Thiếu ${nutrient}`;
+            if (status === "high") return `Thừa ${nutrient}`;
+            return `${nutrient} hợp lý`;
+          };
+
+          ratioHtml = `
+            <div class="ai-status-box">
+              <b>So sánh với mục tiêu theo khoảng:</b><br>
+              ${getRatioText(ratioComparison.proteinStatus, "Protein")} ·
+              ${getRatioText(ratioComparison.carbsStatus, "Carbs")} ·
+              ${getRatioText(ratioComparison.fatStatus, "Chất béo")}
+            </div>
+          `;
+        }
+
+        resultEl.innerHTML = `
+          <h4>Kết quả phân tích giỏ hàng</h4>
+          <div><b>Mục tiêu:</b> ${goalLabel(goal || "balanced")}</div>
+          <div class="ai-summary-grid">
+            <div class="ai-summary-item"><b>Tổng Calories:</b> ${fmt(s.totalCalories)} kcal</div>
+            <div class="ai-summary-item"><b>Tổng Protein:</b> ${fmt(s.totalProtein)} g</div>
+            <div class="ai-summary-item"><b>Tổng Fat:</b> ${fmt(s.totalFat)} g</div>
+            <div class="ai-summary-item"><b>Tổng Carbs:</b> ${fmt(s.totalCarbs)} g</div>
+          </div>
+          <div class="ai-status-box"><b>Gợi ý nhanh:</b> ${String(data.analysis.advice || "").trim() || "(Không có gợi ý)"}</div>
+          ${healthWarningHtml}
+          ${ratioHtml}
+          ${suggestionHtml}
+        `;
+        resultEl.style.display = "block";
+
+        try {
+          const recRes = await fetch(API_BASE + "/ai/cart/recommendations", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ items: itemsPayload, goal: goal || "balanced" })
+          });
+
+          const recData = await recRes.json();
+          if (recData && recData.ok) {
+            renderCartRecommendations(recData.recommendations || []);
+          }
+        } catch (recErr) {
+          console.error("Recommendation API error:", recErr);
+        }
+      } catch (err) {
+        console.error("AI Analysis error:", err);
+        msgEl.textContent = "Không gọi được API AI. Vui lòng thử lại sau.";
+        msgEl.style.color = "#d90429";
+      }
+    }
+
+    function renderCartRecommendations(items) {
+      const root = document.getElementById("ai-recommendations");
+      if (!root) return;
+      window.lastRecommendationItems = Array.isArray(items) ? items : [];
+
+      if (!window.lastRecommendationItems.length) {
+        root.innerHTML = "";
+        return;
+      }
+
+      root.innerHTML = `
+        <h4>Có thể mua thêm để hợp mục tiêu hơn</h4>
+        ${window.lastRecommendationItems.map(item => `
+          <div class="ai-rec-card">
+            <img src="${buildImageUrl(item.image_url || "")}" alt="${item.name || ""}">
+            <div style="flex:1;">
+              <div class="ai-rec-title">${item.name || ""}</div>
+              <div class="ai-rec-meta">${item.category || "Khác"} · ${formatPrice(item.price || 0)} · Score ${item.score || 0}</div>
+              <div class="ai-rec-reason">${item.reason || ""}</div>
+              <button class="ai-rec-add-btn" data-rec-add="${item.id}">Thêm vào giỏ</button>
+            </div>
+          </div>
+        `).join("")}
+      `;
+    }
+
+    // Add recommended product to cart
+    document.getElementById("ai-recommendations").addEventListener("click", function(e) {
+      const addBtn = e.target.closest("[data-rec-add]");
+      if (!addBtn) return;
+      
+      const productId = Number(addBtn.getAttribute("data-rec-add"));
+      const product = window.lastRecommendationItems.find(item => Number(item.id) === productId);
+      
+      if (!product) return;
+      
+      const items = getCartItems();
+      const existingIdx = items.findIndex(item => Number(item.id) === productId);
+      
+      if (existingIdx >= 0) {
+        items[existingIdx].quantity += 1;
+      } else {
+        items.push({
+          id: productId,
+          name: product.name,
+          price: Number(product.price || 0),
+          image: buildImageUrl(product.image_url || ""),
+          quantity: 1
+        });
+      }
+      
+      saveCartItems(items);
+      renderCart();
+      alert("Đã thêm sản phẩm vào giỏ hàng!");
+    });
+
+    // Analyze button
+    document.getElementById("btn-analyze").addEventListener("click", function() {
+      analyzeCart(getStoredPurchaseGoal());
+    });
+
+    // Navigation login/logout
+    (function() {
+      const nav = document.querySelector("nav ul");
+      if (!nav) return;
+      const user = localStorage.getItem("user");
+      const loginLi = Array.from(nav.children).find(li => li.textContent.includes("Đăng nhập"));
+      if (user && loginLi) {
+        loginLi.innerHTML = '<a href="profile.html">Hồ sơ</a>';
+      } else if (!user && loginLi) {
+        loginLi.innerHTML = '<a href="login.html">Đăng nhập</a>';
+      }
+    })();
+
+    // Initial render
+    renderCart();
+  </script>
+</body>
+</html>
+
+
+
+
+
