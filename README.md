@@ -2,7 +2,33 @@
 
 ThucPhamKhoe la website ban thuc pham tot cho suc khoe, gom frontend HTML/CSS/JavaScript va backend Node.js/Express ket noi MySQL. He thong co cac chuc nang chinh: quan ly san pham, gio hang, dat hang, quan ly nguoi dung, bai viet, tu van chuyen gia, dashboard admin va goi y/phan tich dinh duong bang AI logic noi bo.
 
-## 1. Cong nghe su dung
+## Cau truc repository
+
+```text
+.
+|-- README.md
+|-- references/    # Cac bai bao, tai lieu tham khao PDF
+`-- src/           # Ma nguon chuong trinh
+```
+
+Trong `src/`:
+
+```text
+src/
+|-- index.js
+|-- db.js
+|-- aiLogic.js
+|-- aiLogic-improved.js
+|-- package.json
+|-- package-lock.json
+|-- database-migrations.sql
+|-- migration-add-personalization-fields.sql
+|-- frontend/
+|-- img/
+`-- example/
+```
+
+## Cong nghe su dung
 
 - Backend: Node.js, Express
 - Database: MySQL
@@ -12,24 +38,7 @@ ThucPhamKhoe la website ban thuc pham tot cho suc khoe, gom frontend HTML/CSS/Ja
 - Ma hoa mat khau: bcryptjs
 - Quan ly source: Git/GitHub
 
-## 2. Cau truc thu muc
-
-```text
-.
-|-- index.js                              # Server Express va cac API chinh
-|-- db.js                                 # Cau hinh ket noi MySQL
-|-- aiLogic.js                            # Logic phan tich/goi y dinh duong
-|-- aiLogic-improved.js                   # Ban logic AI cai tien/tham khao
-|-- package.json                          # Script va dependencies Node.js
-|-- package-lock.json
-|-- database-migrations.sql               # Migration bo sung truong ca nhan hoa
-|-- migration-add-personalization-fields.sql
-|-- frontend/                             # Giao dien nguoi dung/admin/chuyen gia
-|-- img/                                  # Anh san pham, bai viet, avatar, asset
-`-- example/                              # Du lieu/anh/tai lieu minh hoa
-```
-
-## 3. Yeu cau moi truong
+## Yeu cau moi truong
 
 Can cai dat truoc:
 
@@ -48,13 +57,13 @@ git --version
 mysql --version
 ```
 
-## 4. Cai dat du an tren may local
+## Cai dat du an tren may local
 
 Clone repository:
 
 ```bash
 git clone https://github.com/ggcaochihieu602/thucphamkhoe.git
-cd thucphamkhoe
+cd thucphamkhoe/src
 ```
 
 Cai dependencies:
@@ -69,7 +78,7 @@ Neu dung PowerShell tren Windows va gap loi `running scripts is disabled`, chay 
 npm.cmd install
 ```
 
-## 5. Cau hinh database MySQL
+## Cau hinh database MySQL
 
 Tao database:
 
@@ -77,7 +86,7 @@ Tao database:
 CREATE DATABASE thucphamkhoe CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-Mo file `db.js` va cap nhat thong tin ket noi cho dung voi MySQL tren may:
+Mo file `src/db.js` va cap nhat thong tin ket noi cho dung voi MySQL tren may:
 
 ```js
 const pool = mysql.createPool({
@@ -106,7 +115,13 @@ mysql -u root -p thucphamkhoe < migration-add-personalization-fields.sql
 
 Luu y: backend co tu dong tao/bo sung mot so bang va cot khi server khoi dong, nhung database van can co cac bang nen tang nhu `users`, `roles`, `products`, `articles`, `orders`, `order_items` neu ban khoi tao database moi hoan toan.
 
-## 6. Chay backend
+## Chay backend
+
+Di chuyen vao thu muc ma nguon:
+
+```bash
+cd src
+```
 
 Chay production mode:
 
@@ -144,49 +159,38 @@ Thu kiem tra nhanh:
 curl http://localhost:3000/products
 ```
 
-## 7. Chay frontend
+## Chay frontend
 
-Frontend nam trong thu muc `frontend/`. Cac file HTML hien dang goi API mac dinh tai:
+Frontend nam trong thu muc `src/frontend/`. Cac file HTML hien dang goi API mac dinh tai:
 
 ```text
 http://localhost:3000
 ```
 
-Cach chay don gian:
+Cach chay:
 
-1. Dam bao backend dang chay bang `npm start` hoac `npm run dev`.
-2. Mo file `frontend/index.html` bang trinh duyet.
+1. Dam bao backend dang chay bang `npm start` hoac `npm run dev` trong thu muc `src/`.
+2. Mo file `src/frontend/index.html` bang trinh duyet.
 3. Dang ky/dang nhap va thu cac trang san pham, gio hang, don hang, profile.
 
 Mot so trang quan trong:
 
-- `frontend/index.html`: trang chu
-- `frontend/products.html`: danh sach san pham
-- `frontend/cart.html`: gio hang
-- `frontend/login.html`: dang nhap
-- `frontend/register.html`: dang ky
-- `frontend/admin-dashboard.html`: dashboard admin
-- `frontend/ask-expert.html`: hoi dap chuyen gia
+- `src/frontend/index.html`: trang chu
+- `src/frontend/products.html`: danh sach san pham
+- `src/frontend/cart.html`: gio hang
+- `src/frontend/login.html`: dang nhap
+- `src/frontend/register.html`: dang ky
+- `src/frontend/admin-dashboard.html`: dashboard admin
+- `src/frontend/ask-expert.html`: hoi dap chuyen gia
 
 Co the chay frontend bang extension Live Server cua VS Code. Khi do backend van phai chay rieng o port `3000`.
 
-## 8. Tai khoan va phan quyen
-
-He thong su dung JWT de xac thuc. Cac API admin va chuyen gia yeu cau user co role phu hop trong database.
-
-Khi khoi tao database moi, can dam bao co bang role va du lieu role tuong ung, vi code dang su dung cac nhom quyen nhu:
-
-- user/khach hang
-- admin
-- expert/chuyen gia
-
-Ten cot va ten role can dong bo voi database thuc te cua du an.
-
-## 9. Kiem thu nhanh
+## Kiem thu nhanh
 
 Kiem tra cu phap cac file JavaScript chinh:
 
 ```bash
+cd src
 node --check index.js
 node --check aiLogic.js
 node --check aiLogic-improved.js
@@ -209,7 +213,7 @@ Kiem tra cac luong chinh tren trinh duyet:
 - Thu chuc nang phan tich/goi y dinh duong
 - Dang nhap admin va kiem tra dashboard
 
-## 10. Deploy len VPS
+## Deploy len VPS
 
 Vi du deploy tren Ubuntu VPS.
 
@@ -224,7 +228,7 @@ Clone source:
 
 ```bash
 git clone https://github.com/ggcaochihieu602/thucphamkhoe.git
-cd thucphamkhoe
+cd thucphamkhoe/src
 npm install
 ```
 
@@ -242,7 +246,7 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
-Cap nhat `db.js` theo thong tin database VPS.
+Cap nhat `src/db.js` theo thong tin database VPS.
 
 Chay server bang PM2:
 
@@ -271,14 +275,14 @@ server {
 }
 ```
 
-Kich hoat site va reload Nginx:
+Kiem tra va reload Nginx:
 
 ```bash
 sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-Neu frontend van mo rieng tu file HTML hoac hosting tinh, can sua cac gia tri `API_BASE` trong `frontend/*.html` tu:
+Neu frontend host rieng, sua cac gia tri `API_BASE` trong `src/frontend/*.html` tu:
 
 ```js
 http://localhost:3000
@@ -290,44 +294,30 @@ thanh domain backend:
 https://your-domain.com
 ```
 
-## 11. Deploy len Render/Railway
+## Deploy len Render/Railway
 
 Co the deploy backend Node.js len Render hoac Railway, database MySQL dung Railway, PlanetScale, Aiven hoac MySQL server rieng.
 
 Cau hinh co ban:
 
+- Root directory: `src`
 - Build command: `npm install`
 - Start command: `npm start`
 - Runtime: Node.js
 - Port: ung dung hien dang dung co dinh `3000`
 
-Truoc khi deploy nen chuyen thong tin database va JWT secret sang bien moi truong thay vi de truc tiep trong code. Neu giu code hien tai, can cap nhat `db.js` theo host/user/password/database cua database production.
+Truoc khi deploy nen chuyen thong tin database va JWT secret sang bien moi truong thay vi de truc tiep trong code. Neu giu code hien tai, can cap nhat `src/db.js` theo host/user/password/database cua database production.
 
 Sau khi deploy backend, sua `API_BASE` trong cac file frontend tu `http://localhost:3000` sang URL backend production.
 
-## 12. Commit va push code len GitHub
+## Commit va push code len GitHub
 
-Kiem tra thay doi:
+Tu thu muc goc repository:
 
 ```bash
 git status
-```
-
-Them file vao staging:
-
-```bash
 git add .
-```
-
-Tao commit:
-
-```bash
-git commit -m "update README huong dan cai dat va deploy"
-```
-
-Push len branch `main`:
-
-```bash
+git commit -m "mo ta thay doi"
 git push origin main
 ```
 
@@ -349,7 +339,7 @@ Sau do chay lai:
 git push origin main
 ```
 
-## 13. Luu y bao mat
+## Luu y bao mat
 
 - Khong nen commit mat khau database, JWT secret, token API hoac file `.env` len GitHub.
 - Nen cau hinh database/JWT bang bien moi truong khi deploy production.
@@ -357,10 +347,11 @@ git push origin main
 - Nen bat HTTPS khi deploy public.
 - Nen backup database truoc khi chay migration.
 
-## 14. Lenh thuong dung
+## Lenh thuong dung
 
 ```bash
 # Cai dependencies
+cd src
 npm install
 
 # Chay backend
@@ -372,7 +363,8 @@ npm run dev
 # Kiem tra cu phap
 node --check index.js
 
-# Kiem tra git
+# Kiem tra git tu thu muc goc repo
+cd ..
 git status
 git log --oneline -5
 
